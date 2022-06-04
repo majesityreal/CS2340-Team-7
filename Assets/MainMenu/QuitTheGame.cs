@@ -25,6 +25,7 @@ public class QuitTheGame : MonoBehaviour
     {
         // Tested and successfully runs as intended.
         //Debug.Log("Successfully quit.");
+        PlayerPrefs.SetInt("loaded", 0);
         Application.Quit();
     }
 }

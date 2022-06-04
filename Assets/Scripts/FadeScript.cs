@@ -9,7 +9,7 @@ public class FadeScript : MonoBehaviour
     // This script is used to fade the screen in and out.
     // https://docs.unity3d.com/ScriptReference/CanvasGroup.html
     private CanvasGroup UIGroup;
-    private float fadeTime = 0.25f; // seconds of duration of fade effect
+    private float fadeTime = 0.35f; // seconds of duration of fade effect
     private bool fadeIn = false;
     private bool fadeOut = false;
 
@@ -27,11 +27,11 @@ public class FadeScript : MonoBehaviour
     void Start()
     {
         UIGroup = gameObject.GetComponent<CanvasGroup>();
-        if (gameObject.name == "Landing" && gameObject.layer == 5)
-        {
-            UIGroup.alpha = 0;
-            fadeIn = true;
-        }
+        // if (gameObject.name == "Landing" && gameObject.layer == 5)
+        // {
+        //     UIGroup.alpha = 0;
+        //     fadeIn = true;
+        // }
         if (gameObject.name == "Black" && gameObject.layer == 5)
         {
             UIGroup.alpha = 1;
