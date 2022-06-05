@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: ae379dd63d9802642879484e9639c7a9
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - DejaVu Sans Mono
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: a518d7b418b217b49b913717b05ca752, type: 3}
+  - {fileID: 12800000, guid: f9a12412448126543bc67abeed1d2545, type: 3}
+  - {fileID: 12800000, guid: 0c2105437b673f5458d0f3d1dbd7cd27, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
