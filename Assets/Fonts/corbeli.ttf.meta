@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: f723253f44c5d6046a1a3dbee1278425
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Corbel
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 4075a4213643b624f8b743c6ec185d87, type: 3}
+  - {fileID: 12800000, guid: 548a8f87aeab7784ca34517ebac46df1, type: 3}
+  - {fileID: 12800000, guid: 90bb7b952cb62a644b96b8bd9d3c889a, type: 3}
+  - {fileID: 12800000, guid: 176b17a90ffbb9e43810e79791d66b8a, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
