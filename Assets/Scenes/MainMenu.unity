@@ -2345,7 +2345,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Placeholder
+  m_text: Surviving Tech
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e194336b555fea241958be30ce8cbd2b, type: 2}
   m_sharedMaterial: {fileID: 6047177958519483481, guid: e194336b555fea241958be30ce8cbd2b, type: 2}
