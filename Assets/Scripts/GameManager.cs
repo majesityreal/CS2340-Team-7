@@ -99,25 +99,10 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // swap shuffle
-        for (int i = 0; i < 25; i++)
+        // Fisher-Yates Shuffle
+        for (int i = 0; i < 50; i++)
         {
-            int rand = (int)Random.Range(0, 52);
-            int rand2 = (int)Random.Range(0, 52);
-            Swap(rand, rand2);
-        }
-
-        // bubble shuffle
-        for (int j = 0; j < 25; j++)
-        {
-            for (int i = 0; i < 51; i++)
-            {
-                int rand = (int)Random.Range(0, 2);
-                if (rand == 0)
-                {
-                    Swap(i, i + 1);
-                }
-            }
+            Swap(i, (int) Random.Range(0, 52));
         }
     }
 
