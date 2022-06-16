@@ -12,9 +12,10 @@ public class GameManager : MonoBehaviour
 
     public int betAmount;
 
-    int currIndex;
     public Card[] playerHand;
     public Card[] dealerHand;
+    private int playerSize;
+    private int dealerSize;
 
     // statistics variables:
     private int totalMoneyWon;
@@ -33,6 +34,8 @@ public class GameManager : MonoBehaviour
         playerHand[1] = DealCard();
         dealerHand[0] = DealCard();
         dealerHand[1] = DealCard();
+        playerSize = 2;
+        dealerSize = 2;
     }
 
     // Update is called once per frame
@@ -45,6 +48,7 @@ public class GameManager : MonoBehaviour
             playerHand = new Card[8];
             playerHand[0] = DealCard();
             playerHand[1] = DealCard();
+            playerSize = 2;
         }
     }
 
@@ -57,32 +61,53 @@ public class GameManager : MonoBehaviour
     // method for dealing the next card
     public void Hit()
     {
-        for (int i = 2; i < playerHand.Length; i++)
+        if (playerHand[playerSize] == null)
         {
-            if (playerHand[i] == null)
-            {
-                currIndex = i;
-                break;
-            }
+            return;
         }
-        playerHand[currIndex] = DealCard();
-        return;
+
+        playerHand[playerSize] = DealCard();
+
+        if (GetScore(playerHand, playerSize) > 21)
+        {
+            // TODO: Losing Screen, Lose Money
+        }
+
+        playerSize++;
     }
 
     // stop dealing to the player
     public void Stand()
     {
+        int dealerScore = GetScore(dealerHand, dealerSize);
+        int playerScore = GetScore(playerHand, dealerSize);
 
+        while (dealerSize < 8 && 21 - dealerScore < 5) {
+            dealerHand[dealerScore] = DealCard();
+            dealerScore = GetScore(dealerHand, dealerSize);
+            dealerSize++;
+        }
+
+        if (dealerScore == playerScore)
+        {
+            // TODO: Draw Screen, Same Money
+        }
+        else if (dealerScore > 21 || playerScore > dealerScore)
+        {
+            // TODO: Winning Screen, Gain Money
+        }
+        else
+        {
+            // TODO: Losing Screen, Lose Money
+        }
     }
 
     // equivalent to "hit" but instead doubling the bet
     public void Double ()
     {
-        // TODO - check if player can make bet, then do this
         betAmount *= 2;
-
         Hit();
-
+        Stand();
     }
 
     // removes and returns a Card from the deck
@@ -94,6 +119,35 @@ public class GameManager : MonoBehaviour
         return temp;
     }
 
+    private int GetScore(Card[] actor, int size)
+    {
+        int score = 0;
+        int numOfAce = 0;
+
+        // Calculates the total score. Stops adding when reaches null.
+        // When Ace is added, adds 11 instead of 1.
+        for (int i = 0; i < size; i++) 
+        {
+            if (actor[i].value == 1)
+            {
+                score += 10;
+                numOfAce++; 
+            }
+            else
+            {
+                score += actor[i].value;
+            }
+        }
+
+        // If score overflows and hand contains Ace, subtracts score until score is less than 21.
+        while (numOfAce != 0 && score > 21)
+        {
+            score -= 10;
+            numOfAce--;
+        }
+        return score;
+    }
+
     // set up deck to be dealt. Note: before referencing any cards in the deck, this method must be called!
     public void ReshuffleDeck()
     {
@@ -103,9 +157,10 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < 13; j++)
             {
-                deck.Add(new Card(j, i, cardSprites[(i * 13) + j]));
+                deck.Add(new Card(Mathf.Min(j, 10), i, cardSprites[(i * 13) + j]));
             }
         }
+
         // swap shuffle
         for (int i = 0; i < 25; i++)
         {
@@ -113,6 +168,7 @@ public class GameManager : MonoBehaviour
             int rand2 = (int)Random.Range(0, 52);
             Swap(rand, rand2);
         }
+
         // bubble shuffle
         for (int j = 0; j < 25; j++)
         {
