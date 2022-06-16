@@ -5,17 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
     public Sprite[] cardSprites;
 
     public List<Card> deck;
 
     public int betAmount;
 
-    public Card[] playerHand;
-    public Card[] dealerHand;
-    private int playerSize;
-    private int dealerSize;
+    public Hand playerHand;
+    public Hand dealerHand;
 
     // statistics variables:
     private int totalMoneyWon;
@@ -27,15 +24,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         deck = new List<Card>();
-        playerHand = new Card[8];
-        dealerHand = new Card[8];
+        playerHand = new Hand();
+        dealerHand = new Hand();
         ReshuffleDeck();
-        playerHand[0] = DealCard();
-        playerHand[1] = DealCard();
-        dealerHand[0] = DealCard();
-        dealerHand[1] = DealCard();
-        playerSize = 2;
-        dealerSize = 2;
+        playerHand.AddToHand(DealCard());
+        playerHand.AddToHand(DealCard());
+        dealerHand.AddToHand(DealCard());
+        dealerHand.AddToHand(DealCard());
     }
 
     // Update is called once per frame
@@ -45,10 +40,9 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
         {
             ReshuffleDeck();
-            playerHand = new Card[8];
-            playerHand[0] = DealCard();
-            playerHand[1] = DealCard();
-            playerSize = 2;
+            playerHand = new Hand();
+            playerHand.AddToHand(DealCard());
+            playerHand.AddToHand(DealCard());
         }
     }
 
@@ -61,45 +55,18 @@ public class GameManager : MonoBehaviour
     // method for dealing the next card
     public void Hit()
     {
-        if (playerHand[playerSize] == null)
-        {
-            return;
-        }
-
-        playerHand[playerSize] = DealCard();
-
-        if (GetScore(playerHand, playerSize) > 21)
-        {
-            // TODO: Losing Screen, Lose Money
-        }
-
-        playerSize++;
+        playerHand.AddToHand(DealCard());
+        // TODO: Method for checking end.
     }
 
     // stop dealing to the player
     public void Stand()
     {
-        int dealerScore = GetScore(dealerHand, dealerSize);
-        int playerScore = GetScore(playerHand, dealerSize);
-
-        while (dealerSize < 8 && 21 - dealerScore < 5) {
-            dealerHand[dealerScore] = DealCard();
-            dealerScore = GetScore(dealerHand, dealerSize);
-            dealerSize++;
+        while (dealerHand.GetSize() < 8 && dealerHand.GetScore() < 17) {
+            dealerHand.AddToHand(DealCard());
         }
 
-        if (dealerScore == playerScore)
-        {
-            // TODO: Draw Screen, Same Money
-        }
-        else if (dealerScore > 21 || playerScore > dealerScore)
-        {
-            // TODO: Winning Screen, Gain Money
-        }
-        else
-        {
-            // TODO: Losing Screen, Lose Money
-        }
+        // TODO: Method for checking end & winner.
     }
 
     // equivalent to "hit" but instead doubling the bet
@@ -117,35 +84,6 @@ public class GameManager : MonoBehaviour
         deck.RemoveAt(0);
         totalCardsDealt++;
         return temp;
-    }
-
-    private int GetScore(Card[] actor, int size)
-    {
-        int score = 0;
-        int numOfAce = 0;
-
-        // Calculates the total score. Stops adding when reaches null.
-        // When Ace is added, adds 11 instead of 1.
-        for (int i = 0; i < size; i++) 
-        {
-            if (actor[i].value == 1)
-            {
-                score += 10;
-                numOfAce++; 
-            }
-            else
-            {
-                score += actor[i].value;
-            }
-        }
-
-        // If score overflows and hand contains Ace, subtracts score until score is less than 21.
-        while (numOfAce != 0 && score > 21)
-        {
-            score -= 10;
-            numOfAce--;
-        }
-        return score;
     }
 
     // set up deck to be dealt. Note: before referencing any cards in the deck, this method must be called!
@@ -219,4 +157,65 @@ public class Card
         this.sprite = sprite;
     }
 
+}
+
+public class Hand
+{
+    private Card[] hand;
+    private int size;
+    private int score;
+    private int numOfAce;
+
+    public Hand()
+    {
+        this.size = 0;
+        this.score = 0;
+        this.numOfAce = 0;
+        hand = new Card[8];
+    }
+
+    public void AddToHand(Card card)
+    {
+        if (size >= this.hand.Length)
+        {
+            Debug.Log("This cannot happen. Check code / card list for errors.");
+            return;
+        }
+
+        this.hand[size] = card;
+        UpdateScore();
+        size++;
+    }
+
+    private void UpdateScore()
+    {
+        this.score += hand[size].value;
+
+        if (hand[size].value == 1) {
+            this.score += 10;
+            this.numOfAce++;
+        }
+
+        while (this.score > 21 && numOfAce != 0)
+        {
+            this.score -= 10;
+            this.numOfAce--;
+        }
+    }
+
+    // Getters
+    public int GetSize()
+    {
+        return this.size;
+    }
+
+    public int GetScore()
+    {
+        return this.score;
+    }
+
+    public Card GetIndex(int i)
+    {
+        return this.hand[i];
+    }
 }

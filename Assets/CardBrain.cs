@@ -21,25 +21,25 @@ public class CardBrain : MonoBehaviour
     {
         if (isPlayerCard)
         {
-            if (gameManager.playerHand[index] == null)
+            if (gameManager.playerHand.GetIndex(index) == null)
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
             }
             else
             {
-                image.sprite = gameManager.playerHand[index].sprite;
+                image.sprite = gameManager.playerHand.GetIndex(index).sprite;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
         }
         else
         {
-            if (gameManager.dealerHand[index] == null)
+            if (gameManager.dealerHand.GetIndex(index) == null)
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
             }
             else
             {
-                image.sprite = gameManager.dealerHand[index].sprite;
+                image.sprite = gameManager.dealerHand.GetIndex(index).sprite;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
         }
