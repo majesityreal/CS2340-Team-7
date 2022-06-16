@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public int betAmount;
 
     int currIndex;
+
     public Card[] playerHand;
     public Card[] dealerHand;
 
