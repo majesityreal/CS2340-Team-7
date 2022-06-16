@@ -651,6 +651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSprites:
+  - {fileID: 21300000, guid: 7f7dec95c14830f4abc117115d75b8e4, type: 3}
   - {fileID: 21300000, guid: b559cd29ab11cf740a7429f7d836df31, type: 3}
   - {fileID: 21300000, guid: f3179fcded107bf45bde73abcf1c1014, type: 3}
   - {fileID: 21300000, guid: 9c28e8247099bda48903d9d6101af75f, type: 3}
@@ -660,10 +661,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b4170ba68a81b994a8905d8f966e202e, type: 3}
   - {fileID: 21300000, guid: 3686fd7e45d3dd445b942b479f0eadc0, type: 3}
   - {fileID: 21300000, guid: 612130619c5d53845b8c45225b6ab17f, type: 3}
-  - {fileID: 21300000, guid: 7f7dec95c14830f4abc117115d75b8e4, type: 3}
   - {fileID: 21300000, guid: 11f081f36e91fb84ca2eb60f4e317368, type: 3}
   - {fileID: 21300000, guid: 12f459e47a8fe414889f67cba4cdc8f9, type: 3}
   - {fileID: 21300000, guid: 39de193b3f93a544b92b0d35c01dd8e6, type: 3}
+  - {fileID: 21300000, guid: fca4ed4627fc37347b8d2cd99bf3c13f, type: 3}
   - {fileID: 21300000, guid: 902731f41530af94bbb2d7cdc721c6d2, type: 3}
   - {fileID: 21300000, guid: ee65d124860103c4294ac8862d3f3cbe, type: 3}
   - {fileID: 21300000, guid: 1f87d2f9ff4b9c144bc7ee4e94061421, type: 3}
@@ -673,10 +674,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4625d80b109194a47a136be27eb45914, type: 3}
   - {fileID: 21300000, guid: 43ff8e06b05bbdd4b9736dd388490a68, type: 3}
   - {fileID: 21300000, guid: 9611a75b1668af04f9b47a7f4c745136, type: 3}
-  - {fileID: 21300000, guid: fca4ed4627fc37347b8d2cd99bf3c13f, type: 3}
   - {fileID: 21300000, guid: 207f8930d8ac03b4a9cf40364a8e36b1, type: 3}
   - {fileID: 21300000, guid: 37628cd51e932d84882f371def799a06, type: 3}
   - {fileID: 21300000, guid: a94d5b8738ae88340b795371883b5f99, type: 3}
+  - {fileID: 21300000, guid: 0786c3f3e1dd8474180450a53448a79e, type: 3}
   - {fileID: 21300000, guid: 768c96ba1a09921478af6d1457f899a7, type: 3}
   - {fileID: 21300000, guid: 53031d869da53f2419aab55f55d891c2, type: 3}
   - {fileID: 21300000, guid: f66546e7432b6fd48b4bde361db3bbcf, type: 3}
@@ -686,10 +687,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c9da2d9a56ad24f43981da7ba9700f54, type: 3}
   - {fileID: 21300000, guid: 28457a700a5a25244953ccc698a7a2b9, type: 3}
   - {fileID: 21300000, guid: bcbbff18a2a1463468b7a82afd7178f1, type: 3}
-  - {fileID: 21300000, guid: 0786c3f3e1dd8474180450a53448a79e, type: 3}
   - {fileID: 21300000, guid: 8f1aa03e3630c924fb04bf956ff7998a, type: 3}
   - {fileID: 21300000, guid: 776c6323423a4b94e9b137a033a30348, type: 3}
   - {fileID: 21300000, guid: b6eabe5d95d5a034f9a0fb38eec3528c, type: 3}
+  - {fileID: 21300000, guid: f44a6c1e834d1b44eaf5db13f3cf9f9c, type: 3}
   - {fileID: 21300000, guid: 4c354e259fbf18741ab05b7873167669, type: 3}
   - {fileID: 21300000, guid: be3ef8a321218e443921b2291af0ca22, type: 3}
   - {fileID: 21300000, guid: 4fea7842e73ca6041b408ef795b31e54, type: 3}
@@ -699,7 +700,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0c3ba04e563734d408005d19d322c072, type: 3}
   - {fileID: 21300000, guid: 60c7d71440e03fc4e905d745c5a652b3, type: 3}
   - {fileID: 21300000, guid: b910d440ad31062448c0fef37a82d886, type: 3}
-  - {fileID: 21300000, guid: f44a6c1e834d1b44eaf5db13f3cf9f9c, type: 3}
   - {fileID: 21300000, guid: ccdc90df219add942b7184a2757266f8, type: 3}
   - {fileID: 21300000, guid: 39b2ca9b7721686488cf7469037cd3f0, type: 3}
   - {fileID: 21300000, guid: 3a72e9974c281d142be4cd763d620410, type: 3}
@@ -2259,13 +2259,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 1a34fbfd6de760149aad52e40a801d61, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 449733103}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: Stand
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < 13; j++)
             {
-                deck.Add(new Card(Mathf.Min(j, 10), i, cardSprites[(i * 13) + j]));
+                deck.Add(new Card(Mathf.Min(j + 1, 10), i, cardSprites[(i * 13) + j]));
             }
         }
 
