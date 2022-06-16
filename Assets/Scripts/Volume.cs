@@ -21,8 +21,8 @@ public class Volume : MonoBehaviour
     {
         firstRun = PlayerPrefs.GetInt("savedFirstRun");
         actualfirstrun = PlayerPrefs.GetInt("actualfirstRun");
-        UnityEngine.Debug.Log(PlayerPrefs.GetInt("savedFirstRun"));
-        UnityEngine.Debug.Log(PlayerPrefs.GetInt("actualfirstRun"));
+        // UnityEngine.Debug.Log(PlayerPrefs.GetInt("savedFirstRun"));
+        // UnityEngine.Debug.Log(PlayerPrefs.GetInt("actualfirstRun"));
         if (PlayerPrefs.GetInt("savedFirstRun") == 0 && actualfirstrun == 0) 
         {
             GetComponent<Slider>().value = 1f;
@@ -47,6 +47,6 @@ public class Volume : MonoBehaviour
     {
         changeVolume(GetComponent<Slider>().value);
         GetComponent<Slider>().value= PlayerPrefs.GetFloat("volume");
-        Debug.Log(PlayerPrefs.GetFloat("volume"));
+        //Debug.Log(PlayerPrefs.GetFloat("volume"));
     }
 }
