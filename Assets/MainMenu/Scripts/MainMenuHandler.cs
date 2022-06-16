@@ -33,4 +33,22 @@ public class MainMenuHandler : MonoBehaviour
     {
         
     }
+    
+    public void StartBlackjack()
+    {
+        PlayerPrefs.SetInt("loaded", 1); // player has loaded the first game
+        Application.LoadLevel("Blackjack");
+    }
+    public void StartChess()
+    {
+        PlayerPrefs.SetInt("loaded", 1);
+        Application.LoadLevel("Chess");
+    }
+    public void QuitGame()
+    {
+        // Tested and successfully runs as intended.
+        //Debug.Log("Successfully quit.");
+        PlayerPrefs.SetInt("loaded", 0);
+        Application.Quit();
+    }
 }
