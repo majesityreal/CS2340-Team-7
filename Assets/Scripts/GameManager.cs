@@ -1,44 +1,92 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
     public Sprite[] cardSprites;
 
     public List<Card> deck;
+
+    public int betAmount;
+
+    public Hand playerHand;
+    public Hand dealerHand;
+
+    // statistics variables:
+    private int totalMoneyWon;
+    private int totalCardsDealt;
+    private int gamesWon;
+    private int gamesLost;
 
     // Start is called before the first frame update
     void Start()
     {
         deck = new List<Card>();
+        playerHand = new Hand();
+        dealerHand = new Hand();
+        ReshuffleDeck();
+        playerHand.AddToHand(DealCard());
+        playerHand.AddToHand(DealCard());
+        dealerHand.AddToHand(DealCard());
+        dealerHand.AddToHand(DealCard());
     }
 
     // Update is called once per frame
     void Update()
     {
+        // test for shuffling default to player
         if (Input.GetKeyDown(KeyCode.S))
         {
             ReshuffleDeck();
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            for (int i = 0; i < 52; i++)
-            {
-                Card card = DealCard();
-                Debug.Log("value: " + card.value + " suit: " + card.suit);
-            }
+            playerHand = new Hand();
+            playerHand.AddToHand(DealCard());
+            playerHand.AddToHand(DealCard());
         }
     }
 
+    public void PlaceBet()
+    {
+        Debug.Log("I am changing");
+        // check for if text is valid
+    }
+
+    // method for dealing the next card
+    public void Hit()
+    {
+        playerHand.AddToHand(DealCard());
+        // TODO: Method for checking end.
+    }
+
+    // stop dealing to the player
+    public void Stand()
+    {
+        while (dealerHand.GetSize() < 8 && dealerHand.GetScore() < 17) {
+            dealerHand.AddToHand(DealCard());
+        }
+
+        // TODO: Method for checking end & winner.
+    }
+
+    // equivalent to "hit" but instead doubling the bet
+    public void Double ()
+    {
+        betAmount *= 2;
+        Hit();
+        Stand();
+    }
+
+    // removes and returns a Card from the deck
     public Card DealCard()
     {
         Card temp = deck[0];
         deck.RemoveAt(0);
+        totalCardsDealt++;
         return temp;
     }
 
+    // set up deck to be dealt. Note: before referencing any cards in the deck, this method must be called!
     public void ReshuffleDeck()
     {
         deck.Clear();
@@ -47,18 +95,20 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < 13; j++)
             {
-                deck.Add(new Card(j, i, cardSprites[(i * 13) + j]));
+                deck.Add(new Card(Mathf.Min(j + 1, 10), i, cardSprites[(i * 13) + j]));
             }
         }
+
         // swap shuffle
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 25; i++)
         {
             int rand = (int)Random.Range(0, 52);
             int rand2 = (int)Random.Range(0, 52);
             Swap(rand, rand2);
         }
+
         // bubble shuffle
-        for (int j = 0; j < 20; j++)
+        for (int j = 0; j < 25; j++)
         {
             for (int i = 0; i < 51; i++)
             {
@@ -71,6 +121,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // reloads the blackjack scene to start again
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void QuitGame()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    // helper method, swaps two indexes of the deck list
     private void Swap(int i, int j)
     {
         Card temp = deck[i];
@@ -95,4 +157,65 @@ public class Card
         this.sprite = sprite;
     }
 
+}
+
+public class Hand
+{
+    private Card[] hand;
+    private int size;
+    private int score;
+    private int numOfAce;
+
+    public Hand()
+    {
+        this.size = 0;
+        this.score = 0;
+        this.numOfAce = 0;
+        hand = new Card[8];
+    }
+
+    public void AddToHand(Card card)
+    {
+        if (size >= this.hand.Length)
+        {
+            Debug.Log("This cannot happen. Check code / card list for errors.");
+            return;
+        }
+
+        this.hand[size] = card;
+        UpdateScore();
+        size++;
+    }
+
+    private void UpdateScore()
+    {
+        this.score += hand[size].value;
+
+        if (hand[size].value == 1) {
+            this.score += 10;
+            this.numOfAce++;
+        }
+
+        while (this.score > 21 && numOfAce != 0)
+        {
+            this.score -= 10;
+            this.numOfAce--;
+        }
+    }
+
+    // Getters
+    public int GetSize()
+    {
+        return this.size;
+    }
+
+    public int GetScore()
+    {
+        return this.score;
+    }
+
+    public Card GetIndex(int i)
+    {
+        return this.hand[i];
+    }
 }
