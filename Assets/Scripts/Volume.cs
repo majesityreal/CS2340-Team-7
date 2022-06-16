@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/**
+ *  Author: Kevin Kwan
+ *  Date:   2022.06.16
+ *  Ver:    1.0
+ *  
+ *  This script is used to pause the game and bring up the pause menu.
+ */
+
 public class Volume : MonoBehaviour
 {
     bool setthevolumeyet = false;
@@ -15,7 +23,7 @@ public class Volume : MonoBehaviour
         actualfirstrun = PlayerPrefs.GetInt("actualfirstRun");
         UnityEngine.Debug.Log(PlayerPrefs.GetInt("savedFirstRun"));
         UnityEngine.Debug.Log(PlayerPrefs.GetInt("actualfirstRun"));
-        if (PlayerPrefs.GetInt("savedFirstRun") == 0&&actualfirstrun==0) 
+        if (PlayerPrefs.GetInt("savedFirstRun") == 0 && actualfirstrun == 0) 
         {
             GetComponent<Slider>().value = 1f;
             PlayerPrefs.SetFloat("volume", 1f);
@@ -39,5 +47,6 @@ public class Volume : MonoBehaviour
     {
         changeVolume(GetComponent<Slider>().value);
         GetComponent<Slider>().value= PlayerPrefs.GetFloat("volume");
+        Debug.Log(PlayerPrefs.GetFloat("volume"));
     }
 }
