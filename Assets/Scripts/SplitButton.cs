@@ -42,7 +42,6 @@ public class SplitButton : MonoBehaviour
 
         // Update to Game Manager.
         gameManager = FindObjectOfType<GameManager>();
-        gameManager.playerSplitHand = playerSplitHand;
     }
 
     // If player is able to split,
@@ -54,6 +53,7 @@ public class SplitButton : MonoBehaviour
             split();
             haveSplit = true;
             canSplit = false;
+            gameManager.playerSplitHand = playerSplitHand;
             Debug.Log("Split success!");
         }
         else
