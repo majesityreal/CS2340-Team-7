@@ -9,6 +9,7 @@ public class CardBrain : MonoBehaviour
     public int index;
     public Image image;
     public bool isPlayerCard;
+    public bool isSplitCard;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,18 @@ public class CardBrain : MonoBehaviour
             else
             {
                 image.sprite = gameManager.playerHand.GetIndex(index).sprite;
+                image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
+            }
+        }
+        else if (isSplitCard)
+        {
+            if (gameManager.playerSplitHand.GetIndex(index) == null)
+            {
+                image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
+            }
+            else
+            {
+                image.sprite = gameManager.playerSplitHand.GetIndex(index).sprite;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
         }

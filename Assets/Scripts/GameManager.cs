@@ -12,7 +12,10 @@ public class GameManager : MonoBehaviour
     public int betAmount;
 
     public Hand playerHand;
+    public Hand playerSplitHand;
     public Hand dealerHand;
+
+    public int currentBet;
 
     // statistics variables:
     private int totalMoneyWon;
@@ -20,17 +23,14 @@ public class GameManager : MonoBehaviour
     private int gamesWon;
     private int gamesLost;
 
+    // Scripts
+    private SplitButton splitButton;
+
     // Start is called before the first frame update
     void Start()
     {
-        deck = new List<Card>();
-        playerHand = new Hand();
-        dealerHand = new Hand();
-        ReshuffleDeck();
-        playerHand.AddToHand(DealCard());
-        playerHand.AddToHand(DealCard());
-        dealerHand.AddToHand(DealCard());
-        dealerHand.AddToHand(DealCard());
+        splitButton = FindObjectOfType<SplitButton>();
+        initBlackJack();
     }
 
     // Update is called once per frame
@@ -44,6 +44,25 @@ public class GameManager : MonoBehaviour
             playerHand.AddToHand(DealCard());
             playerHand.AddToHand(DealCard());
         }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Debug.Log("First Card" + playerHand.GetIndex(0).value.ToString());
+            Debug.Log("Second Card" + playerHand.GetIndex(1).value.ToString());
+        }
+    }
+
+    public void initBlackJack()
+    {
+        deck = new List<Card>();
+        playerHand = new Hand();
+        dealerHand = new Hand();
+        ReshuffleDeck();
+        playerHand.AddToHand(DealCard());
+        playerHand.AddToHand(DealCard());
+        dealerHand.AddToHand(DealCard());
+        dealerHand.AddToHand(DealCard());
+        splitButton.initSplitHand();
     }
 
     public void PlaceBet()
@@ -171,7 +190,7 @@ public class Hand
         this.size = 0;
         this.score = 0;
         this.numOfAce = 0;
-        hand = new Card[8];
+        hand = new Card[11];
     }
 
     public void AddToHand(Card card)
@@ -217,5 +236,19 @@ public class Hand
     public Card GetIndex(int i)
     {
         return this.hand[i];
+    }
+
+
+    // Remove the last card from the hand and return it.
+    // If it's an Ace, apply change to numOfAce.
+    public Card removeLast()
+    {
+        Card res = this.hand[--size];
+        this.hand[size] = null;
+        if (res.value == 1)
+        {
+            numOfAce--;
+        }
+        return res;
     }
 }
