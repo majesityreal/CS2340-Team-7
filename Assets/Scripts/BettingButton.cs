@@ -13,7 +13,7 @@ public class BettingButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initBet();
+        currBet = 0;
         playerMoney = 100;
     }
 
@@ -23,23 +23,15 @@ public class BettingButton : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
     }
 
-    // Initalize player bet amount.
-    public void initBet()
+    public void ComfirmBet()
     {
-        currBet = 0;
-    }
-
-    public void comfirmBet()
-    {
-        gameManager.betAmount = currBet;
         playerMoney -= currBet;
         Debug.Log("Comfirm Bet, total Bet: " + currBet.ToString());
     }
 
-    public void addBet(int amount)
+    public void AddBet(int amount)
     {
-        if (amount <= 0
-            && ((amount + currBet) > playerMoney))
+        if (amount <= 0 && ((amount + currBet) > playerMoney))
         {
             Debug.Log("Bet value is invalid");
             // Will add an exception here.
@@ -51,17 +43,12 @@ public class BettingButton : MonoBehaviour
         }
     }
 
-    public void addBet()
+    public void AddBet()
     {
-        addBet(inputBet);
+        AddBet(inputBet);
     }
 
-    public int getCurrBet()
-    {
-        return currBet;
-    }
-
-    public void resetBet()
+    public void ResetBet()
     {
         currBet = 0;
         Debug.Log("Reset bet. Total Bet: " + currBet.ToString());
