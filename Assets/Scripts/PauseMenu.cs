@@ -2,14 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ *  Author: Kevin Kwan
+ *  Date:   2022.06.16
+ *  Ver:    1.0
+ *  
+ *  This script is used to pause the game and bring up the pause menu.
+ */
+
 public class PauseMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
+    
     bool isPaused = false;
-    private GameObject pauseMenu;
+    public GameObject pauseMenu;
+    // Start is called before the first frame update
     void Start()
     {
-        pauseMenu = GameObject.Find("PauseMenu");
+        //pauseMenu = GameObject.Find("PauseMenu");
         pauseMenu.SetActive(false);
         isPaused = false;
     }
