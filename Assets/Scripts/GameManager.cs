@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     // Used for splitted hands
     private int standCount;
 
-    // BettingButton betButton = new BettingButton();
+    BettingButton betButton;
 
     public bool canDouble;
 
@@ -32,9 +32,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         splitButton = FindObjectOfType<SplitButton>();
-        BettingButton betButton = gameObject.AddComponent(typeof(BettingButton)) as BettingButton;
+        betButton = gameObject.AddComponent(typeof(BettingButton)) as BettingButton;
         totalMoneyWon = 0;
-        totalCardsDealt = 0
+        totalCardsDealt = 0;
         gamesWon = 0;
         gamesLost = 0;
         deck = new List<Card>();
@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
 
         if (playerHand.GetScore() > 21)
         {
-            totalMoneyWon -= betButton.burrBet;
+            totalMoneyWon -= BettingButton.currBet;
             gamesLost--;
             if (splitButton.haveSplit)
             {
@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
 
         if (dealerHand.GetScore() > 21 || playerHand.GetScore() > dealerHand.GetScore())
         {
-            totalMoneyWon += betButton.currBet;
+            totalMoneyWon += BettingButton.currBet;
             gamesWon++;
             // TODO: Win Screen
             BettingButton.playerMoney += BettingButton.currBet;
