@@ -58,8 +58,8 @@ public class HowToPlay : MonoBehaviour
         // show the first element
         uiElements[currentUIElement].SetActive(true);
         if (!inited) {
-        gameObject.SetActive(false);
-        inited = true;
+            gameObject.SetActive(false);
+            inited = true;
         }
     }
 
@@ -75,9 +75,9 @@ public class HowToPlay : MonoBehaviour
             uiElements[currentUIElement].SetActive(true);
         } else {
             Debug.Log("not last element");
-        prevButton.SetActive(true);
-        nextButton.SetActive(true);
-        uiElements[currentUIElement].SetActive(true);
+            prevButton.SetActive(true);
+            nextButton.SetActive(true);
+            uiElements[currentUIElement].SetActive(true);
         }
         
     }
@@ -93,9 +93,9 @@ public class HowToPlay : MonoBehaviour
             currentUIElement = 0;
             uiElements[currentUIElement].SetActive(true);
         } else {
-        prevButton.SetActive(true);
-        nextButton.SetActive(true);
-        uiElements[currentUIElement].SetActive(true);
+            prevButton.SetActive(true);
+            nextButton.SetActive(true);
+            uiElements[currentUIElement].SetActive(true);
         }   
     }
 
