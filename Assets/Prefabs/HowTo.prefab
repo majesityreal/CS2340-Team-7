@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'You will be able to bet your desired amount of in-game currency to gamble
+  m_text: 'HowTo00 You will be able to bet your desired amount of in-game currency to gamble
     on whether or not you will win. If you win, your bet will return double the amount
     that you wagered.
 
@@ -1229,7 +1229,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'After the dealer deals the initial cards, you can choose whether to "hit,"
+  m_text: 'HowTo01: After the dealer deals the initial cards, you can choose whether to "hit,"
     "stand," "double," or "split."
 
 
@@ -1439,7 +1439,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'You, the player, will attempt to beat the dealer by being dealt cards
+  m_text: 'HowTo02 You, the player, will attempt to beat the dealer by being dealt cards
     and getting a total hand value that is as close or equal to 21, without going
     over 21, which is called "bust."
 
