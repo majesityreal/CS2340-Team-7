@@ -34,13 +34,13 @@ public class CardBrain : MonoBehaviour
         }
         else if (isSplitCard)
         {
-            if (gameManager.playerSplitHand.GetIndex(index) == null)
+            if (gameManager.splitButton.playerSplitHand.GetIndex(index) == null)
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
             }
             else
             {
-                image.sprite = gameManager.playerSplitHand.GetIndex(index).sprite;
+                image.sprite = gameManager.splitButton.playerSplitHand.GetIndex(index).sprite;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
         }

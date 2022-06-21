@@ -23,7 +23,7 @@ public class SplitButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initSplitHand();
+        InitSplitHand();
     }
 
     // Update is called once per frame
@@ -34,7 +34,7 @@ public class SplitButton : MonoBehaviour
         if (!haveSplit && gameManager.playerHand.GetSize() == 2)
         {
             // Check if the two cards able to split.
-            if (!canSplit && sameValue(gameManager.playerHand.GetIndex(0), gameManager.playerHand.GetIndex(1)))
+            if (!canSplit && SameValue(gameManager.playerHand.GetIndex(0), gameManager.playerHand.GetIndex(1)))
             {
                 canSplit = true; 
             }
@@ -45,15 +45,14 @@ public class SplitButton : MonoBehaviour
     }
 
     // If player is able to split,
-    // click on the button will allow them to spliit.
-    public void splitButton()
+    // click on the button will allow them to split.
+    public void ButtonPressed()
     {
         if (canSplit)
         {
-            split();
+            Split();
             haveSplit = true;
             canSplit = false;
-            gameManager.playerSplitHand = playerSplitHand;
             Debug.Log("Split success!");
         }
         else
@@ -63,7 +62,7 @@ public class SplitButton : MonoBehaviour
     }
 
     // Initalize the split part when called.
-    public void initSplitHand()
+    public void InitSplitHand()
     {
         canSplit = false;
         haveSplit = false;
@@ -72,7 +71,7 @@ public class SplitButton : MonoBehaviour
     }
 
     // Change player's current hand to split hand.
-    public void switchHand()
+    public void SwitchHand()
     {
         Hand temp = gameManager.playerHand;
         gameManager.playerHand = playerSplitHand;
@@ -80,16 +79,15 @@ public class SplitButton : MonoBehaviour
     }
 
     // Function that split the hand in to two hands.
-    private void split()
+    private void Split()
     {
         // set the second card in hand to split hand.
-        playerSplitHand.AddToHand(gameManager.playerHand.removeLast());
+        playerSplitHand.AddToHand(gameManager.playerHand.RemoveLast());
     }
 
     // Check if two card's value is same.
-    private bool sameValue(Card a, Card b)
+    private bool SameValue(Card a, Card b)
     {
         return a.value == b.value;
     }
-
 }
