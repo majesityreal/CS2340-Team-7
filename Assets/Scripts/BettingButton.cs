@@ -30,6 +30,7 @@ public class BettingButton : MonoBehaviour
         betDisplay.text = "Current Bet: $" + currBet.ToString();
 
         betAmountSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
+        currBet = 0;
     }
 
     // Update is called once per frame
@@ -38,21 +39,15 @@ public class BettingButton : MonoBehaviour
         betAmountSlider.value = currBet;
     }
 
-    // Initalize player bet amount.
-    public void initBet()
-    {
-        currBet = 0;
-    }
-
-    public void comfirmBet()
+    public void ComfirmBet()
     {
         //gameManager.betAmount = currBet;
-        playerMoney = playerMoney - currBet;
+        playerMoney -= currBet;
         hideBet();
         Debug.Log("Comfirm Bet, total Bet: " + currBet.ToString());
     }
 
-    public void addBet(int amount)
+    public void AddBet(int amount)
     {
         if ((amount + currBet) > playerMoney)
         {
@@ -65,17 +60,12 @@ public class BettingButton : MonoBehaviour
         betDisplay.text = "Current Bet: $" + currBet.ToString();
     }
 
-    public void addBet()
+    public void AddBet()
     {
-        addBet(inputBet);
+        AddBet(inputBet);
     }
 
-    public int getCurrBet()
-    {
-        return currBet;
-    }
-
-    public void resetBet()
+    public void ResetBet()
     {
         currBet = 0;
         betAmountSlider.value = currBet;

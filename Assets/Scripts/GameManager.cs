@@ -9,13 +9,15 @@ public class GameManager : MonoBehaviour
 
     public List<Card> deck;
 
-    public int betAmount;
-
     public Hand playerHand;
-    public Hand playerSplitHand;
     public Hand dealerHand;
 
-    public int currentBet;
+    // Used for splitted hands
+    private int standCount;
+
+    BettingButton betButton;
+
+    public bool canDouble;
 
     // statistics variables:
     private int totalMoneyWon;
@@ -24,13 +26,20 @@ public class GameManager : MonoBehaviour
     private int gamesLost;
 
     // Scripts
-    private SplitButton splitButton;
+    public SplitButton splitButton;
 
     // Start is called before the first frame update
     void Start()
     {
         splitButton = FindObjectOfType<SplitButton>();
-        initBlackJack();
+        betButton = gameObject.AddComponent(typeof(BettingButton)) as BettingButton;
+        totalMoneyWon = 0;
+        totalCardsDealt = 0;
+        gamesWon = 0;
+        gamesLost = 0;
+        deck = new List<Card>();
+        InitalizeDeck();
+        InitializeGame();
     }
 
     // Update is called once per frame
@@ -39,10 +48,7 @@ public class GameManager : MonoBehaviour
         // test for shuffling default to player
         if (Input.GetKeyDown(KeyCode.S))
         {
-            ReshuffleDeck();
-            playerHand = new Hand();
-            playerHand.AddToHand(DealCard());
-            playerHand.AddToHand(DealCard());
+            InitializeGame();
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -52,46 +58,118 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void initBlackJack()
+    public void InitializeGame()
     {
-        deck = new List<Card>();
+        if (deck.Count < 26)
+        {
+            InitalizeDeck();
+        }
         playerHand = new Hand();
         dealerHand = new Hand();
+        standCount = 0;
+        canDouble = true;
         ReshuffleDeck();
         playerHand.AddToHand(DealCard());
         playerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
-        splitButton.initSplitHand();
-    }
-
-    public void PlaceBet()
-    {
-        Debug.Log("I am changing");
-        // check for if text is valid
+        splitButton.InitSplitHand();
     }
 
     // method for dealing the next card
     public void Hit()
     {
+        totalCardsDealt++;
         playerHand.AddToHand(DealCard());
-        // TODO: Method for checking end.
+        Debug.Log("Hit: Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
+
+        if (canDouble)
+        {
+            canDouble = false;
+        }
+        if (splitButton.canSplit)
+        {
+            splitButton.canSplit = false;
+        }
+
+        if (playerHand.GetScore() > 21)
+        {
+            totalMoneyWon -= BettingButton.currBet;
+            gamesLost--;
+            if (splitButton.haveSplit)
+            {
+                // TODO: Lose Screen
+                Debug.Log("Hit: Player Lost Split");
+                if (standCount == 2)
+                {
+                    InitializeGame();
+                    return;
+                }
+                
+                standCount = 2;
+                splitButton.SwitchHand();
+            }
+            else
+            {
+                Debug.Log("Hit: Player Lost");
+                // TODO: Lose Screen
+                InitializeGame();
+            }
+        }
     }
 
     // stop dealing to the player
     public void Stand()
     {
+        if (splitButton.haveSplit && standCount == 0)
+        {
+            standCount++;
+            splitButton.SwitchHand();
+            return;
+        }
+
         while (dealerHand.GetSize() < 8 && dealerHand.GetScore() < 17) {
             dealerHand.AddToHand(DealCard());
         }
 
-        // TODO: Method for checking end & winner.
+        Debug.Log("Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
+
+        if (dealerHand.GetScore() > 21 || playerHand.GetScore() > dealerHand.GetScore())
+        {
+            totalMoneyWon += BettingButton.currBet;
+            gamesWon++;
+            // TODO: Win Screen
+            BettingButton.playerMoney += BettingButton.currBet;
+            Debug.Log("Player win");
+        }
+        else
+        {
+            gamesLost--;
+            // TODO: Lose Screen
+            Debug.Log("Dealer win");
+        }
+
+        if (standCount == 1)
+        {
+            splitButton.SwitchHand();
+            standCount++;
+            Stand();
+            return;
+        }
+
+        InitializeGame();
     }
 
     // equivalent to "hit" but instead doubling the bet
     public void Double ()
     {
-        betAmount *= 2;
+        if (!canDouble)
+        {
+            Debug.Log("Cannot Double");
+            return;
+        }
+        BettingButton.playerMoney -= BettingButton.currBet;
+        BettingButton.currBet *= 2;
         Hit();
         Stand();
     }
@@ -106,9 +184,10 @@ public class GameManager : MonoBehaviour
     }
 
     // set up deck to be dealt. Note: before referencing any cards in the deck, this method must be called!
-    public void ReshuffleDeck()
+    public void InitalizeDeck()
     {
         deck.Clear();
+        
         // initializing a deck List
         for (int i = 0; i < 4; i++)
         {
@@ -117,26 +196,14 @@ public class GameManager : MonoBehaviour
                 deck.Add(new Card(Mathf.Min(j + 1, 10), i, cardSprites[(i * 13) + j]));
             }
         }
+    }
 
-        // swap shuffle
-        for (int i = 0; i < 25; i++)
+    public void ReshuffleDeck()
+    {
+        // Fisher-Yates Shuffle
+        for (int i = 0; i < deck.Count - 2; i++)
         {
-            int rand = (int)Random.Range(0, 52);
-            int rand2 = (int)Random.Range(0, 52);
-            Swap(rand, rand2);
-        }
-
-        // bubble shuffle
-        for (int j = 0; j < 25; j++)
-        {
-            for (int i = 0; i < 51; i++)
-            {
-                int rand = (int)Random.Range(0, 2);
-                if (rand == 0)
-                {
-                    Swap(i, i + 1);
-                }
-            }
+            Swap(i, (int) Random.Range(0, deck.Count));
         }
     }
 
@@ -238,17 +305,17 @@ public class Hand
         return this.hand[i];
     }
 
-
-    // Remove the last card from the hand and return it.
-    // If it's an Ace, apply change to numOfAce.
-    public Card removeLast()
+    // Used for splitting.
+    public Card RemoveLast()
     {
-        Card res = this.hand[--size];
+        size--;
+        Card lastCard = this.hand[size];
         this.hand[size] = null;
-        if (res.value == 1)
+        if (lastCard.value == 1)
         {
-            numOfAce--;
+            this.numOfAce--;
         }
-        return res;
+        this.score = hand[0].value;
+        return lastCard;
     }
 }
