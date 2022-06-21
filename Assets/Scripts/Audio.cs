@@ -8,20 +8,24 @@ public class Audio: MonoBehaviour
     public AudioSource DealCard;
     public AudioSource FlipCard;
     public AudioSource FlipCard2;
+    public AudioSource PokerChip;
 
-    public void PlayShuffle(){
+    public void PlayShuffle() {
         Shuffle.Play();
     }
 
-    public void PlayDealCard(){
+    public void PlayDealCard() {
         DealCard.Play();
     }
 
-    public void PlayFlipCard(){
+    public void PlayFlipCard() {
         FlipCard.Play();
     }
 
-    public void PlayFlipCard2(){
+    public void PlayFlipCard2() {
         FlipCard2.Play();
+    }
+    public void PlayPokerChip() {
+        PokerChip.Play();
     }
 }
