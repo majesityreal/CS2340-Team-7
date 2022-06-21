@@ -25,11 +25,13 @@ public class GameManager : MonoBehaviour
 
     // Scripts
     private SplitButton splitButton;
+    private Audio sound;
 
     // Start is called before the first frame update
     void Start()
     {
         splitButton = FindObjectOfType<SplitButton>();
+        sound = FindObjectOfType<Audio>();
         initBlackJack();
     }
 
@@ -109,6 +111,7 @@ public class GameManager : MonoBehaviour
     public void ReshuffleDeck()
     {
         deck.Clear();
+        sound.PlayShuffle();
         // initializing a deck List
         for (int i = 0; i < 4; i++)
         {
