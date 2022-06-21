@@ -1,69 +1,91 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BettingButton : MonoBehaviour
 {
-    public static int currBet;
-    public static int playerMoney;
-    public int inputBet;
+    public static int currBet = 0;
+    public static int playerMoney = 100;
+    public static int inputBet;
+    public Text moneyDisplay;
+    public Text betDisplay;
+   
 
+    private GameObject betStage;
     private GameManager gameManager;
+    private Slider betAmountSlider;
 
     // Start is called before the first frame update
     void Start()
     {
         initBet();
-        playerMoney = 100;
+        betStage = GameObject.Find("BetStage");
+        gameManager = FindObjectOfType<GameManager>();
+        betAmountSlider = GameObject.Find("BetAmountSlider").GetComponent<Slider>();
+
+        betAmountSlider.maxValue = playerMoney;
+
+        moneyDisplay.text = "Balance: $" + playerMoney.ToString();
+        betDisplay.text = "Current Bet: $" + currBet.ToString();
+
+        betAmountSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
+        currBet = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        betAmountSlider.value = currBet;
     }
 
-    // Initalize player bet amount.
-    public void initBet()
+    public void ComfirmBet()
     {
-        currBet = 0;
-    }
-
-    public void comfirmBet()
-    {
-        gameManager.betAmount = currBet;
+        //gameManager.betAmount = currBet;
         playerMoney -= currBet;
+        hideBet();
         Debug.Log("Comfirm Bet, total Bet: " + currBet.ToString());
     }
 
-    public void addBet(int amount)
+    public void AddBet(int amount)
     {
-        if (amount <= 0
-            && ((amount + currBet) > playerMoney))
+        if ((amount + currBet) > playerMoney)
         {
-            Debug.Log("Bet value is invalid");
-            // Will add an exception here.
+            currBet = playerMoney;
         }
-        else
+        else if (amount > 0)
         {
             currBet += amount;
-            Debug.Log("Add " + amount.ToString() + "to bet. Total Bet: " + currBet.ToString());
         }
+        betDisplay.text = "Current Bet: $" + currBet.ToString();
     }
 
-    public void addBet()
+    public void AddBet()
     {
-        addBet(inputBet);
+        AddBet(inputBet);
     }
 
-    public int getCurrBet()
-    {
-        return currBet;
-    }
-
-    public void resetBet()
+    public void ResetBet()
     {
         currBet = 0;
+        betAmountSlider.value = currBet;
         Debug.Log("Reset bet. Total Bet: " + currBet.ToString());
+    }
+
+    public void hideBet()
+    {
+        betStage.SetActive(false);
+    }
+
+    public void showBet()
+    {
+        betStage.SetActive(true);
+    }
+
+    public void ValueChangeCheck()
+    {
+        currBet = (int)betAmountSlider.value;
+        betDisplay.text = "Current Bet: $" + currBet.ToString();
+        Debug.Log(betAmountSlider.value);
     }
 }
