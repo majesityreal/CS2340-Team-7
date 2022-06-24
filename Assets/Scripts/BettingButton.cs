@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 /**
@@ -10,6 +11,7 @@ using UnityEngine.UI;
  *  Version:        1.2
  *  
  *  Last update:    
+ *                  2022.06.24  Change Text to TextMesh pro.
  *                  2022.06.23  Fix null reference bugs. Change static variable Name.
  *                  2022.06.20  Create an individual scene.
  *                  2022.06.16  Create the script for Betting Buttons.
@@ -21,8 +23,9 @@ public class BettingButton : MonoBehaviour
     public static int CurrBet = 0;
     public static int PlayerMoney = 100;    // The initial player balance.
 
-    public Text moneyDisplay;
-    public Text betDisplay;
+
+    public GameObject moneyDisplay;
+    public GameObject betDisplay;
     public Slider betAmountSlider;
     public GameManager gameManager;
     
@@ -58,11 +61,11 @@ public class BettingButton : MonoBehaviour
         // Display button text.
         if (moneyDisplay != null)
         {
-            moneyDisplay.text = "Balance: $" + PlayerMoney.ToString();
+            moneyDisplay.GetComponent<TextMeshProUGUI>().SetText("Balance: $" + PlayerMoney.ToString());
         }
         if (betDisplay != null)
         {
-            betDisplay.text = "Current Bet: $" + CurrBet.ToString();
+            betDisplay.GetComponent<TextMeshProUGUI>().SetText("Bet: $" + CurrBet.ToString());
         }
 
         // Initialize slider.
@@ -100,7 +103,7 @@ public class BettingButton : MonoBehaviour
             CurrBet += amount;
         }
         betAmountSlider.value = CurrBet;
-        betDisplay.text = "Current Bet: $" + CurrBet.ToString();
+        betDisplay.GetComponent<TextMeshProUGUI>().SetText("Bet: $" + CurrBet.ToString());
     }
 
     public void ResetBet()
@@ -133,7 +136,7 @@ public class BettingButton : MonoBehaviour
     public void ValueChangeCheck()
     {
         CurrBet = (int)betAmountSlider.value;
-        betDisplay.text = "Current Bet: $" + CurrBet.ToString();
+        betDisplay.GetComponent<TextMeshProUGUI>().SetText("Bet: $" + CurrBet.ToString());
         //Debug.Log(betAmountSlider.value);
     }
 }
