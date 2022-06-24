@@ -108,6 +108,11 @@ public class GameManager : MonoBehaviour
     // method for dealing the next card
     public void Hit()
     {
+        if (playerHand.GetScore() > 21) {
+            Debug.Log("Stop hitting");
+            return;
+        }
+
         totalCardsDealt++;
         playerHand.AddToHand(DealCard());
         Debug.Log("Hit: Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
