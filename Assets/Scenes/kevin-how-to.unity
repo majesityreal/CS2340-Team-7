@@ -176,7 +176,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputBet: 0
+  moneyDisplay: {fileID: 0}
+  betDisplay: {fileID: 0}
+  cover: {fileID: 0}
 --- !u!114 &6817806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1244,8 +1246,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ccdc90df219add942b7184a2757266f8, type: 3}
   - {fileID: 21300000, guid: 39b2ca9b7721686488cf7469037cd3f0, type: 3}
   - {fileID: 21300000, guid: 3a72e9974c281d142be4cd763d620410, type: 3}
-  betAmount: 0
-  currentBet: 0
+  canDouble: 0
+  splitButton: {fileID: 0}
+  loseScreen: {fileID: 0}
+  winScreen: {fileID: 0}
 --- !u!4 &449733104
 Transform:
   m_ObjectHideFlags: 0
@@ -1433,7 +1437,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputBet: 10
+  moneyDisplay: {fileID: 0}
+  betDisplay: {fileID: 0}
+  cover: {fileID: 0}
 --- !u!114 &475602542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4105,7 +4111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputBet: 0
+  moneyDisplay: {fileID: 0}
+  betDisplay: {fileID: 0}
+  cover: {fileID: 0}
 --- !u!114 &1639105740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4449,7 +4457,6 @@ GameObject:
   - component: {fileID: 1692717229}
   - component: {fileID: 1692717228}
   - component: {fileID: 1692717227}
-  - component: {fileID: 1692717230}
   m_Layer: 5
   m_Name: HowToPlayButton
   m_TagString: Untagged
@@ -4572,18 +4579,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1692717225}
   m_CullTransparentMesh: 1
---- !u!114 &1692717230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1692717225}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6e1305ffdb14c8409c2a7f664229ab6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &1704372606 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4442657334977139916, guid: d82c3479adffcd746818e4d4b36d2c6c, type: 3}

@@ -29,19 +29,38 @@ public class GameManager : MonoBehaviour
     private Audio sound;
     public SplitButton splitButton;
 
+    // lose / win screen
+    public GameObject loseScreen;
+    public GameObject winScreen;
+
+    public static GameManager Instance;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Instance.loseScreen = GameObject.Find("LoseScreen");
+            Instance.winScreen = GameObject.Find("WinScreen");
+            ResetGame();
+            DestroyImmediate(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         splitButton = FindObjectOfType<SplitButton>();
         sound = FindObjectOfType<Audio>();
-        betButton = gameObject.AddComponent(typeof(BettingButton)) as BettingButton;
         totalMoneyWon = 0;
         totalCardsDealt = 0;
         gamesWon = 0;
         gamesLost = 0;
         deck = new List<Card>();
-        InitalizeDeck();
-        InitializeGame();
+        ResetGame();
     }
 
     // Update is called once per frame
@@ -60,6 +79,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ResetGame()
+    {
+        InitalizeDeck();
+        InitializeGame();
+        winScreen.SetActive(false);
+        loseScreen.SetActive(false);
+    }
+
     public void InitializeGame()
     {
         if (deck.Count < 26)
@@ -75,8 +102,8 @@ public class GameManager : MonoBehaviour
         playerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
-        splitButton.InitSplitHand();
-    }
+/*        splitButton.InitSplitHand();
+*/    }
 
     // method for dealing the next card
     public void Hit()
@@ -100,11 +127,11 @@ public class GameManager : MonoBehaviour
             gamesLost--;
             if (splitButton.haveSplit)
             {
-                // TODO: Lose Screen
                 Debug.Log("Hit: Player Lost Split");
+                // this happens if the player loses the second hand
                 if (standCount == 2)
                 {
-                    InitializeGame();
+                    PlayerLose();
                     return;
                 }
                 
@@ -114,8 +141,8 @@ public class GameManager : MonoBehaviour
             else
             {
                 Debug.Log("Hit: Player Lost");
-                // TODO: Lose Screen
-                InitializeGame();
+                // pulls up lose Screen
+                PlayerLose();
             }
         }
     }
@@ -143,12 +170,14 @@ public class GameManager : MonoBehaviour
             // TODO: Win Screen
             BettingButton.playerMoney += BettingButton.currBet;
             Debug.Log("Player win");
+            PlayerWin();
         }
         else
         {
             gamesLost--;
             // TODO: Lose Screen
             Debug.Log("Dealer win");
+            PlayerLose();
         }
 
         if (standCount == 1)
@@ -159,7 +188,6 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        InitializeGame();
     }
 
     // equivalent to "hit" but instead doubling the bet
@@ -176,6 +204,28 @@ public class GameManager : MonoBehaviour
         Stand();
     }
 
+    public void PlayerLose()
+    {
+        StartCoroutine(PlayerLostCoroutine());
+    }
+
+    private IEnumerator PlayerLostCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        loseScreen.SetActive(true);
+    }
+
+    public void PlayerWin()
+    {
+        StartCoroutine(PlayerWinCoroutine());
+    }
+
+    private IEnumerator PlayerWinCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        winScreen.SetActive(true);
+    }
+
     // removes and returns a Card from the deck
     public Card DealCard()
     {
@@ -188,8 +238,15 @@ public class GameManager : MonoBehaviour
     // set up deck to be dealt. Note: before referencing any cards in the deck, this method must be called!
     public void InitalizeDeck()
     {
-        deck.Clear();
-        sound.PlayShuffle();
+        if (deck == null)
+        {
+            deck = new List<Card>();
+        }
+        else
+        {
+            deck.Clear();
+        }
+        //sound.PlayShuffle();
         // initializing a deck List
         for (int i = 0; i < 4; i++)
         {
@@ -213,10 +270,13 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        ResetGame();
     }
 
     public void QuitGame()
     {
+        // we are doing this because this is a singleton!
+        DestroyImmediate(gameObject);
         SceneManager.LoadScene("MainMenu");
     }
 
