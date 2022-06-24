@@ -16,15 +16,29 @@ public class BettingButton : MonoBehaviour
     private GameManager gameManager;
     private Slider betAmountSlider;
 
+    public GameObject cover;
+
     // Start is called before the first frame update
     void Start()
     {
-        initBet();
+        currBet = 0;
         betStage = GameObject.Find("BetStage");
         gameManager = FindObjectOfType<GameManager>();
         betAmountSlider = GameObject.Find("BetAmountSlider").GetComponent<Slider>();
 
         betAmountSlider.maxValue = playerMoney;
+
+        if (moneyDisplay == null)
+        {
+            GameObject moDisplay = GameObject.Find("TotalMoneyDisplay");
+            moneyDisplay = moDisplay.GetComponent<Text>();
+        }
+
+        if (betDisplay == null)
+        {
+            GameObject beDisplay = GameObject.Find("CurrentBet");
+            betDisplay = beDisplay.GetComponent<Text>();
+        }
 
         moneyDisplay.text = "Balance: $" + playerMoney.ToString();
         betDisplay.text = "Current Bet: $" + currBet.ToString();
@@ -44,6 +58,7 @@ public class BettingButton : MonoBehaviour
         //gameManager.betAmount = currBet;
         playerMoney -= currBet;
         hideBet();
+        GameManager.Instance.ResetGame();
         Debug.Log("Comfirm Bet, total Bet: " + currBet.ToString());
     }
 
