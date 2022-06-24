@@ -26,12 +26,14 @@ public class GameManager : MonoBehaviour
     private int gamesLost;
 
     // Scripts
+    private Audio sound;
     public SplitButton splitButton;
 
     // Start is called before the first frame update
     void Start()
     {
         splitButton = FindObjectOfType<SplitButton>();
+        sound = FindObjectOfType<Audio>();
         betButton = gameObject.AddComponent(typeof(BettingButton)) as BettingButton;
         totalMoneyWon = 0;
         totalCardsDealt = 0;
@@ -187,7 +189,7 @@ public class GameManager : MonoBehaviour
     public void InitalizeDeck()
     {
         deck.Clear();
-        
+        sound.PlayShuffle();
         // initializing a deck List
         for (int i = 0; i < 4; i++)
         {
