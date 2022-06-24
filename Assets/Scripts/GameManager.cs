@@ -124,10 +124,13 @@ public class GameManager : MonoBehaviour
         if (playerHand.GetScore() > 21)
         {
             totalMoneyWon -= BettingButton.currBet;
-            gamesLost--;
+            gamesLost++;
+            BettingButton.playerMoney -= BettingButton.currBet;
+            Debug.Log("Player Money left: " + BettingButton.playerMoney);
+
             if (splitButton.haveSplit)
             {
-                Debug.Log("Hit: Player Lost Split");
+                gamesLost++;
                 // this happens if the player loses the second hand
                 if (standCount == 2)
                 {
@@ -174,7 +177,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            gamesLost--;
+            BettingButton.playerMoney -= BettingButton.currBet;
+            Debug.Log("Player Money left: " + BettingButton.playerMoney);
+            gamesLost++;
             // TODO: Lose Screen
             Debug.Log("Dealer win");
             PlayerLose();
