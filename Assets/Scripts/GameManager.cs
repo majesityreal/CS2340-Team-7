@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
 
         if (playerHand.GetScore() > 21)
         {
-            totalMoneyWon -= BettingButton.currBet;
+            totalMoneyWon -= BettingButton.CurrBet;
             gamesLost--;
             if (splitButton.haveSplit)
             {
@@ -138,10 +138,10 @@ public class GameManager : MonoBehaviour
 
         if (dealerHand.GetScore() > 21 || playerHand.GetScore() > dealerHand.GetScore())
         {
-            totalMoneyWon += BettingButton.currBet;
+            totalMoneyWon += BettingButton.CurrBet;
             gamesWon++;
             // TODO: Win Screen
-            BettingButton.playerMoney += BettingButton.currBet;
+            BettingButton.PlayerMoney += BettingButton.CurrBet;
             Debug.Log("Player win");
         }
         else
@@ -170,8 +170,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Cannot Double");
             return;
         }
-        BettingButton.playerMoney -= BettingButton.currBet;
-        BettingButton.currBet *= 2;
+        BettingButton.PlayerMoney -= BettingButton.CurrBet;
+        BettingButton.CurrBet *= 2;
         Hit();
         Stand();
     }

@@ -908,7 +908,6 @@ GameObject:
   - component: {fileID: 372899856}
   - component: {fileID: 372899855}
   - component: {fileID: 372899854}
-  - component: {fileID: 372899857}
   m_Layer: 5
   m_Name: BetButton
   m_TagString: Untagged
@@ -981,9 +980,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 372899857}
+      - m_Target: {fileID: 992103501}
         m_TargetAssemblyTypeName: BettingButton, Assembly-CSharp
-        m_MethodName: hideBet
+        m_MethodName: ComfirmBet
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1031,22 +1030,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 372899852}
   m_CullTransparentMesh: 1
---- !u!114 &372899857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 372899852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputBet: 0
-  moneyDisplay: {fileID: 0}
-  betDisplay: {fileID: 0}
-  betAmountSlider: {fileID: 0}
 --- !u!1001 &379848135
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1408,8 +1391,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ccdc90df219add942b7184a2757266f8, type: 3}
   - {fileID: 21300000, guid: 39b2ca9b7721686488cf7469037cd3f0, type: 3}
   - {fileID: 21300000, guid: 3a72e9974c281d142be4cd763d620410, type: 3}
-  betAmount: 0
-  currentBet: 0
+  canDouble: 0
+  splitButton: {fileID: 0}
 --- !u!4 &449733104
 Transform:
   m_ObjectHideFlags: 0
@@ -2181,7 +2164,6 @@ GameObject:
   - component: {fileID: 817537146}
   - component: {fileID: 817537145}
   - component: {fileID: 817537144}
-  - component: {fileID: 817537143}
   m_Layer: 5
   m_Name: AddBetButton2
   m_TagString: Untagged
@@ -2210,22 +2192,6 @@ RectTransform:
   m_AnchoredPosition: {x: 228, y: -283}
   m_SizeDelta: {x: 151, y: 115.49}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &817537143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 817537141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputBet: 0
-  moneyDisplay: {fileID: 0}
-  betDisplay: {fileID: 0}
-  betAmountSlider: {fileID: 0}
 --- !u!114 &817537144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2270,9 +2236,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 817537143}
+      - m_Target: {fileID: 992103501}
         m_TargetAssemblyTypeName: BettingButton, Assembly-CSharp
-        m_MethodName: addBet
+        m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2872,7 +2838,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputBet: 0
   moneyDisplay: {fileID: 1284892160}
   betDisplay: {fileID: 78755249}
   betAmountSlider: {fileID: 402769969}
@@ -4199,7 +4164,6 @@ GameObject:
   - component: {fileID: 1366685780}
   - component: {fileID: 1366685779}
   - component: {fileID: 1366685778}
-  - component: {fileID: 1366685777}
   m_Layer: 5
   m_Name: ShowBetButton
   m_TagString: Untagged
@@ -4228,22 +4192,6 @@ RectTransform:
   m_AnchoredPosition: {x: 800, y: -299}
   m_SizeDelta: {x: 202.8715, y: 112.6806}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1366685777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1366685775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputBet: 0
-  moneyDisplay: {fileID: 0}
-  betDisplay: {fileID: 0}
-  betAmountSlider: {fileID: 0}
 --- !u!114 &1366685778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4288,9 +4236,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1366685777}
+      - m_Target: {fileID: 992103501}
         m_TargetAssemblyTypeName: BettingButton, Assembly-CSharp
-        m_MethodName: showBet
+        m_MethodName: initBetStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4298,7 +4246,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1366685779
 MonoBehaviour:
@@ -4360,7 +4308,6 @@ GameObject:
   - component: {fileID: 1543299426}
   - component: {fileID: 1543299425}
   - component: {fileID: 1543299424}
-  - component: {fileID: 1543299427}
   m_Layer: 5
   m_Name: BetResetButton
   m_TagString: Untagged
@@ -4433,9 +4380,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1543299427}
+      - m_Target: {fileID: 992103501}
         m_TargetAssemblyTypeName: BettingButton, Assembly-CSharp
-        m_MethodName: resetBet
+        m_MethodName: ResetBet
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4483,22 +4430,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1543299422}
   m_CullTransparentMesh: 1
---- !u!114 &1543299427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1543299422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputBet: 0
-  moneyDisplay: {fileID: 0}
-  betDisplay: {fileID: 0}
-  betAmountSlider: {fileID: 0}
 --- !u!1 &1550478748
 GameObject:
   m_ObjectHideFlags: 0
@@ -4511,7 +4442,6 @@ GameObject:
   - component: {fileID: 1550478753}
   - component: {fileID: 1550478752}
   - component: {fileID: 1550478751}
-  - component: {fileID: 1550478750}
   m_Layer: 5
   m_Name: AddBetButton1
   m_TagString: Untagged
@@ -4540,22 +4470,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776, y: -283}
   m_SizeDelta: {x: 151, y: 115.49}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1550478750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1550478748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40dc3ceb2403d534b8cf9b0c83b866f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputBet: 0
-  moneyDisplay: {fileID: 0}
-  betDisplay: {fileID: 0}
-  betAmountSlider: {fileID: 0}
 --- !u!114 &1550478751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4600,9 +4514,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1550478750}
+      - m_Target: {fileID: 992103501}
         m_TargetAssemblyTypeName: BettingButton, Assembly-CSharp
-        m_MethodName: addBet
+        m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
