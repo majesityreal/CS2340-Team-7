@@ -19,7 +19,7 @@ public class BettingButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initBet();
+        currBet = 0;
         betStage = GameObject.Find("BetStage");
         gameManager = FindObjectOfType<GameManager>();
         betAmountSlider = GameObject.Find("BetAmountSlider").GetComponent<Slider>();
@@ -30,7 +30,6 @@ public class BettingButton : MonoBehaviour
         betDisplay.text = "Current Bet: $" + currBet.ToString();
 
         betAmountSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
-        currBet = 0;
     }
 
     // Update is called once per frame
