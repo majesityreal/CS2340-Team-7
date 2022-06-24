@@ -14,11 +14,11 @@ public class PauseMenu : MonoBehaviour
 {
     
     bool isPaused = false;
-    public GameObject pauseMenu;
+    private GameObject pauseMenu;
     // Start is called before the first frame update
     void Start()
     {
-        //pauseMenu = GameObject.Find("PauseMenu");
+        pauseMenu = GameObject.Find("PauseMenu");
         pauseMenu.SetActive(false);
         isPaused = false;
     }
