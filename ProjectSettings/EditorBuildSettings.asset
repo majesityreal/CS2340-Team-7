@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: eec45916b3cbf53458acea25de13efab
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/BlackJack.unity
     guid: ce45552a8db50f549938cf1e9f3e9abd
+  - enabled: 1
+    path: Assets/Scenes/Chess.unity
+    guid: a368f3225d7061844b3a4e254894f55c
   m_configObjects: {}
