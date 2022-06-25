@@ -393,10 +393,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1782441147}
     m_Modifications:
+    - target: {fileID: 130047666862824386, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 130047666862824386, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 130047666862824386, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3692712990063689098, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 449733105}
+    - target: {fileID: 5111632687855327963, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5111632687855327963, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5425208009357334774, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -488,6 +508,10 @@ PrefabInstance:
     - target: {fileID: 7338297053963879495, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
       propertyPath: m_Name
       value: PauseMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 7338297053963879495, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
@@ -698,7 +722,6 @@ GameObject:
   - component: {fileID: 342018536}
   - component: {fileID: 342018535}
   - component: {fileID: 342018534}
-  - component: {fileID: 342018537}
   m_Layer: 5
   m_Name: WinScreen
   m_TagString: Untagged
@@ -782,18 +805,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 342018532}
   m_CullTransparentMesh: 1
---- !u!114 &342018537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 342018532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 445c016739d45734d879ab46b44fca9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &351066391
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,7 +889,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 342018537}
+      - m_Target: {fileID: 1949760252}
         m_TargetAssemblyTypeName: ButtonBrain, Assembly-CSharp
         m_MethodName: Quit
         m_Mode: 1
@@ -1042,7 +1053,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb7538c1cc9b1ab4d97ed87206fdce5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseMenu: {fileID: 1397848815}
 --- !u!1 &452388555
 GameObject:
   m_ObjectHideFlags: 0
@@ -1931,7 +1941,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 342018537}
+      - m_Target: {fileID: 1949760252}
         m_TargetAssemblyTypeName: ButtonBrain, Assembly-CSharp
         m_MethodName: PlayAgain
         m_Mode: 1
@@ -2065,7 +2075,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2082591390}
+      - m_Target: {fileID: 1949760252}
         m_TargetAssemblyTypeName: ButtonBrain, Assembly-CSharp
         m_MethodName: Quit
         m_Mode: 1
@@ -2137,6 +2147,18 @@ PrefabInstance:
     - target: {fileID: 458429833225037676, guid: d1878965abcc50f48a1d30057fcca714, type: 3}
       propertyPath: m_Color.r
       value: 0.084905684
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758162813915411603, guid: d1878965abcc50f48a1d30057fcca714, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5330188
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758162813915411603, guid: d1878965abcc50f48a1d30057fcca714, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758162813915411603, guid: d1878965abcc50f48a1d30057fcca714, type: 3}
+      propertyPath: m_Color.r
+      value: 0.58985007
       objectReference: {fileID: 0}
     - target: {fileID: 4758162814671976656, guid: d1878965abcc50f48a1d30057fcca714, type: 3}
       propertyPath: m_Pivot.x
@@ -2381,11 +2403,6 @@ Transform:
   m_Father: {fileID: 2000056952}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1397848815 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7338297053963879495, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
-  m_PrefabInstance: {fileID: 180008242}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1397848816 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5425208009357334774, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
@@ -3339,7 +3356,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2082591390}
+      - m_Target: {fileID: 1949760252}
         m_TargetAssemblyTypeName: ButtonBrain, Assembly-CSharp
         m_MethodName: PlayAgain
         m_Mode: 1
@@ -3401,7 +3418,6 @@ GameObject:
   - component: {fileID: 2082591388}
   - component: {fileID: 2082591387}
   - component: {fileID: 2082591389}
-  - component: {fileID: 2082591390}
   m_Layer: 5
   m_Name: LoseScreen
   m_TagString: Untagged
@@ -3485,18 +3501,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 876279993}
---- !u!114 &2082591390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2082591385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 445c016739d45734d879ab46b44fca9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2113791122
 GameObject:
   m_ObjectHideFlags: 0
