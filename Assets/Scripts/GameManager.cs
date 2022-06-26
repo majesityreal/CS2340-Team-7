@@ -20,13 +20,6 @@ public class GameManager : MonoBehaviour
 
     public bool canDouble;
 
-    // statistics variables:
-    private int totalMoneyWon;
-    private int totalCardsDealt;
-    private int gamesWon;
-    private int gamesLost;
-    private int income;
-
     // Scripts
     private Audio sound;
 
@@ -35,14 +28,10 @@ public class GameManager : MonoBehaviour
     // public GameObject winScreen;
     public GameObject ResultStage;
     public TextMeshProUGUI BalanceChangeText;
-    public TextMeshProUGUI CurrBalanceText;
-
     public GameObject BetStage;
 
     public static int PlayerMoney = 100;
-
-
-
+    public int moneyAtStart;
 
     public static GameManager Instance;
     private void Awake()
@@ -73,11 +62,6 @@ public class GameManager : MonoBehaviour
         }
 
         sound = FindObjectOfType<Audio>();
-        totalMoneyWon = 0;
-        totalCardsDealt = 0;
-        income = 0;
-        gamesWon = 0;
-        gamesLost = 0;
         deck = new List<Card>();
         ResetGame();
     }
@@ -114,6 +98,7 @@ public class GameManager : MonoBehaviour
         }
         playerHand = new Hand();
         dealerHand = new Hand();
+        moneyAtStart = PlayerMoney;
         standCount = 0;
         canDouble = true;
         ReshuffleDeck();
@@ -122,7 +107,6 @@ public class GameManager : MonoBehaviour
         dealerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
         CardBrain.isDealerTurn = false;
-        income = 0;
         hideResult();
     }
 
@@ -135,7 +119,6 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        totalCardsDealt++;
         playerHand.AddToHand(DealCard());
         Debug.Log("Hit: Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
 
@@ -150,14 +133,11 @@ public class GameManager : MonoBehaviour
 
         if (playerHand.GetScore() > 21)
         {
-            totalMoneyWon -= BettingButton.CurrBet;
-            income -= BettingButton.CurrBet;
-            gamesLost++;
+            PlayerMoney -= BettingButton.CurrBet;
             Debug.Log("Player Money left: " + PlayerMoney);
 
             if (SplitButton.haveSplit)
             {
-                gamesLost++;
                 // this happens if the player loses the second hand
                 if (standCount == 2)
                 {
@@ -180,47 +160,56 @@ public class GameManager : MonoBehaviour
     // stop dealing to the player
     public void Stand()
     {
+        // Stand count 0 : Haven't stand before
+        // Stand count 1 : Player has a split hand that is not complete
+        
         if (SplitButton.haveSplit && standCount == 0)
         {
             standCount++;
-            switchHand();
-            return;
         }
 
+        // Used for flipping the dealer's first card
         CardBrain.isDealerTurn = true;
 
-        while (dealerHand.GetSize() < 8 && dealerHand.GetScore() < 17) {
+        while (dealerHand.GetSize() < 11 && dealerHand.GetScore() < 17) 
+        {
             dealerHand.AddToHand(DealCard());
         }
 
         Debug.Log("Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
 
+        // Player wins
         if (dealerHand.GetScore() > 21 || playerHand.GetScore() > dealerHand.GetScore())
         {
-            totalMoneyWon += BettingButton.CurrBet;
-            income += BettingButton.CurrBet;
-            gamesWon++;
-            // TODO: Win Screen
+            PlayerMoney += BettingButton.CurrBet;
             Debug.Log("Player win");
+
+            if (standCount == 1) {
+                switchHand();
+                return;
+            }
             showResult();
         }
-        else
+        else if (dealerHand.GetScore() == playerHand.GetScore()) // Draw
         {
+            Debug.Log("It is a draw");
+            if (standCount == 1) {
+                switchHand();
+                return;
+            }
+            showResult();
+        }
+        else // Lost 
+        {
+            PlayerMoney -= BettingButton.CurrBet;
             Debug.Log("Player Money left: " + PlayerMoney);
-            gamesLost++;
-            // TODO: Lose Screen
             Debug.Log("Dealer win");
+            if (standCount == 1) {
+                switchHand();
+                return;
+            }
             showResult();
         }
-
-        if (standCount == 1)
-        {
-            switchHand();
-            standCount++;
-            Stand();
-            return;
-        }
-
     }
 
     // equivalent to "hit" but instead doubling the bet
@@ -231,34 +220,10 @@ public class GameManager : MonoBehaviour
             Debug.Log("Cannot Double");
             return;
         }
-        PlayerMoney -= BettingButton.CurrBet;
         BettingButton.CurrBet *= 2;
         Hit();
         Stand();
     }
-
-    //public void PlayerLose()
-    //{
-    //    StartCoroutine(PlayerLostCoroutine());
-    //}
-
-    //private IEnumerator PlayerLostCoroutine()
-    //{
-    //    yield return new WaitForSeconds(1.5f);
-    //    loseScreen.SetActive(true);
-    //}
-
-    //public void PlayerWin()
-    //{
-    //    StartCoroutine(PlayerWinCoroutine());
-    //}
-
-    //private IEnumerator PlayerWinCoroutine()
-    //{
-    //    yield return new WaitForSeconds(1.5f);
-    //    winScreen.SetActive(true);
-    //}
-
 
     public void showResult()
     {
@@ -266,10 +231,22 @@ public class GameManager : MonoBehaviour
         {
             ResultStage.transform.GetChild(i).gameObject.SetActive(true);
         }
-        BalanceChangeText.SetText("YOU GET $ " + income.ToString());
-        
-        CurrBalanceText.SetText(PlayerMoney.ToString());
-        
+
+        if (PlayerMoney > moneyAtStart) {
+            if (standCount == 2) { 
+                BalanceChangeText.SetText("You won $" + (BettingButton.CurrBet * 2).ToString());
+            } else {
+                BalanceChangeText.SetText("You won $" + BettingButton.CurrBet.ToString());
+            }
+        } else if (PlayerMoney == moneyAtStart) {
+            BalanceChangeText.SetText("You tied!");
+        } else {
+            if (standCount == 2) { 
+                BalanceChangeText.SetText("You lost $" + (BettingButton.CurrBet * 2).ToString());
+            } else {
+                BalanceChangeText.SetText("You lost $" + BettingButton.CurrBet.ToString());
+            }
+        }
     }
 
     public void hideResult()
@@ -285,7 +262,6 @@ public class GameManager : MonoBehaviour
     {
         Card temp = deck[0];
         deck.RemoveAt(0);
-        totalCardsDealt++;
         return temp;
     }
 

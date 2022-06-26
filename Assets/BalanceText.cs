@@ -23,7 +23,7 @@ public class BalanceText : MonoBehaviour
 
     private void OnEnable()
     {
-        text.text = "" + GameManager.PlayerMoney;
+        // text.text = "" + GameManager.PlayerMoney;
     }
 
 }

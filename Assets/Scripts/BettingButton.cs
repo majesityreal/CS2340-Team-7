@@ -97,7 +97,6 @@ public class BettingButton : MonoBehaviour
     public void ComfirmBet()
     {
         // Apply the change to the player balance. And Hide the UI.
-        GameManager.PlayerMoney -= CurrBet;
         hideUI(gameObject);
         //Debug.Log("Comfirm Bet, total Bet: " + CurrBet.ToString());
         //Debug.Log("Total Money: " + PlayerMoney.ToString());
