@@ -19,7 +19,6 @@ public class BettingButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initBet();
         betStage = GameObject.Find("BetStage");
         gameManager = FindObjectOfType<GameManager>();
         betAmountSlider = GameObject.Find("BetAmountSlider").GetComponent<Slider>();
