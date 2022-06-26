@@ -37,6 +37,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI BalanceChangeText;
     public TextMeshProUGUI CurrBalanceText;
 
+    public GameObject BetStage;
+
+    public static int PlayerMoney = 100;
+
 
 
 
@@ -63,6 +67,11 @@ public class GameManager : MonoBehaviour
             ResultStage = GameObject.Find("ResultStage");
         }
 
+        if (BetStage == null)
+        {
+            ResultStage = GameObject.Find("BetStage");
+        }
+
         sound = FindObjectOfType<Audio>();
         totalMoneyWon = 0;
         totalCardsDealt = 0;
@@ -70,7 +79,6 @@ public class GameManager : MonoBehaviour
         gamesWon = 0;
         gamesLost = 0;
         deck = new List<Card>();
-        BettingButton.playerMoney = 100;
         ResetGame();
     }
 
@@ -95,6 +103,7 @@ public class GameManager : MonoBehaviour
         InitalizeDeck();
         InitializeGame();
         SplitButton.InitSplitHand();
+        BettingButton.showUI(BetStage);
     }
 
     public void InitializeGame()
@@ -122,6 +131,7 @@ public class GameManager : MonoBehaviour
     {
         if (playerHand.GetScore() > 21) {
             Debug.Log("Stop hitting");
+            CardBrain.isDealerTurn = true;
             return;
         }
 
@@ -140,11 +150,10 @@ public class GameManager : MonoBehaviour
 
         if (playerHand.GetScore() > 21)
         {
-            totalMoneyWon -= BettingButton.currBet;
-            income -= BettingButton.currBet;
+            totalMoneyWon -= BettingButton.CurrBet;
+            income -= BettingButton.CurrBet;
             gamesLost++;
-            BettingButton.playerMoney -= BettingButton.currBet;
-            Debug.Log("Player Money left: " + BettingButton.playerMoney);
+            Debug.Log("Player Money left: " + PlayerMoney);
 
             if (SplitButton.haveSplit)
             {
@@ -188,18 +197,16 @@ public class GameManager : MonoBehaviour
 
         if (dealerHand.GetScore() > 21 || playerHand.GetScore() > dealerHand.GetScore())
         {
-            totalMoneyWon += BettingButton.currBet;
-            income += BettingButton.currBet;
+            totalMoneyWon += BettingButton.CurrBet;
+            income += BettingButton.CurrBet;
             gamesWon++;
             // TODO: Win Screen
-            BettingButton.playerMoney += BettingButton.currBet;
             Debug.Log("Player win");
             showResult();
         }
         else
         {
-            BettingButton.playerMoney -= BettingButton.currBet;
-            Debug.Log("Player Money left: " + BettingButton.playerMoney);
+            Debug.Log("Player Money left: " + PlayerMoney);
             gamesLost++;
             // TODO: Lose Screen
             Debug.Log("Dealer win");
@@ -224,8 +231,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Cannot Double");
             return;
         }
-        BettingButton.playerMoney -= BettingButton.currBet;
-        BettingButton.currBet *= 2;
+        PlayerMoney -= BettingButton.CurrBet;
+        BettingButton.CurrBet *= 2;
         Hit();
         Stand();
     }
@@ -259,16 +266,9 @@ public class GameManager : MonoBehaviour
         {
             ResultStage.transform.GetChild(i).gameObject.SetActive(true);
         }
-        if (income >= 0)
-        {
-            BalanceChangeText.SetText("+ $" + income.ToString());
-        }
-        else
-        {
-            BalanceChangeText.SetText("+ $" + (0 - income).ToString());
-        }
+        BalanceChangeText.SetText("YOU GET $ " + income.ToString());
         
-        CurrBalanceText.SetText(BettingButton.playerMoney.ToString());
+        CurrBalanceText.SetText(PlayerMoney.ToString());
         
     }
 
