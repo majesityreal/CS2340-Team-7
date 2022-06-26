@@ -12,11 +12,11 @@ using UnityEngine;
 public class SplitButton : MonoBehaviour
 {
     // The second hand for split.
-    public Hand playerSplitHand;
+    public static Hand playerSplitHand;
 
     // Booleans to check split status.
-    public bool canSplit;
-    public bool haveSplit;
+    public static bool canSplit;
+    public static bool haveSplit;
     // Scripts
     private GameManager gameManager;
 
@@ -24,6 +24,10 @@ public class SplitButton : MonoBehaviour
     void Start()
     {
         InitSplitHand();
+        if (gameManager == null)
+        {
+            gameManager = FindObjectOfType<GameManager>();
+        }
     }
 
     // Update is called once per frame
@@ -62,20 +66,11 @@ public class SplitButton : MonoBehaviour
     }
 
     // Initalize the split part when called.
-    public void InitSplitHand()
+    public static void InitSplitHand()
     {
         canSplit = false;
         haveSplit = false;
         playerSplitHand = new Hand();
-        gameManager = FindObjectOfType<GameManager>();
-    }
-
-    // Change player's current hand to split hand.
-    public void SwitchHand()
-    {
-        Hand temp = gameManager.playerHand;
-        gameManager.playerHand = playerSplitHand;
-        playerSplitHand = temp;
     }
 
     // Function that split the hand in to two hands.

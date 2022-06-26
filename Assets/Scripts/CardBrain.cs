@@ -9,6 +9,14 @@ public class CardBrain : MonoBehaviour
     public Image image;
     public bool isPlayerCard;
     public bool isSplitCard;
+    public static bool isDealerTurn;
+
+    public Sprite DeckImage;
+
+    void Start()
+    {
+        DeckImage = GameObject.Find("Deck").GetComponent<Image>().sprite;
+    }
 
     // Update is called once per frame
     void Update()
@@ -27,13 +35,13 @@ public class CardBrain : MonoBehaviour
         }
         else if (isSplitCard)
         {
-            if (GameManager.Instance.splitButton.playerSplitHand.GetIndex(index) == null)
+            if (SplitButton.playerSplitHand.GetIndex(index) == null)
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
             }
             else
             {
-                image.sprite = GameManager.Instance.splitButton.playerSplitHand.GetIndex(index).sprite;
+                image.sprite = SplitButton.playerSplitHand.GetIndex(index).sprite;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
         }
@@ -42,6 +50,11 @@ public class CardBrain : MonoBehaviour
             if (GameManager.Instance.dealerHand.GetIndex(index) == null)
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
+            }
+            else if (index == 0 && !isDealerTurn)
+            {
+                image.sprite = DeckImage;
+                image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
             else
             {
