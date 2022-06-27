@@ -57,6 +57,6 @@ public class PauseMenu : MonoBehaviour
 
     public void backToMenu()
     {
-        Application.LoadLevel("MainMenu");
+        GameManager.Instance.QuitGame();
     }
 }
