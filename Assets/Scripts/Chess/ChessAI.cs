@@ -46,6 +46,7 @@ public class ChessAI : MonoBehaviour
                 continue;
             }
 
+
             if (ChessManager.board[i % 8, i / 8] is Pawn) {
                 material += pawnValue;
             }

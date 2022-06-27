@@ -14,41 +14,44 @@ public class ChessManager : MonoBehaviour
     {
 /*        pieces = new List<Piece>(32);
 */        board = new Piece[8, 8];
+        board[0, 0] = new Pawn(1);
+        board[0, 1] = new Pawn(-1);
+        board[0, 0] = new Pawn(-1);
+
     }
 
-/*    public int[,] getPositions()
+    private void Update()
     {
-        int[,] temp = new int[32, 2];
-        int count = 0;
-        foreach (Piece piece in pieces)
+        Debug.Log(ChessAI.EvaluateBoard());
+    }
+
+    /*    public int[,] getPositions()
         {
-            if (piece != null)
+            int[,] temp = new int[32, 2];
+            int count = 0;
+            foreach (Piece piece in pieces)
             {
-                int[] temp2 = piece.getPosition();
-                temp[count, 0] = temp2[0];
-                temp[count, 1] = temp2[1];
+                if (piece != null)
+                {
+                    int[] temp2 = piece.getPosition();
+                    temp[count, 0] = temp2[0];
+                    temp[count, 1] = temp2[1];
+                }
             }
-        }
-        return temp;
-    }*/
+            return temp;
+        }*/
 }
 
 public abstract class Piece
 {
-    protected int[] position;
     protected int pieceID;
     protected Sprite sprite;
     public int color;
     protected int[,] possibleMoves;
 
-    public void movePosition(int[] position)
+    public void movePosition(int position)
     {
-        this.position = position;
-    }
-
-    public int[] getPosition()
-    {
-        return this.position;
+        ChessManager.board[position % 8, position / 8] = this;
     }
 }
 
@@ -56,7 +59,6 @@ class Pawn : Piece
 {
     Pawn(int[] position, int pieceID, int color)
     {
-        position = this.position;
         pieceID = this.pieceID;
         color = this.color;
 
@@ -71,13 +73,17 @@ class Pawn : Piece
             possibleMoves = new int[1, 2] { { 0, 1 } };
         }
     }
+
+    public Pawn(int color)
+    {
+        this.color = color;
+    }
 }
 
 class Bishop : Piece
 {
     Bishop(int[] position, int pieceID, int color)
     {
-        position = this.position;
         pieceID = this.pieceID;
         color = this.color;
 
@@ -104,7 +110,6 @@ class Knight : Piece
 {
     Knight(int[] position, int pieceID, int color)
     {
-        position = this.position;
         pieceID = this.pieceID;
         color = this.color;
 
@@ -135,7 +140,6 @@ class Rook : Piece
 {
     Rook(int[] position, int pieceID, int color)
     {
-        position = this.position;
         pieceID = this.pieceID;
         color = this.color;
         if (color == 0)
@@ -160,7 +164,6 @@ class Queen : Piece
 {
     Queen(int[] position, int pieceID, int color)
     {
-        position = this.position;
         pieceID = this.pieceID;
         color = this.color;
 
@@ -191,7 +194,6 @@ class King : Piece
 {
     King(int[] position, int pieceID, int color)
     {
-        position = this.position;
         pieceID = this.pieceID;
         color = this.color;
 
