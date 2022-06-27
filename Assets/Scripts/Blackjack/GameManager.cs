@@ -256,12 +256,13 @@ public class GameManager : MonoBehaviour
         }
         else if (PlayerMoney > moneyAtStart)
         {
-            if (StandCount == 2)
+            if (SplitButton.haveSplit)
             {
                 BalanceChangeText.SetText("You won! +$" + (BettingButton.CurrBet * 2).ToString());
             }
             else
             {
+                Debug.Log(StandCount);
                 BalanceChangeText.SetText("You won! +$" + BettingButton.CurrBet.ToString());
             }
         }
@@ -271,7 +272,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (StandCount == 2)
+            if (SplitButton.haveSplit)
             {
                 BalanceChangeText.SetText("You lost! -$" + (BettingButton.CurrBet * 2).ToString());
             }
