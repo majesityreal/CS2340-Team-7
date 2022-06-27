@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
         sound = FindObjectOfType<Audio>();
         deck = new List<Card>();
         ResetGame();
+        PlayerMoney = 100;
     }
 
     // Update is called once per frame
