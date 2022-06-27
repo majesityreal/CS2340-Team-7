@@ -6,12 +6,28 @@ public class ChessManager : MonoBehaviour
 {
     List<Piece> pieces;
     int[,] isPieceOnSquare;
+    int[,] positions;
     
     // Start is called before the first frame update
     void Start()
     {
         pieces = new List<Piece>(32);
         isPieceOnSquare = new int[8, 8];
+    }
+
+    public int[,] getPositions() 
+    {
+        int[,] temp = new int[32, 2]();
+        int count = 0;
+        foreach(Piece piece in pieces)
+        {
+            if (piece != null) {
+                int[] temp2 = piece.getPosition;
+                temp[count][0] = temp2[0];
+                temp[count][1] = temp2[1];
+            }
+        }
+        return temp;
     }
 }
 
@@ -26,6 +42,11 @@ abstract class Piece
     public void movePosition(int[] position)
     {
         this.position = position;
+    }
+
+    public int[] getPosition()
+    {
+        return this.position;
     }
 }
 
