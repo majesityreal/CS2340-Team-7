@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Hand dealerHand;
 
     // Used for splitted hands
-    private int standCount;
+    public static int StandCount;
 
     BettingButton betButton;
 
@@ -30,6 +29,9 @@ public class GameManager : MonoBehaviour
     public GameObject BetStage;
     public TextMeshProUGUI BalanceChangeText;
     public TextMeshProUGUI PlayerBalanceText;
+
+    public TextMeshProUGUI PlayerHandPointText;
+    public TextMeshProUGUI DealerHandPointText;
 
     public static int PlayerMoney = 100;
     public int moneyAtStart;
@@ -66,7 +68,6 @@ public class GameManager : MonoBehaviour
         deck = new List<Card>();
         PlayerMoney = 100;
         ResetGame();
-
     }
 
     // Update is called once per frame
@@ -83,6 +84,15 @@ public class GameManager : MonoBehaviour
             Debug.Log("First Card" + playerHand.GetIndex(0).value.ToString());
             Debug.Log("Second Card" + playerHand.GetIndex(1).value.ToString());
         }
+        PlayerHandPointText.SetText("Player Hand Value: " + playerHand.GetScore().ToString());
+        if (CardBrain.showDealerHand)
+        {
+            DealerHandPointText.SetText("Dealer Hand Value: " + dealerHand.GetScore().ToString());
+        } else
+        {
+            DealerHandPointText.SetText("");
+        }
+        
     }
 
     public void ResetGame()
@@ -102,14 +112,14 @@ public class GameManager : MonoBehaviour
         playerHand = new Hand();
         dealerHand = new Hand();
         moneyAtStart = PlayerMoney;
-        standCount = 0;
+        StandCount = 1;
         canDouble = true;
         ReshuffleDeck();
         playerHand.AddToHand(DealCard());
         playerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
-        CardBrain.isDealerTurn = false;
+        CardBrain.showDealerHand = false;
         PlayerBalanceText.SetText("Balance: " + PlayerMoney.ToString());
         hideResult();
     }
@@ -117,7 +127,8 @@ public class GameManager : MonoBehaviour
     // method for dealing the next card
     public void Hit()
     {
-        if (playerHand.GetScore() > 21) {
+        if (playerHand.GetScore() > 21)
+        {
             Debug.Log("Stop hitting");
             return;
         }
@@ -138,17 +149,16 @@ public class GameManager : MonoBehaviour
         {
             PlayerMoney -= BettingButton.CurrBet;
             Debug.Log("Player Money left: " + PlayerMoney);
+            StandCount--;
 
-            if (SplitButton.haveSplit)
+            if (StandCount > 0)
             {
-                // this happens if the player loses the second hand
-                if (standCount == 2)
-                {
-                    showResult();
-                    return;
-                }
-                
-                standCount = 2;
+                //// this happens if the player loses the second hand
+                //if (StandCount == 0)
+                //{
+                //    showResult();
+                //    return;
+                //}
                 switchHand();
             }
             else
@@ -163,19 +173,20 @@ public class GameManager : MonoBehaviour
     // stop dealing to the player
     public void Stand()
     {
-        // Stand count 0 : Haven't stand before
-        // Stand count 1 : Player has a split hand that is not complete
-        
-        if (SplitButton.haveSplit && standCount == 0)
-        {
-            standCount++;
-        }
+        // Stand count 0 : All hand finished.
+        // Stand count 1 : One Hand Remain.
+        // Stand count 2 : Two Hand Remain.
 
-        // Used for flipping the dealer's first card
+        StandCount--;
 
-        while (dealerHand.GetSize() < 11 && dealerHand.GetScore() < 17) 
+        if (StandCount == 0)
         {
-            dealerHand.AddToHand(DealCard());
+            CardBrain.showDealerHand = true;
+            // Used for flipping the dealer's first card
+            while (dealerHand.GetSize() < 11 && dealerHand.GetScore() < 17)
+            {
+                dealerHand.AddToHand(DealCard());
+            }
         }
 
         Debug.Log("Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
@@ -186,9 +197,9 @@ public class GameManager : MonoBehaviour
             PlayerMoney += BettingButton.CurrBet;
             Debug.Log("Player win");
 
-            if (standCount == 1) {
+            if (StandCount ==1)
+            {
                 switchHand();
-                standCount++;
                 return;
             }
             showResult();
@@ -196,9 +207,9 @@ public class GameManager : MonoBehaviour
         else if (dealerHand.GetScore() == playerHand.GetScore()) // Draw
         {
             Debug.Log("It is a draw");
-            if (standCount == 1) {
+            if (StandCount == 1)
+            {
                 switchHand();
-                standCount++;
                 return;
             }
             showResult();
@@ -208,9 +219,9 @@ public class GameManager : MonoBehaviour
             PlayerMoney -= BettingButton.CurrBet;
             Debug.Log("Player Money left: " + PlayerMoney);
             Debug.Log("Dealer win");
-            if (standCount == 1) {
+            if (StandCount == 1)
+            {
                 switchHand();
-                standCount++;
                 return;
             }
             showResult();
@@ -232,7 +243,7 @@ public class GameManager : MonoBehaviour
 
     public void showResult()
     {
-        CardBrain.isDealerTurn = true;
+        CardBrain.showDealerHand = true;
 
         for (int i = 0; i < ResultStage.transform.childCount; i++)
         {
@@ -243,18 +254,29 @@ public class GameManager : MonoBehaviour
         {
             BalanceChangeText.SetText("No Balance Change");
         }
-        else if (PlayerMoney > moneyAtStart) {
-            if (standCount == 2) { 
+        else if (PlayerMoney > moneyAtStart)
+        {
+            if (StandCount == 2)
+            {
                 BalanceChangeText.SetText("You won! +$" + (BettingButton.CurrBet * 2).ToString());
-            } else {
+            }
+            else
+            {
                 BalanceChangeText.SetText("You won! +$" + BettingButton.CurrBet.ToString());
             }
-        } else if (playerHand.GetScore() == dealerHand.GetScore() || PlayerMoney == moneyAtStart) {
+        }
+        else if (playerHand.GetScore() == dealerHand.GetScore() || PlayerMoney == moneyAtStart)
+        {
             BalanceChangeText.SetText("You tied! Push!");
-        } else {
-            if (standCount == 2) { 
+        }
+        else
+        {
+            if (StandCount == 2)
+            {
                 BalanceChangeText.SetText("You lost! -$" + (BettingButton.CurrBet * 2).ToString());
-            } else {
+            }
+            else
+            {
                 BalanceChangeText.SetText("You lost! -$" + BettingButton.CurrBet.ToString());
             }
         }
@@ -303,7 +325,7 @@ public class GameManager : MonoBehaviour
         // Fisher-Yates Shuffle
         for (int i = 0; i < deck.Count - 2; i++)
         {
-            Swap(i, (int) Random.Range(0, deck.Count));
+            Swap(i, (int)Random.Range(0, deck.Count));
         }
     }
 
@@ -387,7 +409,8 @@ public class Hand
     {
         this.score += hand[size].value;
 
-        if (hand[size].value == 1) {
+        if (hand[size].value == 1)
+        {
             this.score += 10;
             this.numOfAce++;
         }

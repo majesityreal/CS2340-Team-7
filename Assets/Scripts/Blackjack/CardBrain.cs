@@ -9,7 +9,7 @@ public class CardBrain : MonoBehaviour
     public Image image;
     public bool isPlayerCard;
     public bool isSplitCard;
-    public static bool isDealerTurn;
+    public static bool showDealerHand;
 
     public Sprite DeckImage;
 
@@ -51,7 +51,7 @@ public class CardBrain : MonoBehaviour
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
             }
-            else if (index == 0 && !isDealerTurn)
+            else if (index == 0 && !showDealerHand)
             {
                 image.sprite = DeckImage;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);

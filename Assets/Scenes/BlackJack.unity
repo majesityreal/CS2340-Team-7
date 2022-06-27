@@ -995,6 +995,8 @@ MonoBehaviour:
   BetStage: {fileID: 4758162815513910233}
   BalanceChangeText: {fileID: 1692878131}
   PlayerBalanceText: {fileID: 1776138585}
+  PlayerHandPointText: {fileID: 29702843582581311}
+  DealerHandPointText: {fileID: 29702843582581312}
   moneyAtStart: 0
 --- !u!4 &449733104
 Transform:
@@ -2858,6 +2860,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerBalance
       objectReference: {fileID: 0}
+    - target: {fileID: 6618222749635342964, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
+      propertyPath: m_Name
+      value: PlayerPointText
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1122800257450865715, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
@@ -2871,6 +2877,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1122800257450865717, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
   m_PrefabInstance: {fileID: 29702843582581308}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &29702843582581311 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2350122118406763007, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
+  m_PrefabInstance: {fileID: 29702843582581308}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &29702843582581312 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 724805501607554895, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
+  m_PrefabInstance: {fileID: 29702843582581308}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &458429834469753954
 MonoBehaviour:
   m_ObjectHideFlags: 0
