@@ -17,13 +17,13 @@ public class ChessManager : MonoBehaviour
 
 abstract class Piece
 {
-    protected (int, int) position;
+    protected int[] position;
     protected int pieceID;
     protected Sprite sprite;
     protected int color;
-    protected (int, int)[] possibleMoves;
+    protected int[,] possibleMoves;
 
-    public void movePosition((int, int) position)
+    public void movePosition(int[] position)
     {
         this.position = position;
     }
@@ -31,7 +31,7 @@ abstract class Piece
 
 class Pawn : Piece
 {
-    Pawn((int, int) position, int pieceID, int color)
+    Pawn(int[] position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
@@ -39,23 +39,24 @@ class Pawn : Piece
 
         if (color == 0) { // White
             // sprite = WHITE PAWN IMAGE;
-            possibleMoves = new (int, int)[] {(0, -1)};
+            possibleMoves = new int[1, 2] {{0, -1}};
         } 
         else 
         {
             // sprite = BLACK PAWN IMAGE;
-            possibleMoves = new (int, int)[] {(0, 1)};
+            possibleMoves = new int[1, 2] {{0, 1}};
         }
     }
 }
 
 class Bishop : Piece
 {
-    Bishop((int, int) position, int pieceID, int color)
+    Bishop(int[] position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
         color = this.color;
+
         if (color == 0) {
             // sprite = WHITE BISHOP IMAGE;
         }
@@ -63,17 +64,25 @@ class Bishop : Piece
         {
             // sprite = BLACK BISHOP IMAGE;
         }
-        possibleMoves = new (int, int)[] {(-1, -1), (1, -1), (-1, 1), (1, 1)};
+
+        possibleMoves = new int[4, 2]
+        {
+            {-1, -1}, 
+            {1, -1}, 
+            {-1, 1}, 
+            {1, 1}
+        };
     }
 }
 
 class Knight : Piece
 {
-    Knight((int, int) position, int pieceID, int color)
+    Knight(int[] position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
         color = this.color;
+
         if (color == 0) {
             // sprite = WHITE KNIGHT IMAGE;
         }
@@ -81,13 +90,24 @@ class Knight : Piece
         {
             // sprite = BLACK KNIGHT IMAGE;
         }
-        possibleMoves = new (int, int)[] {(-1, -2), (1, -2), (-2, -1), (2, -1), (-2, 1), (2, 1), (-1, 2), (1, 2)};
+
+        possibleMoves = new int[8, 2] 
+        {
+            {-1, -2}, 
+            {1, -2}, 
+            {-2, -1}, 
+            {2, -1}, 
+            {-2, 1}, 
+            {2, 1}, 
+            {-1, 2}, 
+            {1, 2}
+        };
     }
 }
 
 class Rook : Piece
 {
-    Rook((int, int) position, int pieceID, int color)
+    Rook(int[] position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
@@ -99,17 +119,24 @@ class Rook : Piece
         {
             // sprite = BLACK ROOK IMAGE;
         }
-        possibleMoves = new (int, int)[] {(0, -1), (-1, 0), (1, 0), (0, 1)};
+        possibleMoves = new int[4, 2]
+        {
+            {0, -1}, 
+            {-1, 0},
+            {1, 0}, 
+            {0, 1}
+        };
     }
 }
 
 class Queen : Piece
 {
-    Queen((int, int) position, int pieceID, int color)
+    Queen(int[] position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
         color = this.color;
+
         if (color == 0) {
             // sprite = WHITE QUEEN IMAGE;
         }
@@ -117,17 +144,29 @@ class Queen : Piece
         {
             // sprite = BLACK QUEEN IMAGE;
         }
-        possibleMoves = new (int, int)[] {(-1, -1), (1, -1), (-1, 1), (1, 1), (0, -1), (-1, 0), (1, 0), (0, 1)};
+
+        possibleMoves = new int[8, 2]
+        {
+            {-1, -1}, 
+            {1, -1}, 
+            {-1, 1}, 
+            {1, 1}, 
+            {0, -1}, 
+            {-1, 0}, 
+            {1, 0}, 
+            {0, 1}
+        };
     }
 }
 
 class King : Piece
 {
-    King((int, int) position, int pieceID, int color)
+    King(int[] position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
         color = this.color;
+
         if (color == 0) {
             // sprite = WHITE KING IMAGE;
         }
@@ -135,6 +174,17 @@ class King : Piece
         {
             // sprite = BLACK KING IMAGE;
         }
-        possibleMoves = new (int, int)[] {(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)};
+
+        possibleMoves = new int[8, 2]
+        {
+            {-1, -1}, 
+            {0, -1}, 
+            {1, -1}, 
+            {-1, 0}, 
+            {1, 0}, 
+            {-1, 1}, 
+            {0, 1}, 
+            {1, 1}
+        };
     }
 }
