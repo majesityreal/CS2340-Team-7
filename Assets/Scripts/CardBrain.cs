@@ -5,16 +5,17 @@ using UnityEngine.UI;
 
 public class CardBrain : MonoBehaviour
 {
-    private GameManager gameManager;
     public int index;
     public Image image;
     public bool isPlayerCard;
     public bool isSplitCard;
+    public static bool isDealerTurn;
 
-    // Start is called before the first frame update
+    public Sprite DeckImage;
+
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        DeckImage = GameObject.Find("Deck").GetComponent<Image>().sprite;
     }
 
     // Update is called once per frame
@@ -22,37 +23,42 @@ public class CardBrain : MonoBehaviour
     {
         if (isPlayerCard)
         {
-            if (gameManager.playerHand.GetIndex(index) == null)
+            if (GameManager.Instance.playerHand.GetIndex(index) == null)
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
             }
             else
             {
-                image.sprite = gameManager.playerHand.GetIndex(index).sprite;
+                image.sprite = GameManager.Instance.playerHand.GetIndex(index).sprite;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
         }
         else if (isSplitCard)
         {
-            if (gameManager.splitButton.playerSplitHand.GetIndex(index) == null)
+            if (SplitButton.playerSplitHand.GetIndex(index) == null)
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
             }
             else
             {
-                image.sprite = gameManager.splitButton.playerSplitHand.GetIndex(index).sprite;
+                image.sprite = SplitButton.playerSplitHand.GetIndex(index).sprite;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
         }
         else
         {
-            if (gameManager.dealerHand.GetIndex(index) == null)
+            if (GameManager.Instance.dealerHand.GetIndex(index) == null)
             {
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
             }
+            else if (index == 0 && !isDealerTurn)
+            {
+                image.sprite = DeckImage;
+                image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
+            }
             else
             {
-                image.sprite = gameManager.dealerHand.GetIndex(index).sprite;
+                image.sprite = GameManager.Instance.dealerHand.GetIndex(index).sprite;
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 1.0f);
             }
         }

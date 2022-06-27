@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,29 +20,52 @@ public class GameManager : MonoBehaviour
 
     public bool canDouble;
 
-    // statistics variables:
-    private int totalMoneyWon;
-    private int totalCardsDealt;
-    private int gamesWon;
-    private int gamesLost;
-
     // Scripts
     private Audio sound;
-    public SplitButton splitButton;
+
+    // lose / win screen
+    // public GameObject loseScreen;
+    // public GameObject winScreen;
+    public GameObject ResultStage;
+    public TextMeshProUGUI BalanceChangeText;
+    public GameObject BetStage;
+
+    public static int PlayerMoney = 100;
+    public int moneyAtStart;
+
+    public static GameManager Instance;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            ResetGame();
+            DestroyImmediate(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        splitButton = FindObjectOfType<SplitButton>();
+        if (ResultStage == null)
+        {
+            ResultStage = GameObject.Find("ResultStage");
+        }
+
+        if (BetStage == null)
+        {
+            ResultStage = GameObject.Find("BetStage");
+        }
+
         sound = FindObjectOfType<Audio>();
-        betButton = gameObject.AddComponent(typeof(BettingButton)) as BettingButton;
-        totalMoneyWon = 0;
-        totalCardsDealt = 0;
-        gamesWon = 0;
-        gamesLost = 0;
         deck = new List<Card>();
-        InitalizeDeck();
-        InitializeGame();
+        PlayerMoney = 100;
+        ResetGame();
+
     }
 
     // Update is called once per frame
@@ -60,6 +84,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ResetGame()
+    {
+        InitalizeDeck();
+        InitializeGame();
+        SplitButton.InitSplitHand();
+        BettingButton.showUI(BetStage);
+    }
+
     public void InitializeGame()
     {
         if (deck.Count < 26)
@@ -68,6 +100,7 @@ public class GameManager : MonoBehaviour
         }
         playerHand = new Hand();
         dealerHand = new Hand();
+        moneyAtStart = PlayerMoney;
         standCount = 0;
         canDouble = true;
         ReshuffleDeck();
@@ -75,13 +108,19 @@ public class GameManager : MonoBehaviour
         playerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
-        splitButton.InitSplitHand();
+        CardBrain.isDealerTurn = false;
+        hideResult();
     }
 
     // method for dealing the next card
     public void Hit()
     {
-        totalCardsDealt++;
+        if (playerHand.GetScore() > 21) {
+            Debug.Log("Stop hitting");
+            CardBrain.isDealerTurn = true;
+            return;
+        }
+
         playerHand.AddToHand(DealCard());
         Debug.Log("Hit: Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
 
@@ -89,33 +128,33 @@ public class GameManager : MonoBehaviour
         {
             canDouble = false;
         }
-        if (splitButton.canSplit)
+        if (SplitButton.canSplit)
         {
-            splitButton.canSplit = false;
+            SplitButton.canSplit = false;
         }
 
         if (playerHand.GetScore() > 21)
         {
-            totalMoneyWon -= BettingButton.currBet;
-            gamesLost--;
-            if (splitButton.haveSplit)
+            PlayerMoney -= BettingButton.CurrBet;
+            Debug.Log("Player Money left: " + PlayerMoney);
+
+            if (SplitButton.haveSplit)
             {
-                // TODO: Lose Screen
-                Debug.Log("Hit: Player Lost Split");
+                // this happens if the player loses the second hand
                 if (standCount == 2)
                 {
-                    InitializeGame();
+                    showResult();
                     return;
                 }
                 
                 standCount = 2;
-                splitButton.SwitchHand();
+                switchHand();
             }
             else
             {
                 Debug.Log("Hit: Player Lost");
-                // TODO: Lose Screen
-                InitializeGame();
+                // pulls up lose Screen
+                showResult();
             }
         }
     }
@@ -123,57 +162,101 @@ public class GameManager : MonoBehaviour
     // stop dealing to the player
     public void Stand()
     {
-        if (splitButton.haveSplit && standCount == 0)
+        // Stand count 0 : Haven't stand before
+        // Stand count 1 : Player has a split hand that is not complete
+        
+        if (SplitButton.haveSplit && standCount == 0)
         {
             standCount++;
-            splitButton.SwitchHand();
-            return;
         }
 
-        while (dealerHand.GetSize() < 8 && dealerHand.GetScore() < 17) {
+        // Used for flipping the dealer's first card
+        CardBrain.isDealerTurn = true;
+
+        while (dealerHand.GetSize() < 11 && dealerHand.GetScore() < 17) 
+        {
             dealerHand.AddToHand(DealCard());
         }
 
         Debug.Log("Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
 
+        // Player wins
         if (dealerHand.GetScore() > 21 || playerHand.GetScore() > dealerHand.GetScore())
         {
-            totalMoneyWon += BettingButton.currBet;
-            gamesWon++;
-            // TODO: Win Screen
-            BettingButton.playerMoney += BettingButton.currBet;
+            PlayerMoney += BettingButton.CurrBet;
             Debug.Log("Player win");
+
+            if (standCount == 1) {
+                switchHand();
+                return;
+            }
+            showResult();
         }
-        else
+        else if (dealerHand.GetScore() == playerHand.GetScore()) // Draw
         {
-            gamesLost--;
-            // TODO: Lose Screen
+            Debug.Log("It is a draw");
+            if (standCount == 1) {
+                switchHand();
+                return;
+            }
+            showResult();
+        }
+        else // Lost 
+        {
+            PlayerMoney -= BettingButton.CurrBet;
+            Debug.Log("Player Money left: " + PlayerMoney);
             Debug.Log("Dealer win");
+            if (standCount == 1) {
+                switchHand();
+                return;
+            }
+            showResult();
         }
-
-        if (standCount == 1)
-        {
-            splitButton.SwitchHand();
-            standCount++;
-            Stand();
-            return;
-        }
-
-        InitializeGame();
     }
 
     // equivalent to "hit" but instead doubling the bet
-    public void Double ()
+    public void Double()
     {
         if (!canDouble)
         {
             Debug.Log("Cannot Double");
             return;
         }
-        BettingButton.playerMoney -= BettingButton.currBet;
-        BettingButton.currBet *= 2;
+        BettingButton.CurrBet *= 2;
         Hit();
         Stand();
+    }
+
+    public void showResult()
+    {
+        for (int i = 0; i < ResultStage.transform.childCount; i++)
+        {
+            ResultStage.transform.GetChild(i).gameObject.SetActive(true);
+        }
+
+        if (PlayerMoney > moneyAtStart) {
+            if (standCount == 2) { 
+                BalanceChangeText.SetText("You won $" + (BettingButton.CurrBet * 2).ToString());
+            } else {
+                BalanceChangeText.SetText("You won $" + BettingButton.CurrBet.ToString());
+            }
+        } else if (PlayerMoney == moneyAtStart) {
+            BalanceChangeText.SetText("You tied!");
+        } else {
+            if (standCount == 2) { 
+                BalanceChangeText.SetText("You lost $" + (BettingButton.CurrBet * 2).ToString());
+            } else {
+                BalanceChangeText.SetText("You lost $" + BettingButton.CurrBet.ToString());
+            }
+        }
+    }
+
+    public void hideResult()
+    {
+        for (int i = 0; i < ResultStage.transform.childCount; i++)
+        {
+            ResultStage.transform.GetChild(i).gameObject.SetActive(false);
+        }
     }
 
     // removes and returns a Card from the deck
@@ -181,15 +264,21 @@ public class GameManager : MonoBehaviour
     {
         Card temp = deck[0];
         deck.RemoveAt(0);
-        totalCardsDealt++;
         return temp;
     }
 
     // set up deck to be dealt. Note: before referencing any cards in the deck, this method must be called!
     public void InitalizeDeck()
     {
-        deck.Clear();
-        sound.PlayShuffle();
+        if (deck == null)
+        {
+            deck = new List<Card>();
+        }
+        else
+        {
+            deck.Clear();
+        }
+        //sound.PlayShuffle();
         // initializing a deck List
         for (int i = 0; i < 4; i++)
         {
@@ -213,10 +302,13 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        ResetGame();
     }
 
     public void QuitGame()
     {
+        // we are doing this because this is a singleton!
+        DestroyImmediate(gameObject);
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -230,6 +322,13 @@ public class GameManager : MonoBehaviour
         deck.RemoveAt(j + 1);
     }
 
+    // Change player's current hand to split hand.
+    public void switchHand()
+    {
+        Hand temp = playerHand;
+        playerHand = SplitButton.playerSplitHand;
+        SplitButton.playerSplitHand = temp;
+    }
 }
 
 public class Card
