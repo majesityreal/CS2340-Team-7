@@ -11,11 +11,13 @@ public class ChessAI : MonoBehaviour
     const int rookValue = 500;
     const int queenValue = 900;
 
-    public static int Evaluate()
+
+
+    public static int EvaluateBoard()
     {
         // material section
-        int whiteMaterial = CountMaterial(0);
-        int blackMaterial = CountMaterial(1);
+        int whiteMaterial = CountMaterial(1);
+        int blackMaterial = CountMaterial(-1);
         int totalMaterial = whiteMaterial - blackMaterial;
 
         // positions of the pieces
@@ -26,42 +28,46 @@ public class ChessAI : MonoBehaviour
         return totalMaterial;
     }
 
+    // returns value of all the material of the pieces still in play
     static int CountMaterial(int color)
     {
         int material = 0;
-        // get all the values from chess manager
-        for (int i = 0; i < ChessManager.pieces.Count; i++)
+        // get all the tiles from the square
+        for (int i = 0; i < 64; i++)
         {
-            // if they are not the color, go to next piece
-            if (ChessManager.pieces[i].color != color)
+            // if nothing there, go to next piece
+            if (ChessManager.board[i % 8, i / 8] == null)
             {
                 continue;
             }
-            // sum up the total
+            // if they are not the color, go to next piece
+            if (ChessManager.board[i % 8, i / 8].color != color)
+            {
+                continue;
+            }
 
-            if (ChessManager.pieces[i] is Pawn) {
+            if (ChessManager.board[i % 8, i / 8] is Pawn) {
                 material += pawnValue;
             }
-            else if (ChessManager.pieces[i] is Knight)
+            else if (ChessManager.board[i % 8, i / 8] is Knight)
             {
                 material += knightValue;
             }
-            else if (ChessManager.pieces[i] is Bishop)
+            else if (ChessManager.board[i % 8, i / 8] is Bishop)
             {
                 material += bishopValue;
             }
-            else if (ChessManager.pieces[i] is Rook)
+            else if (ChessManager.board[i % 8, i / 8] is Rook)
             {
                 material += rookValue;
             }
-            else if (ChessManager.pieces[i] is Queen)
+            else if (ChessManager.board[i % 8, i / 8] is Queen)
             {
                 material += queenValue;
             }
         }
 
         return material;
-
     }
 
     // Start is called before the first frame update

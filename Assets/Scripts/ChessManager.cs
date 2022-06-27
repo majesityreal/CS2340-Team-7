@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class ChessManager : MonoBehaviour
 {
-    List<Piece> pieces;
-    int[,] isPieceOnSquare;
+/*    public static List<Piece> pieces;
+*/    
+    public static Piece[,] board;
     int[,] positions;
 
     // Start is called before the first frame update
     void Start()
     {
-        pieces = new List<Piece>(32);
-        isPieceOnSquare = new int[8, 8];
+/*        pieces = new List<Piece>(32);
+*/        board = new Piece[8, 8];
     }
 
-    // this isnt working currently, throwing errors
-    public int[,] getPositions()
+/*    public int[,] getPositions()
     {
         int[,] temp = new int[32, 2];
         int count = 0;
@@ -30,7 +30,7 @@ public class ChessManager : MonoBehaviour
             }
         }
         return temp;
-    }
+    }*/
 }
 
 public abstract class Piece
@@ -38,7 +38,7 @@ public abstract class Piece
     protected int[] position;
     protected int pieceID;
     protected Sprite sprite;
-    protected int color;
+    public int color;
     protected int[,] possibleMoves;
 
     public void movePosition(int[] position)
