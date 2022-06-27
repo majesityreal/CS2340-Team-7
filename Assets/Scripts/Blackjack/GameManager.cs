@@ -27,8 +27,9 @@ public class GameManager : MonoBehaviour
     // public GameObject loseScreen;
     // public GameObject winScreen;
     public GameObject ResultStage;
-    public TextMeshProUGUI BalanceChangeText;
     public GameObject BetStage;
+    public TextMeshProUGUI BalanceChangeText;
+    public TextMeshProUGUI PlayerBalanceText;
 
     public static int PlayerMoney = 100;
     public int moneyAtStart;
@@ -109,6 +110,7 @@ public class GameManager : MonoBehaviour
         dealerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
         CardBrain.isDealerTurn = false;
+        PlayerBalanceText.SetText("Balance: " + PlayerMoney.ToString());
         hideResult();
     }
 
