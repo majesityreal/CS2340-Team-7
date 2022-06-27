@@ -4,62 +4,137 @@ using UnityEngine;
 
 public class ChessManager : MonoBehaviour
 {
-    Piece[] Pieces;
+    List<Piece> pieces;
+    int[,] isPieceOnSquare;
     
     // Start is called before the first frame update
     void Start()
     {
-        Pieces = new Piece[32];
+        pieces = new ArrayList<Piece> (32);
+        isPieceOnSquare = new int[8, 8];
     }
 }
 
-public class Piece
+interface Piece : Monobehavior
 {
-    int position;
-    int pieceNum;
+    (int X, int Y) position;
+    int pieceID;
     Sprite sprite;
-    int color; // White : 0, Black : 1
-    int[] possibleMoves;
-    
-    public Piece (int position, int pieceNum, int color) {
-        this.position = position;
-        this.pieceNum = pieceNum;
-        this.color = color;
-        setMoves();
-    }
+    int color;
+    (int X, int Y) [] possibleMoves;
 
-    void setMoves() 
+    void movePosition((int X, int Y) position)
     {
-        switch(this.pieceNum)
+        this.position = position;
+    }
+}
+
+public class Pawn : Piece
+{
+    public Pawn((int X, int Y) position, int pieceID, int color)
+    {
+        position = this.position;
+        pieceID = this.pieceID;
+        color = this.color;
+
+        if (color == 0) { // White
+            // sprite = WHITE PAWN IMAGE;
+            possibleMoves = new [] {(0, -1)};
+        } 
+        else 
         {
-            case 0: // Pawn
-                if (color == 0) { // White Pawn
-                    possibleMoves = new int[] {8};
-                    break;
-                }
-                // Black Pawn
-                possibleMoves = new int[] {-8}; 
-                break;
-            case 1: // Bishop
-                possibleMoves = new int[] {-9, -7, 7, 9};
-                break;
-            case 2: // Knight
-                possibleMoves = new int[] {-17, -15, -10, -6, 6, 10, 15, 17};
-                break;
-            case 3: // Rook
-                possibleMoves = new int[] {-8, -1, 1, 8};
-                break;
-            case 4: // Queen
-                possibleMoves = new int[] {-9, -7, 7, 9, -8, -1, 1, 8};
-                break;
-            case 5: // King
-                possibleMoves = new int[] {-9, -8, -7, -1, 1, 7, 8, 9};
-                break;
+            // sprite = BLACK PAWN IMAGE;
+            possibleMoves = new [] {(0, 1)};
         }
     }
+}
 
-    void setMoves(int pieceNum) {
-        this.pieceNum = pieceNum;
-        setMoves();
+public class Bishop : Piece
+{
+    public Bishop((int X, int Y) position, int pieceID, int color)
+    {
+        position = this.position;
+        pieceID = this.pieceID;
+        color = this.color;
+        if (color == 0) {
+            // sprite = WHITE BISHOP IMAGE;
+        }
+        else
+        {
+            // sprite = BLACK BISHOP IMAGE;
+        }
+        possibleMoves = new [] {(-1, -1), (1, -1), (-1, 1), (1, 1)};
+    }
+}
+
+public class Knight : Piece
+{
+    public Knight((int X, int Y) position, int pieceID, int color)
+    {
+        position = this.position;
+        pieceID = this.pieceID;
+        color = this.color;
+        if (color == 0) {
+            // sprite = WHITE KNIGHT IMAGE;
+        }
+        else
+        {
+            // sprite = BLACK KNIGHT IMAGE;
+        }
+        possibleMoves = new [] {(-1, -2), (1, -2), (-2, -1), (2, -1), (-2, 1), (2, 1), (-1, 2), (1, 2)};
+    }
+}
+
+public class Rook : Piece
+{
+    public Rook((int X, int Y) position, int pieceID, int color)
+    {
+        position = this.position;
+        pieceID = this.pieceID;
+        color = this.color;
+        if (color == 0) {
+            // sprite = WHITE ROOK IMAGE;
+        }
+        else
+        {
+            // sprite = BLACK ROOK IMAGE;
+        }
+        possibleMoves = new [] {(0, -1), (-1, 0), (1, 0), (0, 1)};
+    }
+}
+
+public class Queen : Piece
+{
+    public Queen((int X, int Y) position, int pieceID, int color)
+    {
+        position = this.position;
+        pieceID = this.pieceID;
+        color = this.color;
+        if (color == 0) {
+            // sprite = WHITE QUEEN IMAGE;
+        }
+        else
+        {
+            // sprite = BLACK QUEEN IMAGE;
+        }
+        possibleMoves = new [] {(-1, -1), (1, -1), (-1, 1), (1, 1), (0, -1), (-1, 0), (1, 0), (0, 1)};
+    }
+}
+
+public class King : Piece
+{
+    public King((int X, int Y) position, int pieceID, int color)
+    {
+        position = this.position;
+        pieceID = this.pieceID;
+        color = this.color;
+        if (color == 0) {
+            // sprite = WHITE KING IMAGE;
+        }
+        else
+        {
+            // sprite = BLACK KING IMAGE;
+        }
+        possibleMoves = new [] {(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)};
     }
 }
