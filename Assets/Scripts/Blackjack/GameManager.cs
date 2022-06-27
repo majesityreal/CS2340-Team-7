@@ -119,7 +119,6 @@ public class GameManager : MonoBehaviour
     {
         if (playerHand.GetScore() > 21) {
             Debug.Log("Stop hitting");
-            CardBrain.isDealerTurn = true;
             return;
         }
 
@@ -173,7 +172,6 @@ public class GameManager : MonoBehaviour
         }
 
         // Used for flipping the dealer's first card
-        CardBrain.isDealerTurn = true;
 
         while (dealerHand.GetSize() < 11 && dealerHand.GetScore() < 17) 
         {
@@ -231,6 +229,8 @@ public class GameManager : MonoBehaviour
 
     public void showResult()
     {
+        CardBrain.isDealerTurn = true;
+
         for (int i = 0; i < ResultStage.transform.childCount; i++)
         {
             ResultStage.transform.GetChild(i).gameObject.SetActive(true);
