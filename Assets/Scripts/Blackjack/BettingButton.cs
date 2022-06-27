@@ -92,7 +92,7 @@ public class BettingButton : MonoBehaviour
         }
 
         // Reset the current bet amount.
-        CurrBet = 0;
+        CurrBet = 1;
     }
 
     public void ComfirmBet()
