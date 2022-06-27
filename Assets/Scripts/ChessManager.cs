@@ -10,28 +10,28 @@ public class ChessManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pieces = new ArrayList<Piece> (32);
+        pieces = new List<Piece>(32);
         isPieceOnSquare = new int[8, 8];
     }
 }
 
-interface Piece : Monobehavior
+abstract class Piece
 {
-    (int X, int Y) position;
-    int pieceID;
-    Sprite sprite;
-    int color;
-    (int X, int Y) [] possibleMoves;
+    protected (int, int) position;
+    protected int pieceID;
+    protected Sprite sprite;
+    protected int color;
+    protected (int, int)[] possibleMoves;
 
-    void movePosition((int X, int Y) position)
+    public void movePosition((int, int) position)
     {
         this.position = position;
     }
 }
 
-public class Pawn : Piece
+class Pawn : Piece
 {
-    public Pawn((int X, int Y) position, int pieceID, int color)
+    Pawn((int, int) position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
@@ -39,19 +39,19 @@ public class Pawn : Piece
 
         if (color == 0) { // White
             // sprite = WHITE PAWN IMAGE;
-            possibleMoves = new [] {(0, -1)};
+            possibleMoves = new (int, int)[] {(0, -1)};
         } 
         else 
         {
             // sprite = BLACK PAWN IMAGE;
-            possibleMoves = new [] {(0, 1)};
+            possibleMoves = new (int, int)[] {(0, 1)};
         }
     }
 }
 
-public class Bishop : Piece
+class Bishop : Piece
 {
-    public Bishop((int X, int Y) position, int pieceID, int color)
+    Bishop((int, int) position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
@@ -63,13 +63,13 @@ public class Bishop : Piece
         {
             // sprite = BLACK BISHOP IMAGE;
         }
-        possibleMoves = new [] {(-1, -1), (1, -1), (-1, 1), (1, 1)};
+        possibleMoves = new (int, int)[] {(-1, -1), (1, -1), (-1, 1), (1, 1)};
     }
 }
 
-public class Knight : Piece
+class Knight : Piece
 {
-    public Knight((int X, int Y) position, int pieceID, int color)
+    Knight((int, int) position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
@@ -81,13 +81,13 @@ public class Knight : Piece
         {
             // sprite = BLACK KNIGHT IMAGE;
         }
-        possibleMoves = new [] {(-1, -2), (1, -2), (-2, -1), (2, -1), (-2, 1), (2, 1), (-1, 2), (1, 2)};
+        possibleMoves = new (int, int)[] {(-1, -2), (1, -2), (-2, -1), (2, -1), (-2, 1), (2, 1), (-1, 2), (1, 2)};
     }
 }
 
-public class Rook : Piece
+class Rook : Piece
 {
-    public Rook((int X, int Y) position, int pieceID, int color)
+    Rook((int, int) position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
@@ -99,13 +99,13 @@ public class Rook : Piece
         {
             // sprite = BLACK ROOK IMAGE;
         }
-        possibleMoves = new [] {(0, -1), (-1, 0), (1, 0), (0, 1)};
+        possibleMoves = new (int, int)[] {(0, -1), (-1, 0), (1, 0), (0, 1)};
     }
 }
 
-public class Queen : Piece
+class Queen : Piece
 {
-    public Queen((int X, int Y) position, int pieceID, int color)
+    Queen((int, int) position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
@@ -117,13 +117,13 @@ public class Queen : Piece
         {
             // sprite = BLACK QUEEN IMAGE;
         }
-        possibleMoves = new [] {(-1, -1), (1, -1), (-1, 1), (1, 1), (0, -1), (-1, 0), (1, 0), (0, 1)};
+        possibleMoves = new (int, int)[] {(-1, -1), (1, -1), (-1, 1), (1, 1), (0, -1), (-1, 0), (1, 0), (0, 1)};
     }
 }
 
-public class King : Piece
+class King : Piece
 {
-    public King((int X, int Y) position, int pieceID, int color)
+    King((int, int) position, int pieceID, int color)
     {
         position = this.position;
         pieceID = this.pieceID;
@@ -135,6 +135,6 @@ public class King : Piece
         {
             // sprite = BLACK KING IMAGE;
         }
-        possibleMoves = new [] {(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)};
+        possibleMoves = new (int, int)[] {(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)};
     }
 }
