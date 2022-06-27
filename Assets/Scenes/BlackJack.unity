@@ -2807,6 +2807,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1949760252}
     - target: {fileID: 1122800257450865712, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1122800257870160527}
+    - target: {fileID: 1122800257450865712, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ButtonPressed
       objectReference: {fileID: 0}
@@ -2866,8 +2870,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerBalance
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1122800257450865715, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
+--- !u!1 &29702843582581309 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1122800257044672402, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
+  m_PrefabInstance: {fileID: 29702843582581308}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &29702843582581310 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1122800257450865717, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
+  m_PrefabInstance: {fileID: 29702843582581308}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &458429834469753954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2903,6 +2918,19 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1122800257044672403, guid: 628afe26dbc5a72438a544beec1b9e95, type: 3}
   m_PrefabInstance: {fileID: 29702843582581308}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1122800257870160527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29702843582581309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4d1720f59df10d4696e18dc5c7b44ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splitButton: {fileID: 29702843582581310}
 --- !u!1 &2626849720043021607
 GameObject:
   m_ObjectHideFlags: 0

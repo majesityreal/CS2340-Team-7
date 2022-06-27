@@ -86,7 +86,8 @@ public class BettingButton : MonoBehaviour
         {
             betAmountSlider.wholeNumbers = true;
             betAmountSlider.maxValue = GameManager.PlayerMoney;
-            betAmountSlider.value = 0;
+            betAmountSlider.minValue = 1;
+            betAmountSlider.value = 1;
             betAmountSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
         }
 

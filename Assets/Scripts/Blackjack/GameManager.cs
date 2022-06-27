@@ -239,7 +239,11 @@ public class GameManager : MonoBehaviour
             ResultStage.transform.GetChild(i).gameObject.SetActive(true);
         }
 
-        if (PlayerMoney > moneyAtStart) {
+        if (BettingButton.CurrBet == 0)
+        {
+            BalanceChangeText.SetText("You Didn't Bet!");
+        }
+        else if (PlayerMoney > moneyAtStart) {
             if (standCount == 2) { 
                 BalanceChangeText.SetText("You won! +$" + (BettingButton.CurrBet * 2).ToString());
             } else {

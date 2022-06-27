@@ -17,7 +17,8 @@ public class SplitButton : MonoBehaviour
     // Booleans to check split status.
     public static bool canSplit;
     public static bool haveSplit;
-    // Scripts
+
+    public GameObject splitButton;
     private GameManager gameManager;
 
     // Start is called before the first frame update
@@ -42,6 +43,16 @@ public class SplitButton : MonoBehaviour
             {
                 canSplit = true; 
             }
+        }
+
+        if (canSplit)
+        {
+            splitButton.SetActive(true);
+        }
+
+        if (haveSplit || !canSplit)
+        {
+            splitButton.SetActive(false);
         }
 
         // Update to Game Manager.
