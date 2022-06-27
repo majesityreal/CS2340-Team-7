@@ -241,7 +241,7 @@ public class GameManager : MonoBehaviour
 
         if (BettingButton.CurrBet == 0)
         {
-            BalanceChangeText.SetText("You Didn't Bet!");
+            BalanceChangeText.SetText("No Balance Change");
         }
         else if (PlayerMoney > moneyAtStart) {
             if (standCount == 2) { 
@@ -249,7 +249,7 @@ public class GameManager : MonoBehaviour
             } else {
                 BalanceChangeText.SetText("You won! +$" + BettingButton.CurrBet.ToString());
             }
-        } else if (playerHand.GetScore() == dealerHand.GetScore()) {
+        } else if (playerHand.GetScore() == dealerHand.GetScore() || PlayerMoney == moneyAtStart) {
             BalanceChangeText.SetText("You tied! Push!");
         } else {
             if (standCount == 2) { 
