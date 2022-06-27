@@ -720,7 +720,6 @@ GameObject:
   m_Component:
   - component: {fileID: 342018533}
   - component: {fileID: 342018536}
-  - component: {fileID: 342018534}
   - component: {fileID: 342018537}
   m_Layer: 5
   m_Name: ResultStage
@@ -753,19 +752,6 @@ RectTransform:
   m_AnchoredPosition: {x: -1.298706, y: -0.024291992}
   m_SizeDelta: {x: 6.2006836, y: 0.13085938}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &342018534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 342018532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a0df88114fed864895581c052de3c21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  text: {fileID: 0}
 --- !u!222 &342018536
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -786,6 +772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 445c016739d45734d879ab46b44fca9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayAgainButton: {fileID: 1058417889}
 --- !u!1 &351066391
 GameObject:
   m_ObjectHideFlags: 0
@@ -2479,6 +2466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 445c016739d45734d879ab46b44fca9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayAgainButton: {fileID: 0}
 --- !u!1 &2000056950
 GameObject:
   m_ObjectHideFlags: 0

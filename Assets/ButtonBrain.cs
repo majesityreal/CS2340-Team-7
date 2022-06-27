@@ -4,6 +4,23 @@ using UnityEngine;
 
 public class ButtonBrain : MonoBehaviour
 {
+    public GameObject PlayAgainButton;
+
+    void Start()
+    {
+        if (PlayAgainButton == null)
+        {
+            PlayAgainButton = GameObject.Find("PlayAgain");
+        }
+    }
+
+    void Update()
+    {
+        if (PlayAgainButton != null)
+        {
+            updatePlayAgain();
+        }
+    }
     public void Hit()
     {
         GameManager.Instance.Hit();
@@ -29,4 +46,11 @@ public class ButtonBrain : MonoBehaviour
         GameManager.Instance.QuitGame();
     }
 
+    public void updatePlayAgain()
+    {
+        if (GameManager.PlayerMoney == 0)
+        {
+            PlayAgainButton.SetActive(false);
+        }
+    }
 }
