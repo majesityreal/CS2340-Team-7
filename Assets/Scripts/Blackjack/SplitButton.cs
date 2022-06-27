@@ -66,6 +66,7 @@ public class SplitButton : MonoBehaviour
         if (canSplit)
         {
             Split();
+            GameManager.StandCount++;
             haveSplit = true;
             canSplit = false;
             Debug.Log("Split success!");
