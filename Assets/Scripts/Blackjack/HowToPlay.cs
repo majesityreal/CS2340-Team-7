@@ -57,10 +57,10 @@ public class HowToPlay : MonoBehaviour
         }
         // show the first element
         uiElements[currentUIElement].SetActive(true);
-        if (!inited) {
-            gameObject.SetActive(false);
-            inited = true;
-        }
+        // if (!inited) {
+        //     gameObject.SetActive(false);
+        //     inited = true;
+        // }
     }
 
     public void increment()

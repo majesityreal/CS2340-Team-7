@@ -236,17 +236,17 @@ public class GameManager : MonoBehaviour
 
         if (PlayerMoney > moneyAtStart) {
             if (standCount == 2) { 
-                BalanceChangeText.SetText("You won $" + (BettingButton.CurrBet * 2).ToString());
+                BalanceChangeText.SetText("You won! +$" + (BettingButton.CurrBet * 2).ToString());
             } else {
-                BalanceChangeText.SetText("You won $" + BettingButton.CurrBet.ToString());
+                BalanceChangeText.SetText("You won! +$" + BettingButton.CurrBet.ToString());
             }
-        } else if (PlayerMoney == moneyAtStart) {
-            BalanceChangeText.SetText("You tied!");
+        } else if (playerHand.GetScore() == dealerHand.GetScore()) {
+            BalanceChangeText.SetText("You tied! Push!");
         } else {
             if (standCount == 2) { 
-                BalanceChangeText.SetText("You lost $" + (BettingButton.CurrBet * 2).ToString());
+                BalanceChangeText.SetText("You lost! -$" + (BettingButton.CurrBet * 2).ToString());
             } else {
-                BalanceChangeText.SetText("You lost $" + BettingButton.CurrBet.ToString());
+                BalanceChangeText.SetText("You lost! -$" + BettingButton.CurrBet.ToString());
             }
         }
     }
