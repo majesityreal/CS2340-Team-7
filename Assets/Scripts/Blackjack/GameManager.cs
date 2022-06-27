@@ -188,6 +188,7 @@ public class GameManager : MonoBehaviour
 
             if (standCount == 1) {
                 switchHand();
+                standCount++;
                 return;
             }
             showResult();
@@ -197,6 +198,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("It is a draw");
             if (standCount == 1) {
                 switchHand();
+                standCount++;
                 return;
             }
             showResult();
@@ -208,6 +210,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Dealer win");
             if (standCount == 1) {
                 switchHand();
+                standCount++;
                 return;
             }
             showResult();
