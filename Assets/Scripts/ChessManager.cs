@@ -44,10 +44,9 @@ public class ChessManager : MonoBehaviour
 
 public abstract class Piece
 {
-    protected int pieceID;
     protected Sprite sprite;
     public int color;
-    protected int[,] possibleMoves;
+    public int[,] possibleMoves;
 
     public void movePosition(int position)
     {
@@ -57,10 +56,9 @@ public abstract class Piece
 
 class Pawn : Piece
 {
-    Pawn(int[] position, int pieceID, int color)
+    Pawn(int color)
     {
-        pieceID = this.pieceID;
-        color = this.color;
+        this.color = color;
 
         if (color == 0)
         { // White
@@ -73,19 +71,13 @@ class Pawn : Piece
             possibleMoves = new int[1, 2] { { 0, 1 } };
         }
     }
-
-    public Pawn(int color)
-    {
-        this.color = color;
-    }
 }
 
 class Bishop : Piece
 {
-    Bishop(int[] position, int pieceID, int color)
+    Bishop(int color)
     {
-        pieceID = this.pieceID;
-        color = this.color;
+        this.color = color;
 
         if (color == 0)
         {
@@ -108,10 +100,9 @@ class Bishop : Piece
 
 class Knight : Piece
 {
-    Knight(int[] position, int pieceID, int color)
+    Knight(int color)
     {
-        pieceID = this.pieceID;
-        color = this.color;
+        this.color = color;
 
         if (color == 0)
         {
@@ -138,10 +129,9 @@ class Knight : Piece
 
 class Rook : Piece
 {
-    Rook(int[] position, int pieceID, int color)
+    Rook(int color)
     {
-        pieceID = this.pieceID;
-        color = this.color;
+        this.color = color;
         if (color == 0)
         {
             // sprite = WHITE ROOK IMAGE;
@@ -162,10 +152,9 @@ class Rook : Piece
 
 class Queen : Piece
 {
-    Queen(int[] position, int pieceID, int color)
+    Queen(int color)
     {
-        pieceID = this.pieceID;
-        color = this.color;
+        this.color = color;
 
         if (color == 0)
         {
@@ -192,10 +181,9 @@ class Queen : Piece
 
 class King : Piece
 {
-    King(int[] position, int pieceID, int color)
+    King(int color)
     {
-        pieceID = this.pieceID;
-        color = this.color;
+        this.color = color;
 
         if (color == 0)
         {
