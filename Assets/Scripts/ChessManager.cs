@@ -14,9 +14,47 @@ public class ChessManager : MonoBehaviour
     {
 /*        pieces = new List<Piece>(32);
 */        board = new Piece[8, 8];
-        board[0, 0] = new Pawn(1);
+
+        // black pieces
+        board[0, 0] = new Rook(-1);
+        board[1, 0] = new Knight(-1);
+        board[2, 0] = new Bishop(-1);
+        board[3, 0] = new Queen(-1);
+        board[4, 0] = new King(-1);
+        board[5, 0] = new Bishop(-1);
+        board[6, 0] = new Knight(-1);
+        board[7, 0] = new Rook(-1);
+
+        // black pawns
         board[0, 1] = new Pawn(-1);
-        board[0, 0] = new Pawn(-1);
+        board[1, 1] = new Pawn(-1);
+        board[2, 1] = new Pawn(-1);
+        board[3, 1] = new Pawn(-1);
+        board[4, 1] = new Pawn(-1);
+        board[5, 1] = new Pawn(-1);
+        board[6, 1] = new Pawn(-1);
+        board[7, 1] = new Pawn(-1);
+
+        // white pieces
+        board[0, 7] = new Rook(1);
+        board[1, 7] = new Knight(1);
+        board[2, 7] = new Bishop(1);
+        board[3, 7] = new King(1);
+        board[4, 7] = new Queen(1);
+        board[5, 7] = new Bishop(1);
+        board[6, 7] = new Knight(1);
+        board[7, 7] = new Rook(1);
+
+        // white pawns
+        board[0, 6] = new Pawn(1);
+        board[1, 6] = new Pawn(1);
+        board[2, 6] = new Pawn(1);
+        board[3, 6] = new Pawn(1);
+        board[4, 6] = new Pawn(1);
+        board[5, 6] = new Pawn(1);
+        board[6, 6] = new Pawn(1);
+        board[7, 6] = new Pawn(1);
+
 
     }
 
@@ -56,7 +94,7 @@ public abstract class Piece
 
 class Pawn : Piece
 {
-    Pawn(int color)
+    public Pawn(int color)
     {
         this.color = color;
 
@@ -75,7 +113,7 @@ class Pawn : Piece
 
 class Bishop : Piece
 {
-    Bishop(int color)
+    public Bishop(int color)
     {
         this.color = color;
 
@@ -100,7 +138,7 @@ class Bishop : Piece
 
 class Knight : Piece
 {
-    Knight(int color)
+    public Knight(int color)
     {
         this.color = color;
 
@@ -129,7 +167,7 @@ class Knight : Piece
 
 class Rook : Piece
 {
-    Rook(int color)
+    public Rook(int color)
     {
         this.color = color;
         if (color == 0)
@@ -152,7 +190,7 @@ class Rook : Piece
 
 class Queen : Piece
 {
-    Queen(int color)
+    public Queen(int color)
     {
         this.color = color;
 
@@ -181,7 +219,7 @@ class Queen : Piece
 
 class King : Piece
 {
-    King(int color)
+    public King(int color)
     {
         this.color = color;
 
