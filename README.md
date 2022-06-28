@@ -3,8 +3,7 @@ A game suite made for Objects & Design class (CS 2340). We're learning the princ
 
 <h1>Group Members:</h1>
 <p><b> 
-<a href="https://github.com/majesityreal" target="_blank">Carson Anderson</a><br/>
-<br/>
+<a href="https://ityreal.github.io/portfolio/" target="_blank">Carson Anderson</a><br/>
 Jing Liu<br/>
 <a href="https://www.koolkev246.com/" target="_blank">Kevin Kwan</a><br/>
 Woo Ju Chee<br/>
