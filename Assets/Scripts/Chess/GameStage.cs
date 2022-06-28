@@ -11,7 +11,7 @@ using UnityEngine;
  *  Last update:    
  *                  2022.06.28  Fix Sprite Scale. Impelement Initalize Chess Board.
  *  
- *  Script for Chess Board Game Stage Sprites.
+ *  Script for Player Input in Chess Board Game.
  */
 
 public class GameStage : MonoBehaviour
