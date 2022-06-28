@@ -1,14 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class BalanceText : MonoBehaviour
+public class GameStage : MonoBehaviour
 {
-
-    public Text text;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -21,9 +16,8 @@ public class BalanceText : MonoBehaviour
         
     }
 
-    private void OnEnable()
+    void initChessBoard()
     {
-        // text.text = "" + GameManager.PlayerMoney;
+        
     }
-
 }
