@@ -14,7 +14,6 @@ public class ChessManager : MonoBehaviour
     {
 /*        pieces = new List<Piece>(32);
 */        board = new Piece[8, 8];
-
         // black pieces
         board[0, 0] = new Rook(-1);
         board[1, 0] = new Knight(-1);
