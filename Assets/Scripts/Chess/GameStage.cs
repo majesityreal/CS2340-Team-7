@@ -2,6 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/**
+ *  Author:         Zheng Yuan
+ *  Date:           2022.06.28
+ *  Version:        1.0
+ *  
+ *  Last update:    
+ *                  2022.06.28  Fix Sprite Scale. Impelement Initalize Chess Board.
+ *  
+ *  Script for Chess Board Game Stage Sprites.
+ */
+
 public class GameStage : MonoBehaviour
 {
     public GameObject GameBoard;
