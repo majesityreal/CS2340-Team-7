@@ -55,7 +55,6 @@ public class ChessManager : MonoBehaviour
         board[6, 6] = new Pawn(1);
         board[7, 6] = new Pawn(1);
 
-
     }
 
     private void Update()

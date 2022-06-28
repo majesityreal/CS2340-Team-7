@@ -11,7 +11,6 @@ public class ChessAI : MonoBehaviour
     const int rookValue = 500;
     const int queenValue = 900;
 
-
     // square values table, default from white's perspective
     readonly static int[] pawnSquareValues = new int[] {
          0, 0, 0, 0, 0, 0, 0, 0,
@@ -86,14 +85,12 @@ public class ChessAI : MonoBehaviour
 
     public static int EvaluateBoard()
     {
-        // material section
+        // material section - starts at 3900 for both
         int whiteMaterial = CountMaterial(1);
         int blackMaterial = CountMaterial(-1);
         int totalMaterial = whiteMaterial - blackMaterial;
-        // material starts at 3900 for both
 
-        // trying to balance down to normal chess eval numbers
-        // dividing this by 40 makes it start about the 
+        // trying to balance down by weighting
         totalMaterial /= 30;
 
 
@@ -102,9 +99,7 @@ public class ChessAI : MonoBehaviour
         int blackPosition = EvaluatePositionBlack();
         int totalPosition = whitePosition - blackPosition;
 
-        // check the perspective, change the totalEval based on this
-
-
+        // TODO - check the perspective, change the totalEval based on this
 
         return totalMaterial + totalPosition;
     }
