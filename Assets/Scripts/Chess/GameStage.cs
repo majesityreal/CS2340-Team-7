@@ -56,10 +56,11 @@ public class GameStage : MonoBehaviour
             {
                 if ((col + row) % 2 == 0)
                 {
-                    Instantiate(Board1, new Vector3(col - 4,4 - row, 0), Quaternion.identity);
-                }else
+                    Instantiate(Board1, new Vector3(col - 4, 4 - row, 0), Quaternion.identity).transform.parent = GameBoard.transform;
+                }
+                else
                 {
-                    Instantiate(Board2, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
+                    Instantiate(Board2, new Vector3(col - 4, 4 - row, 0), Quaternion.identity).transform.parent = GameBoard.transform;
                 }
             }
         }
