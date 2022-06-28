@@ -41,7 +41,7 @@ public class MainMenuHandler : MonoBehaviour
     }
     public void StartChess()
     {
-        PlayerPrefs.SetInt("loaded", 1);
+        PlayerPrefs.SetInt("loaded", 2);
         Application.LoadLevel("Chess");
     }
     public void QuitGame()
