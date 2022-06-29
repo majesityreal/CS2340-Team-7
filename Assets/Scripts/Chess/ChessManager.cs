@@ -40,7 +40,6 @@ public class ChessManager : MonoBehaviour
         {
             board.Add(j, new Pawn(j, 1));
         }
-
         // white pieces
         board.Add(56, new Rook(56, 1));
         board.Add(57, new Knight(57, 1));
@@ -87,9 +86,9 @@ public abstract class Piece
     }
 
     // Returns a list [# of legal move] = position (0-64)
-    public List<int> GetLegalMoves()
+    public List<int> GetLegalMoves(Dictionary<int, Piece> dict)
     {
-        UpdateLegalMoves();
+        UpdateLegalMoves(dict);
         return this.legalMoves;
     }
 
@@ -142,7 +141,7 @@ public abstract class Piece
     }
 
     // Updates legal moves and handles edge cases
-    public abstract void UpdateLegalMoves();
+    public abstract void UpdateLegalMoves(Dictionary<int, Piece> dict);
 
     // Removes piece from dictionary, then reassigns location.
     public virtual void MovePosition(int startPosition, int endPosition)
@@ -150,21 +149,29 @@ public abstract class Piece
         // Assume that the system already updated the legal moves
         if (legalMoves.Contains(endPosition))
         {
-            ChessManager.board.Remove(startPosition);
+/*            int startPosition = this.xCoord + this.yCoord * 8;
+*/            ChessManager.board.Remove(startPosition);
             this.xCoord = endPosition % 8;
             this.yCoord = endPosition / 8;
             ChessManager.board.Add(endPosition, this);
         }
     }
 
-    protected bool IsSquareOccupied(int pos)
+    public int GetPosition()
     {
-        return ChessManager.board.ContainsKey(pos);
+        return this.xCoord + this.yCoord * 8;
     }
 
-    protected bool IsSameColor(int pos, int color)
+
+    
+    protected bool IsSquareOccupied(int pos, Dictionary<int, Piece> dict)
     {
-        if (IsSquareOccupied(pos))
+        return dict.ContainsKey(pos);
+    }
+
+    protected bool IsSameColor(int pos, int color, Dictionary<int, Piece> dict)
+    {
+        if (IsSquareOccupied(pos, dict))
         {
             return color == ChessManager.board[pos].GetColor();
         }
@@ -200,7 +207,7 @@ class Pawn : Piece
         }
     }
 
-    public override void UpdateLegalMoves()
+    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
     {
         // Clears list
         legalMoves = new List<int>();
@@ -211,7 +218,7 @@ class Pawn : Piece
             int doubleMove = yCoord * 8 + possibleMoves[0, 1] * 16 + xCoord;
 
             // Check if both 2 squares are empty before moving.
-            if (!IsSquareOccupied(doubleMove) && !IsSquareOccupied(yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord))
+            if (!IsSquareOccupied(doubleMove, dict) && !IsSquareOccupied(yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord, dict))
             {
                 legalMoves.Add(doubleMove);
             }
@@ -219,14 +226,14 @@ class Pawn : Piece
 
         // Add single move to the legal moves list
         int singleMove = yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord;
-        if (!IsSquareOccupied(singleMove))
+        if (!IsSquareOccupied(singleMove, dict))
         {
             legalMoves.Add(singleMove);
         }
 
         // Add capturing the left to the legal moves list
         int captureLeft = yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord - 1;
-        if (!IsSameColor(captureLeft, color))
+        if (!IsSameColor(captureLeft, color, dict))
         {
             // TODO: Capture the unit on the left
             legalMoves.Add(captureLeft);
@@ -234,7 +241,7 @@ class Pawn : Piece
 
         // Add capturing the right to the legal moves list
         int captureRight = yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord + 1;
-        if (!IsSameColor(captureRight, color))
+        if (!IsSameColor(captureRight, color, dict))
         {
             // TODO: Capture the unit on the right
             legalMoves.Add(captureRight);
@@ -242,7 +249,7 @@ class Pawn : Piece
 
         // Add En Passant (left) to the legal moves list
         int enPassantLeft = yCoord * 8 + xCoord - 1;
-        if (CheckEnPassant(enPassantLeft, color))
+        if (CheckEnPassant(enPassantLeft, color, dict))
         {
             // TODO: Capture the pawn on the left
             if (!legalMoves.Contains(captureLeft)) {
@@ -252,7 +259,7 @@ class Pawn : Piece
 
         // Add En Passant (right) to the legal moves list
         int enPassantRight = yCoord * 8 + xCoord + 1;
-        if (CheckEnPassant(enPassantRight, color))
+        if (CheckEnPassant(enPassantRight, color, dict))
         {
             // TODO: Capture the pawn on the right
             if (!legalMoves.Contains(captureRight)) {
@@ -261,9 +268,9 @@ class Pawn : Piece
         }
     }
 
-    private bool CheckEnPassant(int pos, int color)
+    private bool CheckEnPassant(int pos, int color, Dictionary<int, Piece> dict)
     {
-        if (IsSquareOccupied(pos))
+        if (IsSquareOccupied(pos, dict))
         {
             return color != ChessManager.board[pos].GetColor() && ChessManager.board[pos].GetPieceID() == 1;
         }
@@ -301,7 +308,7 @@ class Bishop : Piece
         };
     }
 
-    public override void UpdateLegalMoves()
+    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
     {
         // Clears list
         legalMoves = new List<int>();
@@ -315,11 +322,11 @@ class Bishop : Piece
             {
                 int newPosition = newXCoord + newYCoord * 8;
 
-                if (!IsSquareOccupied(newPosition))
+                if (!IsSquareOccupied(newPosition, dict))
                 {
                     legalMoves.Add(newPosition);
                 }
-                else if (!IsSameColor(newPosition, color))
+                else if (!IsSameColor(newPosition, color, dict))
                 {
                     legalMoves.Add(newPosition);
                     break;
@@ -358,7 +365,7 @@ class Knight : Piece
         };
     }
 
-    public override void UpdateLegalMoves()
+    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
     {
         // Clears list
         legalMoves = new List<int>();
@@ -371,7 +378,7 @@ class Knight : Piece
             {
                 int newPosition = newXCoord + newYCoord * 8;
 
-                if (!IsSquareOccupied(newPosition) || !IsSameColor(newPosition, color))
+                if (!IsSquareOccupied(newPosition, dict) || !IsSameColor(newPosition, color, dict))
                 {
                     legalMoves.Add(newPosition);
                 }
@@ -401,7 +408,7 @@ class Rook : Piece
         };
     }
 
-    public override void UpdateLegalMoves()
+    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
     {
         // Clears list
         legalMoves = new List<int>();
@@ -415,11 +422,11 @@ class Rook : Piece
             {
                 int newPosition = newXCoord + newYCoord * 8;
 
-                if (!IsSquareOccupied(newPosition))
+                if (!IsSquareOccupied(newPosition, dict))
                 {
                     legalMoves.Add(newPosition);
                 }
-                else if (!IsSameColor(newPosition, color))
+                else if (!IsSameColor(newPosition, color, dict))
                 {
                     legalMoves.Add(newPosition);
                     break;
@@ -458,7 +465,7 @@ class Queen : Piece
         };
     }
 
-    public override void UpdateLegalMoves()
+    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
     {
         // Clears list
         legalMoves = new List<int>();
@@ -472,11 +479,11 @@ class Queen : Piece
             {
                 int newPosition = newXCoord + newYCoord * 8;
 
-                if (!IsSquareOccupied(newPosition))
+                if (!IsSquareOccupied(newPosition, dict))
                 {
                     legalMoves.Add(newPosition);
                 }
-                else if (!IsSameColor(newPosition, color))
+                else if (!IsSameColor(newPosition, color, dict))
                 {
                     legalMoves.Add(newPosition);
                     break;
@@ -524,7 +531,7 @@ class King : Piece
         }
     }
 
-    public override void UpdateLegalMoves()
+    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
     {
         // Clears list
         legalMoves = new List<int>();
@@ -538,11 +545,11 @@ class King : Piece
             {
                 int newPosition = newXCoord + newYCoord * 8;
 
-                if (!IsSquareOccupied(newPosition))
+                if (!IsSquareOccupied(newPosition, dict))
                 {
                     legalMoves.Add(newPosition);
                 }
-                else if (!IsSameColor(newPosition, color))
+                else if (!IsSameColor(newPosition, color, dict))
                 {
                     legalMoves.Add(newPosition);
                     break;
