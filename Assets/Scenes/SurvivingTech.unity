@@ -1704,7 +1704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHitpoints: 100
   currentHitpoints: 100
-  playerSpeed: 5
+  playerSpeed: 3
   damageReduction: 0
   lives: 1
 --- !u!4 &1996801197
