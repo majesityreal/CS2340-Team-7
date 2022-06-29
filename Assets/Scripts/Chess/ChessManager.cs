@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ChessManager : MonoBehaviour
@@ -64,8 +65,12 @@ public abstract class Piece
     protected int yCoord;
     protected int color;
     protected int[,] possibleMoves;
-    protected List<int> legalMoves;
+    public List<int> legalMoves;
     protected int pieceID; // 1: Pawn, 2: Bishop, 3: Knight, 4: Rook, 5: Queen, 6: King
+    protected static int posWhiteKing;
+    protected static int posBlackKing;
+    protected static List<int> whiteKillMap;
+    protected static List<int> blackKillMap;
 
     // Default constructor
     public Piece(int position, int color)
@@ -93,6 +98,49 @@ public abstract class Piece
         return this.pieceID;
     }
 
+
+    // Method that assumes that a king is at a position, then checks if it is check for that color's king.
+    protected bool CheckIfCheck(int pos, int color)
+    {
+        if (color == 1)
+        {
+            UpdateBlackKillMap();
+            return blackKillMap.Contains(pos);
+        }
+        UpdateWhiteKillMap();
+        return whiteKillMap.Contains(pos);
+    }
+
+    protected void UpdateWhiteKillMap()
+    {
+        whiteKillMap = new List<int>();
+
+        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        {
+            if (entry.Value.GetColor == -1)
+            {
+                continue;
+            }
+
+            whiteKillMap = whiteKillMap.Union(entry.Value.legalMoves).ToList();
+        }
+    }
+
+    protected void UpdateBlackKillMap()
+    {
+        blackKillMap = new List<int>();
+
+        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        {
+            if (entry.Value.GetColor == 1)
+            {
+                continue;
+            }
+
+            blackKillMap = blackKillMap.Union(entry.Value.legalMoves).ToList();
+        }
+    }
+
     // Updates legal moves and handles edge cases
     public abstract void UpdateLegalMoves();
 
@@ -107,11 +155,6 @@ public abstract class Piece
             this.yCoord = endPosition / 8;
             ChessManager.board.Add(endPosition, this);
         }
-    }
-
-    public int GetPosition()
-    {
-        return 0;
     }
 
     protected bool IsSquareOccupied(int pos)
@@ -470,6 +513,15 @@ class King : Piece
             {0, 1},
             {1, 1}
         };
+
+        if (color == 1)
+        {
+            posWhiteKing = position;
+        }
+        else
+        {
+            posWhiteKing = position;
+        }
     }
 
     public override void UpdateLegalMoves()
