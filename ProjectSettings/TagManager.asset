@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Button
   - Tutorial
+  - Enemy
+  - PlayerProjectile
   layers:
   - Default
   - TransparentFX
