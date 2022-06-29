@@ -5,9 +5,16 @@ using UnityEngine;
 public class ChessManager : MonoBehaviour
 {
     public static Dictionary<int, Piece> board;
+    public Sprite[] pieceImages;
 
     // Start is called before the first frame update
     void Start()
+    {
+        InitializeBoard();
+        pieceImages = new Sprite[](12);
+    }
+
+    public void InitializeBoard()
     {
         // Dictionary<piece position, piece object>
         board = new Dictionary<int, Piece>();
@@ -182,7 +189,7 @@ class Pawn : Piece
         int captureRight = yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord + 1;
         if (!IsSameColor(captureRight, color))
         {
-            // TODO: Capture the unit on the left
+            // TODO: Capture the unit on the right
             legalMoves.Add(captureRight);
         }
 
