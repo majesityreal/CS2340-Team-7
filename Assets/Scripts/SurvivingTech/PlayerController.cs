@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
             if (lives == 0)
             {
                 //Destroy(gameObject);
-                Debug.Log("Player has died!")
+                Debug.Log("Player has died!");
                 Time.timeScale = 0; // use this for pause too
             }
             else
