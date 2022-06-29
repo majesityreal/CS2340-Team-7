@@ -103,6 +103,11 @@ public abstract class Piece
         }
     }
 
+    public int GetPosition()
+    {
+        return 0;
+    }
+
     protected bool IsSquareOccupied(int pos)
     {
         return ChessManager.board.ContainsKey(pos);

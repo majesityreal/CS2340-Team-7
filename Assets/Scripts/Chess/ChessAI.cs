@@ -83,6 +83,10 @@ public class ChessAI : MonoBehaviour
         -30,-30,  0,  0,  0,  0,-30,-30,
         -50,-30,-30,-30,-30,-30,-30,-50 };
 
+    // go through all the pieces in the board for a color (whose turn is it?)
+    // go through all the moves for each piece
+    // BREADTH FIRST SEARCH
+
     public static int EvaluateBoard()
     {
         // material section - starts at 3900 for both
