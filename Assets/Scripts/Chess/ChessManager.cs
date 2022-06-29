@@ -54,7 +54,7 @@ public class ChessManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(ChessAI.EvaluateBoard());
+        //Debug.Log(ChessAI.EvaluateBoard());
     }
 }
 
