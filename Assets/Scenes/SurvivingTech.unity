@@ -776,7 +776,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.0902256, y: 1}
+    m_SensorSize: {x: 1.7791411, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -944,8 +944,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 4963424189755715071, guid: e7c224de0875b00428a6c846fbdfa14d, type: 3}
-  spawnArea: {x: 10, y: 10}
-  spawnTimer: 3
+  spawnArea: {x: 12, y: 8}
+  spawnInterval: 2
   targetPlayer: {fileID: 1996801194}
 --- !u!1 &1270829765
 GameObject:
