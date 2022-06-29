@@ -11,7 +11,6 @@ public class ChessManager : MonoBehaviour
     void Start()
     {
         InitializeBoard();
-        pieceImages = new Sprite[](12);
     }
 
     public void InitializeBoard()
