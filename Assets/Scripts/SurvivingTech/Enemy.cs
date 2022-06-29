@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] Transform targetLocation;
+    Transform targetLocation;
     [SerializeField] GameObject targetPlayer;
     [SerializeField] float speed = 1;
+    [SerializeField] float health = 50;
     [SerializeField] float damage = 5;
 
     Rigidbody2D rgbEnemy;
@@ -14,7 +15,12 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         rgbEnemy = GetComponent<Rigidbody2D>();
-        targetPlayer = targetLocation.gameObject;
+    }
+
+    public void setTarget(GameObject target)
+    {
+        targetPlayer = target;
+        targetLocation = target.transform;
     }
 
     void FixedUpdate()
