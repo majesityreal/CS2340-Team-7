@@ -471,7 +471,7 @@ class King : Piece
             int newXCoord = xCoord + possibleMoves[i, 0];
             int newYCoord = yCoord + possibleMoves[i, 1];
 
-            while (newXCoord > -1 && newXCoord < 8 && newYCoord > -1 && newYCoord < 8)
+            if (newXCoord > -1 && newXCoord < 8 && newYCoord > -1 && newYCoord < 8)
             {
                 int newPosition = newXCoord + newYCoord * 8;
 
@@ -484,9 +484,6 @@ class King : Piece
                     legalMoves.Add(newPosition);
                     break;
                 }
-
-                newXCoord += possibleMoves[i, 0];
-                newYCoord += possibleMoves[i, 1];
             }
         }
     }
