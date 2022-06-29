@@ -51,9 +51,12 @@ TagManager:
   - name: Pieces
     uniqueID: 1789794377
     locked: 0
-  - name: New Layer 3
+  - name: bg_forest
     uniqueID: 1677622667
     locked: 0
   - name: Player
     uniqueID: 2741232801
+    locked: 0
+  - name: Enemy
+    uniqueID: 423032115
     locked: 0

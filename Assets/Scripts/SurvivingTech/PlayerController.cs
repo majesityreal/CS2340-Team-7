@@ -6,9 +6,11 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody2D rgb;
     Vector3 movementVect;
-    [SerializeField] float hitpoints = 100;
+    [SerializeField] float maxHitpoints = 100;
+    [SerializeField] float currentHitpoints = 100;
     [SerializeField] float playerSpeed = 5.0f;
     [SerializeField] float damageReduction = 0.0f; // percentage of damage taken mitagated by armor
+    [SerializeField] float lives = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -40,16 +42,22 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    public void Hurt(float damage)
     {
-        if (collision.gameObject.tag == "Enemy")
+        currentHitpoints -= damage * (1 - damageReduction);
+        if (currentHitpoints <= 0)
         {
-            // reduce hitpoints by enemy's damage accounting for damage reduction
-            //hitpoints -= gameObject.GetComponent<EnemyController>().damage*(1-damageReduction);
-            if (hitpoints <= 0)
+            lives--;
+            if (lives == 0)
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                Debug.Log("Player has died!")
                 Time.timeScale = 0; // use this for pause too
+            }
+            else
+            {
+                Debug.Log("Extra life used!");
+                currentHitpoints = maxHitpoints;
             }
         }
     }
