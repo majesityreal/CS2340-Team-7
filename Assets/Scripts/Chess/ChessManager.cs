@@ -93,6 +93,16 @@ public abstract class Piece
         return this.pieceID;
     }
 
+    public int GetXPos()
+    {
+        return xCoord;
+    }
+
+    public int GetYPos()
+    {
+        return yCoord;
+    }
+
     // Updates legal moves and handles edge cases
     public abstract void UpdateLegalMoves();
 
