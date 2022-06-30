@@ -87,6 +87,68 @@ public class ChessAI : MonoBehaviour
     // go through all the moves for each piece
     // BREADTH FIRST SEARCH
 
+    private static Queue<Dictionary<int, Piece>> boardList = new Queue<Dictionary<int, Piece>>();
+
+    public static int GetBestMove(int color)
+    {
+        // clear queue
+        boardList.Clear();
+
+        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
+        {
+            if (entry.Value.GetColor() != color)
+            {
+                continue;
+            }
+            // the list of legal moves
+            List<int> moves = entry.Value.GetLegalMoves(ChessManager.board);
+            foreach (int move in moves)
+            {
+                // create temp dictionary
+                Dictionary<int, Piece> temp = ChessManager.board;
+
+                // making the move on the temp board
+                temp.Remove(entry.Key);
+                temp.Add(move, entry.Value);
+
+                // adding temp board to queue for breadth first search
+                boardList.Enqueue(temp);
+            }
+        }
+
+        // go through the queue, analyzing the position, adding again the possible moves from that
+
+        return 0;
+    }
+
+    // recurse through this with a board
+    int GetBestMoveRecursion(int color)
+    {
+        Dictionary<int, Piece> tempBoard = boardList.Dequeue();
+        foreach (KeyValuePair<int, Piece> entry in tempBoard)
+        {
+            if (entry.Value.GetColor() != color)
+            {
+                continue;
+            }
+            // the list of legal moves
+            List<int> moves = entry.Value.GetLegalMoves(tempBoard);
+            foreach (int move in moves)
+            {
+                // create temp dictionary
+                Dictionary<int, Piece> temp = ChessManager.board;
+
+                // making the move on the temp board
+                temp.Remove(entry.Key);
+                temp.Add(move, entry.Value);
+
+                // adding temp board to queue for breadth first search
+                boardList.Enqueue(temp);
+            }
+        }
+        return 0;
+    }
+
     public static int EvaluateBoard()
     {
         // material section - starts at 3900 for both
