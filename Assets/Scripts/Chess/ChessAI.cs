@@ -96,6 +96,27 @@ public class ChessAI : MonoBehaviour
         // clear queue
         boardList.Clear();
 
+        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
+        {
+            if (entry.Value.GetColor() != color)
+            {
+                continue;
+            }
+            // the list of legal moves
+            List<int> moves = entry.Value.GetLegalMoves(ChessManager.board);
+            foreach (int move in moves)
+            {
+                // create temp dictionary
+                Dictionary<int, Piece> temp = ChessManager.board;
+
+                // making the move on the temp board
+                temp.Remove(entry.Key);
+                temp.Add(move, entry.Value);
+
+                // adding temp board to queue for breadth first search
+                boardList.Enqueue(temp);
+            }
+        }
         // starting point
         boardList.Enqueue(ChessManager.board);
 
@@ -106,6 +127,10 @@ public class ChessAI : MonoBehaviour
         return 0;
     }
 
+    // recurse through this with a board
+    int GetBestMoveRecursion(int color)
+    {
+        Dictionary<int, Piece> tempBoard = boardList.Dequeue();
 /*    static int negaMax(Dictionary<int, Piece> board, int depthLeft, int color)
     {
         if (depthLeft == 0)
@@ -158,6 +183,10 @@ public class ChessAI : MonoBehaviour
                 boardList.Enqueue(temp);
             }
         }
+        return 0;
+    }
+
+    public static int EvaluateBoard()
 
         // go one move deeper. Change color to analyze white's possible responses
         return GetBestMoveRecursion((color * -1), depth + 1);

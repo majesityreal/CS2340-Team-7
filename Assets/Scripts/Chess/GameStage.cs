@@ -48,6 +48,7 @@ public class GameStage : MonoBehaviour
     void Start()
     {
         initChessBoard();
+        initChessGameObjects();
     }
 
     // Update is called once per frame
@@ -76,128 +77,136 @@ public class GameStage : MonoBehaviour
                 }
                 SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
                 SpriteBoard[col, row].transform.parent = EmptyPiece.transform;
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetPos(col - 4, 4 - row);
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetColor(0);
+            }
+        }
+    }
+
+    public void initChessGameObjects()
+    {
+        for (int col = 0; col < 8; col++)
+        {
+            for (int row = 0; row < 8; row++)
+            {
+                // Initialize the GameObjects.
+                Destroy(SpriteBoard[col, row]);
+                SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
+                SpriteBoard[col, row].transform.parent = EmptyPiece.transform;
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetPos(col, row);
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetColor(0);
             }
         }
     }
 
     public void UpdatePieces()
     {
-        for (int col = 0; col < 8; col++)
+        initChessGameObjects();
+        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
         {
-            for (int row = 0; row < 8; row++)
+            if (entry.Value.GetType() == typeof(Bishop))
             {
-                // Empty Piece.
-                if (ChessManager.board[col, row] == null)
+                if (entry.Value.GetColor() < 0)
                 {
-                    Destroy(SpriteBoard[col, row]);
-                    SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                    SpriteBoard[col, row].transform.parent = EmptyPiece.transform;
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bBishop, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
                 }
-                // Piece Exist
                 else
                 {
-                    // Bishop
-                    if (ChessManager.board[col, row].GetType() == typeof(Bishop))
-                    {
-                        if (ChessManager.board[col, row].color < 0)
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(bBishop, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = BlackPiece.transform;
-                        } else
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(wBishop, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = WhitePiece.transform;
-                        }
-                    }
-
-                    // King
-                    if (ChessManager.board[col, row].GetType() == typeof(King))
-                    {
-                        if (ChessManager.board[col, row].color < 0)
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(bKing, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = BlackPiece.transform;
-                        }
-                        else
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(wKing, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = WhitePiece.transform;
-                        }
-                    }
-
-                    // Knight
-                    if (ChessManager.board[col, row].GetType() == typeof(Knight))
-                    {
-                        if (ChessManager.board[col, row].color < 0)
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(bKnight, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = BlackPiece.transform;
-                        }
-                        else
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(wKnight, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = WhitePiece.transform;
-                        }
-                    }
-
-                    // Pawn
-                    if (ChessManager.board[col, row].GetType() == typeof(Pawn))
-                    {
-                        if (ChessManager.board[col, row].color < 0)
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(bPown, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = BlackPiece.transform;
-                        }
-                        else
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(wPown, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = WhitePiece.transform;
-                        }
-                    }
-
-                    // Queen
-                    if (ChessManager.board[col, row].GetType() == typeof(Queen))
-                    {
-                        if (ChessManager.board[col, row].color < 0)
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(bQueen, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = BlackPiece.transform;
-                        }
-                        else
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(wQueen, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = WhitePiece.transform;
-                        }
-                    }
-
-                    // Rook
-                    if (ChessManager.board[col, row].GetType() == typeof(Rook))
-                    {
-                        if (ChessManager.board[col, row].color < 0)
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(bRook, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = BlackPiece.transform;
-                        }
-                        else
-                        {
-                            Destroy(SpriteBoard[col, row]);
-                            SpriteBoard[col, row] = Instantiate(wRook, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
-                            SpriteBoard[col, row].transform.parent = WhitePiece.transform;
-                        }
-                    }
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wBishop, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
                 }
             }
+
+            // King
+            if (entry.Value.GetType() == typeof(King))
+            {
+                if (entry.Value.GetColor() < 0)
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bKing, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                }
+                else
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wKing, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                }
+            }
+
+            // Knight
+            if (entry.Value.GetType() == typeof(Knight))
+            {
+                if (entry.Value.GetColor() < 0)
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bKnight, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                }
+                else
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wKnight, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                }
+            }
+
+            // Pawn
+            if (entry.Value.GetType() == typeof(Pawn))
+            {
+                if (entry.Value.GetColor() < 0)
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bPown, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                }
+                else
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wPown, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                }
+            }
+
+            // Queen
+            if (entry.Value.GetType() == typeof(Queen))
+            {
+                if (entry.Value.GetColor() < 0)
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bQueen, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                }
+                else
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wQueen, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                }
+            }
+
+            // Rook
+            if (entry.Value.GetType() == typeof(Rook))
+            {
+                if (entry.Value.GetColor() < 0)
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bRook, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                }
+                else
+                {
+                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wRook, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                }
+            }
+
+            SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].GetComponent<PieceOnClick>().SetPos(entry.Value.GetXPos(), entry.Value.GetYPos());
+            SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].GetComponent<PieceOnClick>().SetColor(entry.Value.GetColor());
         }
     }
 
