@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /**
  *  Author:         Zheng Yuan
@@ -17,6 +18,10 @@ public class PlayerInput : MonoBehaviour
     public static GameObject CurrSelected;
     public static int PlayerColor = 1;// White1 Black-1
     public static bool IsPlayerTurn = true;
+    public static bool IsGameEnd = false;
+
+    //Game Object
+    public GameObject ResultStage;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,24 +32,9 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            
-    }
-
-    //public void SelectPiece(GameObject piece)
-    //{
-        
-    //}
-    public void MoveCurrentPiece()
-    {
-
-    }
-    private void showPossibleMove()
-    {
-
-    }
-
-    private void hidePossibleMove()
-    {
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }
