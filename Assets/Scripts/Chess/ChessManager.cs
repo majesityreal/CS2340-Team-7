@@ -11,6 +11,7 @@ TODO:
     - If king move is in kill map, don't move
     - If in check, only moves that will block kill map will be allowed.
     - If no moves left, checkmate.
+    - Implement bool movable to the piece (If that piece moves, it will make a check)
 2. Stalemate
     - King is the only piece left
     - No possible moves left for king.
