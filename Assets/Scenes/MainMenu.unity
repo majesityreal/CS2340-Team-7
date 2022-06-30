@@ -1801,6 +1801,7 @@ GameObject:
   - component: {fileID: 483825768}
   - component: {fileID: 483825771}
   - component: {fileID: 483825770}
+  - component: {fileID: 483825772}
   m_Layer: 5
   m_Name: Black
   m_TagString: Untagged
@@ -1890,6 +1891,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &483825772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 483825764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f30dc7f1f0c0a438d7295a1a5a41c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &506698477
 GameObject:
   m_ObjectHideFlags: 0
