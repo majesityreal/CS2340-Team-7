@@ -90,12 +90,15 @@ public class ChessAI : MonoBehaviour
     private static Queue<Dictionary<int, Piece>> boardList = new Queue<Dictionary<int, Piece>>();
 
 
-    public int negaMax(int depth, int turn, Dictionary<int, Piece> board)
+    public static int negaMax(int depth, int turn, Dictionary<int, Piece> board)
     {
+        Debug.Log("Depth: " + depth);
         if (depth == 0)
         {
             // this function returns a positive value based on whose turn it is
-            return EvaluateBoard(turn);
+            int val = EvaluateBoard(turn);
+            Debug.Log("Reached end of board with eval: " + val);
+            return val;
         }
 
         int max = int.MinValue;
@@ -111,12 +114,33 @@ public class ChessAI : MonoBehaviour
             List<int> moves = entry.Value.GetLegalMoves(board);
             foreach (int move in moves)
             {
-                // create temp dictionary
-                Dictionary<int, Piece> temp = board;
+                Debug.Log("The piece " + entry.Value.GetColor() + " " + entry.Value + " at position: " + (entry.Value.GetXPos() + (entry.Value.GetYPos() * 8)) + " can move to " + move);
+            }
+            foreach (int move in moves)
+            {
+                // create temp dictionary - THIS NEEDS TO CREATE A DEEP COPY
+                // the other thing to try here is: (I think that does the same thing)
+                // Dictionary<int, Piece> temp = new Dictionary<int, Piece>(board);
+                Dictionary<int, Piece> temp = new Dictionary<int, Piece>();
+                foreach(KeyValuePair<int, Piece> entry2 in board)
+                {
+                    temp.Add(entry2.Key, entry2.Value);
+                }
 
                 // making the move on the temp board
+                // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
                 temp.Remove(entry.Key);
+                if (temp.ContainsKey(move))
+                {
+                    temp.Remove(move);
+                }
                 temp.Add(move, entry.Value);
+
+                Debug.Log("The board: ================================= ");
+                foreach (KeyValuePair<int, Piece> entry2 in temp)
+                {
+                    Debug.Log(entry2.Key + " " + entry2.Value);
+                }
 
                 // re does algorithm with opposite turn, with newly moved piece on board
                 int score = -negaMax(depth - 1, turn * -1, temp);
@@ -131,6 +155,12 @@ public class ChessAI : MonoBehaviour
         return max;
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
     public static int EvaluateBoard(int turn)
     {
         // material section - starts at 3900 for both
@@ -139,7 +169,7 @@ public class ChessAI : MonoBehaviour
         int totalMaterial = whiteMaterial - blackMaterial;
 
         // trying to balance down by weighting
-        totalMaterial /= 30;
+        totalMaterial /= 10;
 
 
         // positions of the pieces - starts at 95 for both
@@ -254,51 +284,7 @@ public class ChessAI : MonoBehaviour
                 material += queenValue;
             }
         }
-
-
-        // // get all the tiles from the square
-        // for (int i = 0; i < 64; i++)
-        // {
-        //     // if nothing there, go to next piece
-        //     if (ChessManager.board[i % 8, i / 8] == null)
-        //     {
-        //         continue;
-        //     }
-        //     // if they are not the color, go to next piece
-        //     if (ChessManager.board[i % 8, i / 8].color != color)
-        //     {
-        //         continue;
-        //     }
-
-
-        //     if (ChessManager.board[i % 8, i / 8] is Pawn) {
-        //         material += pawnValue;
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Knight)
-        //     {
-        //         material += knightValue;
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Bishop)
-        //     {
-        //         material += bishopValue;
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Rook)
-        //     {
-        //         material += rookValue;
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Queen)
-        //     {
-        //         material += queenValue;
-        //     }
-        // }
-
         return material;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
 

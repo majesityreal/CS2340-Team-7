@@ -73,7 +73,7 @@ public class ChessManager : MonoBehaviour
         }
 
         // white pawns
-        for (int j = 48; j < 56; j++) 
+        for (int j = 48; j < 55; j++) 
         {
             board.Add(j, new Pawn(j, 1));
         }
@@ -87,11 +87,19 @@ public class ChessManager : MonoBehaviour
         board.Add(61, new Bishop(61, 1));
         board.Add(62, new Knight(62, 1));
         board.Add(63, new Rook(63, 1));
+        board.Add(40, new Knight(40, 1));
+
+        // THE ERROR COULD BE WITH THIS THIS THIS ADDING A PIECE WITH WRONG KEY OF THE PIECE ITSELF
+
     }
 
     private void Update()
     {
-        Debug.Log(ChessAI.EvaluateBoard());
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            int test = ChessAI.negaMax(4, 1, ChessManager.board);
+            Debug.Log(test);
+        }
     }
 }
 
@@ -214,7 +222,7 @@ public abstract class Piece
     {
         if (IsSquareOccupied(pos, dict))
         {
-            return color == ChessManager.board[pos].GetColor();
+            return color == dict[pos].GetColor();
         }
         return false;
     }
@@ -316,7 +324,7 @@ class Pawn : Piece
     {
         if (IsSquareOccupied(pos, dict))
         {
-            return color != ChessManager.board[pos].GetColor() && ChessManager.board[pos].GetPieceID() == 1;
+            return color != dict[pos].GetColor() && dict[pos].GetPieceID() == 1;
         }
         return false;
     }
