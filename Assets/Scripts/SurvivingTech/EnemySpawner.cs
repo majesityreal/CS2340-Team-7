@@ -33,7 +33,8 @@ public class EnemySpawner : MonoBehaviour
         GameObject newEnemy = Instantiate(enemy);
         newEnemy.transform.position = spawnPosition;
         newEnemy.GetComponent<Enemy>().setTarget(targetPlayer);
-        newEnemy.transform.parent = transform;
+        // for cleaning up, but leave this commented because i have an idea for handling waves
+        // newEnemy.transform.parent = transform;
     }
 
     Vector3 GenerateRandomPosition() // this is to generate enemy off screen
