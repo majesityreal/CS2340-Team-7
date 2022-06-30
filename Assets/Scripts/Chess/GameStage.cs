@@ -234,6 +234,7 @@ public class GameStage : MonoBehaviour
         {
             int x = index % 8;
             int y = index / 8;
+            Debug.Log("You Can Move To " + x.ToString() + y.ToString());
             HighLightBlock[x, y] = Instantiate(possibleBlock, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
             HighLightBlock[x, y].transform.parent = PossibleMoves.transform;
         }
@@ -242,9 +243,9 @@ public class GameStage : MonoBehaviour
 
     public void HidePossibleMoves()
     {
-        for (int i = 0; i < PossibleMoves.transform.childCount; i++)
+        foreach (Transform child in PossibleMoves.transform)
         {
-            Destroy(PossibleMoves.transform.GetChild(i));
+            Destroy(child.gameObject);
         }
     }
 }

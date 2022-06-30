@@ -26,7 +26,12 @@ public class PieceOnClick : MonoBehaviour
                 if (GetColor() == PlayerInput.PlayerColor)
                 {
                     PlayerInput.CurrSelected = gameObject;
-                    GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].GetLegalMoves();
+
+                    //Replace when Game Move Check Fixed.
+                    //GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].GetLegalMoves();
+                    GameStage.HighLightIndex = new List<int>();
+                    GameStage.HighLightIndex.Add(GetIndex() - 8);
+
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
                     Debug.Log("You Select " + gameObject.name.ToString());
                 }
@@ -42,7 +47,14 @@ public class PieceOnClick : MonoBehaviour
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                     PlayerInput.CurrSelected = gameObject;
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
-                    GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].GetLegalMoves();
+
+                    //Replace when Game Move Check Fixed.
+                    //GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].GetLegalMoves();
+                    GameStage.HighLightIndex = new List<int>();
+                    GameStage.HighLightIndex.Add(GetIndex() - 8);
+                    GameStage.HighLightIndex.Add(GetIndex() - 16);
+                    GameStage.HighLightIndex.Add(GetIndex() - 24);
+
                     Debug.Log("You Switch to " + gameObject.name.ToString());
                 }
                 else
