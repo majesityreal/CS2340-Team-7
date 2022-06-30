@@ -246,24 +246,39 @@ public class ChessAI : MonoBehaviour
         return value;
     }
 
-    // returns value of all the material of the pieces still in play
+    // returns value of all the material of the pieces still in play. Accounts for pawn loss in knight and rook value
     static int CountMaterial(int color, Dictionary<int, Piece> board)
     {
         int material = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in board)
+        // count pawns first, because knight and rook value change based on this!
+        int pawnCount = 0;
+        foreach (KeyValuePair<int, Piece> entry in board)
         {
             if (entry.Value.GetColor() != color)
             {
                 continue;
             }
+            if (entry.Value is Pawn)
+            {
+                pawnCount++;
+            }
+        }
 
-            if (entry.Value is Pawn) {
-                material += pawnValue;
+        // subtracting 40 here to keep the same starting value, as the pawn # decrease however, the value decreases
+        int newKnightValue = knightValue + (5 * pawnCount) - 40;
+        // adding 40 to keep same start, as pawns decrease, the value inreases
+        int newRookValue = rookValue - (5 * pawnCount) + 40;
+
+        foreach (KeyValuePair<int, Piece> entry in board)
+            {
+            if (entry.Value.GetColor() != color)
+            {
+                continue;
             }
             else if (entry.Value is Knight)
             {
-                material += knightValue;
+                material += newKnightValue;
             }
             else if (entry.Value is Bishop)
             {
@@ -271,7 +286,7 @@ public class ChessAI : MonoBehaviour
             }
             else if (entry.Value is Rook)
             {
-                material += rookValue;
+                material += newRookValue;
             }
             else if (entry.Value is Queen)
             {

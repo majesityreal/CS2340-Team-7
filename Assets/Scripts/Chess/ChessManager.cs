@@ -97,8 +97,10 @@ public class ChessManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            int test = ChessAI.negaMax(2, 1, board);
+            Debug.Log("Current time: " + DateTime.Now);
+            int test = ChessAI.negaMax(3, 1, board);
             Debug.Log("THIS IS THE END VALUE OF THE NEGA MAX FUNCTION" + test);
+            Debug.Log("Current time: " + DateTime.Now);
         }
     }
 }
