@@ -89,67 +89,49 @@ public class ChessAI : MonoBehaviour
 
     private static Queue<Dictionary<int, Piece>> boardList = new Queue<Dictionary<int, Piece>>();
 
-    public static int GetBestMove(int color)
-    {
-        // clear queue
-        boardList.Clear();
 
-        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
+    public int negaMax(int depth, int turn, Dictionary<int, Piece> board)
+    {
+        if (depth == 0)
         {
-            if (entry.Value.GetColor() != color)
+            // this function returns a positive value based on whose turn it is
+            return EvaluateBoard(turn);
+        }
+
+        int max = int.MinValue;
+
+        // go through all the moves!
+        foreach (KeyValuePair<int, Piece> entry in board)
+        {
+            if (entry.Value.GetColor() != turn)
             {
                 continue;
             }
             // the list of legal moves
-            List<int> moves = entry.Value.GetLegalMoves(ChessManager.board);
+            List<int> moves = entry.Value.GetLegalMoves(board);
             foreach (int move in moves)
             {
                 // create temp dictionary
-                Dictionary<int, Piece> temp = ChessManager.board;
+                Dictionary<int, Piece> temp = board;
 
                 // making the move on the temp board
                 temp.Remove(entry.Key);
                 temp.Add(move, entry.Value);
 
-                // adding temp board to queue for breadth first search
-                boardList.Enqueue(temp);
+                // re does algorithm with opposite turn, with newly moved piece on board
+                int score = -negaMax(depth - 1, turn * -1, temp);
+                if (score > max)
+                {
+                    max = score;
+                    // TODO - STORE THE MOVE HERE STORE THE MOVE HERE STORE THE MOVE HERE
+                }
             }
         }
 
-        // go through the queue, analyzing the position, adding again the possible moves from that
-
-        return 0;
+        return max;
     }
 
-    // recurse through this with a board
-    int GetBestMoveRecursion(int color)
-    {
-        Dictionary<int, Piece> tempBoard = boardList.Dequeue();
-        foreach (KeyValuePair<int, Piece> entry in tempBoard)
-        {
-            if (entry.Value.GetColor() != color)
-            {
-                continue;
-            }
-            // the list of legal moves
-            List<int> moves = entry.Value.GetLegalMoves(tempBoard);
-            foreach (int move in moves)
-            {
-                // create temp dictionary
-                Dictionary<int, Piece> temp = ChessManager.board;
-
-                // making the move on the temp board
-                temp.Remove(entry.Key);
-                temp.Add(move, entry.Value);
-
-                // adding temp board to queue for breadth first search
-                boardList.Enqueue(temp);
-            }
-        }
-        return 0;
-    }
-
-    public static int EvaluateBoard()
+    public static int EvaluateBoard(int turn)
     {
         // material section - starts at 3900 for both
         int whiteMaterial = CountMaterial(1);
@@ -167,7 +149,7 @@ public class ChessAI : MonoBehaviour
 
         // TODO - check the perspective, change the totalEval based on this
 
-        return totalMaterial + totalPosition;
+        return (totalMaterial + totalPosition) * turn;
     }
 
     static int EvaluatePositionWhite()
@@ -202,39 +184,6 @@ public class ChessAI : MonoBehaviour
                 value += queenSquareValues[entry.Key];
             }
         }
-
-        // for (int i = 0; i < 64; i++)
-        // {
-        //     if (ChessManager.board[i % 8, i / 8] == null)
-        //     {
-        //         continue;
-        //     }
-        //     if (ChessManager.board[i % 8, i / 8].color != 1)
-        //     {
-        //         continue;
-        //     }
-
-        //     if (ChessManager.board[i % 8, i / 8] is Pawn)
-        //     {
-        //         value += pawnSquareValues[i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Knight)
-        //     {
-        //         value += knightSquareValues[i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Bishop)
-        //     {
-        //         value += bishopSquareValues[i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Rook)
-        //     {
-        //         value += rookSquareValues[i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Queen)
-        //     {
-        //         value += queenSquareValues[i];
-        //     }
-        // }
         return value;
     }
 
@@ -270,39 +219,6 @@ public class ChessAI : MonoBehaviour
                 value += queenSquareValues[63 - entry.Key];
             }
         }
-
-        // for (int i = 0; i < 64; i++)
-        // {
-        //     if (ChessManager.board[i % 8, i / 8] == null)
-        //     {
-        //         continue;
-        //     }
-        //     if (ChessManager.board[i % 8, i / 8].color != -1)
-        //     {
-        //         continue;
-        //     }
-
-        //     if (ChessManager.board[i % 8, i / 8] is Pawn)
-        //     {
-        //         value += pawnSquareValues[63 - i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Knight)
-        //     {
-        //         value += knightSquareValues[63 - i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Bishop)
-        //     {
-        //         value += bishopSquareValues[63 - i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Rook)
-        //     {
-        //         value += rookSquareValues[63 - i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Queen)
-        //     {
-        //         value += queenSquareValues[63 - i];
-        //     }
-        // }
         return value;
     }
 
@@ -384,4 +300,65 @@ public class ChessAI : MonoBehaviour
     {
         
     }
+
+
+    /*    public static int GetBestMove(int color)
+    {
+        // clear queue
+        boardList.Clear();
+
+        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
+        {
+            if (entry.Value.GetColor() != color)
+            {
+                continue;
+            }
+            // the list of legal moves
+            List<int> moves = entry.Value.GetLegalMoves(ChessManager.board);
+            foreach (int move in moves)
+            {
+                // create temp dictionary
+                Dictionary<int, Piece> temp = ChessManager.board;
+
+                // making the move on the temp board
+                temp.Remove(entry.Key);
+                temp.Add(move, entry.Value);
+
+                // adding temp board to queue for breadth first search
+                boardList.Enqueue(temp);
+            }
+        }
+
+        // go through the queue, analyzing the position, adding again the possible moves from that
+
+        return 0;
+    }*/
+
+    // recurse through this with a board
+    /*    int GetBestMoveRecursion(int color)
+        {
+            Dictionary<int, Piece> tempBoard = boardList.Dequeue();
+            foreach (KeyValuePair<int, Piece> entry in tempBoard)
+            {
+                if (entry.Value.GetColor() != color)
+                {
+                    continue;
+                }
+                // the list of legal moves
+                List<int> moves = entry.Value.GetLegalMoves(tempBoard);
+                foreach (int move in moves)
+                {
+                    // create temp dictionary
+                    Dictionary<int, Piece> temp = ChessManager.board;
+
+                    // making the move on the temp board
+                    temp.Remove(entry.Key);
+                    temp.Add(move, entry.Value);
+
+                    // adding temp board to queue for breadth first search
+                    boardList.Enqueue(temp);
+                }
+            }
+            return 0;
+        }*/
 }
