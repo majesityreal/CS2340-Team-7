@@ -48,6 +48,8 @@ public class PieceOnClick : MonoBehaviour
                 {
                     if (ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].MovePosition(PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex(), GetIndex()))
                     {
+                        PlayerInput.IsPlayerTurn = false;
+                        PlayerInput.CurrSelected.transform.position = new Vector3(GetXPos(), GetYPos());
                         Debug.Log("Move Success!");
                     } else
                     {
@@ -60,12 +62,6 @@ public class PieceOnClick : MonoBehaviour
             }
         }
     }
-
-    private void moveTo(int x, int y)
-    {
-        
-    }
-
 
     // Getter && Setter
     public void SetPos(int x, int y)
