@@ -87,13 +87,13 @@ public class GameStage : MonoBehaviour
                 // SetUp GameBoard
                 if ((col + row) % 2 == 0)
                 {
-                    Instantiate(Board1, new Vector3(col - 4, 4 - row, 0), Quaternion.identity).transform.parent = GameBoard.transform;
+                    Instantiate(Board1, new Vector3(col - 4, 4 - row, transform.position.z), Quaternion.identity).transform.parent = GameBoard.transform;
                 }
                 else
                 {
-                    Instantiate(Board2, new Vector3(col - 4, 4 - row, 0), Quaternion.identity).transform.parent = GameBoard.transform;
+                    Instantiate(Board2, new Vector3(col - 4, 4 - row, transform.position.z), Quaternion.identity).transform.parent = GameBoard.transform;
                 }
-                SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
+                SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, transform.position.z), Quaternion.identity);
                 SpriteBoard[col, row].transform.parent = EmptyPiece.transform;
                 SpriteBoard[col, row].GetComponent<PieceOnClick>().SetPos(col,row);
                 SpriteBoard[col, row].GetComponent<PieceOnClick>().SetColor(0);
@@ -109,7 +109,7 @@ public class GameStage : MonoBehaviour
             {
                 // Initialize the GameObjects.
                 Destroy(SpriteBoard[col, row]);
-                SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
+                SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, transform.position.z), Quaternion.identity);
                 SpriteBoard[col, row].transform.parent = EmptyPiece.transform;
                 SpriteBoard[col, row].GetComponent<PieceOnClick>().SetPos(col, row);
                 SpriteBoard[col, row].GetComponent<PieceOnClick>().SetColor(0);
@@ -127,13 +127,13 @@ public class GameStage : MonoBehaviour
                 if (entry.Value.GetColor() < 0)
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bBishop, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bBishop, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wBishop, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wBishop, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
                 }
             }
@@ -144,13 +144,13 @@ public class GameStage : MonoBehaviour
                 if (entry.Value.GetColor() < 0)
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bKing, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bKing, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wKing, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wKing, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
                 }
             }
@@ -161,13 +161,13 @@ public class GameStage : MonoBehaviour
                 if (entry.Value.GetColor() < 0)
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bKnight, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bKnight, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wKnight, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wKnight, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
                 }
             }
@@ -178,13 +178,13 @@ public class GameStage : MonoBehaviour
                 if (entry.Value.GetColor() < 0)
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bPown, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bPown, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wPown, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wPown, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
                 }
             }
@@ -195,30 +195,29 @@ public class GameStage : MonoBehaviour
                 if (entry.Value.GetColor() < 0)
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bQueen, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bQueen, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wQueen, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wQueen, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
                 }
             }
-
             // Rook
             if (entry.Value.GetType() == typeof(Rook))
             {
                 if (entry.Value.GetColor() < 0)
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bRook, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bRook, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
                     Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wRook, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), 0), Quaternion.identity);
+                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wRook, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
                 }
             }
@@ -235,7 +234,7 @@ public class GameStage : MonoBehaviour
             int x = index % 8;
             int y = index / 8;
             Debug.Log("You Can Move To " + x.ToString() + y.ToString());
-            HighLightBlock[x, y] = Instantiate(possibleBlock, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            HighLightBlock[x, y] = Instantiate(possibleBlock, new Vector3(x - 4, 4 - y, transform.position.z), Quaternion.identity);
             HighLightBlock[x, y].transform.parent = PossibleMoves.transform;
         }
         HighLightIndex = null;

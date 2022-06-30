@@ -18,6 +18,10 @@ public class PlayerInput : MonoBehaviour
     public static GameObject CurrSelected;
     public static int PlayerColor = 1;// White1 Black-1
     public static bool IsPlayerTurn = true;
+    public static bool IsGameEnd = false;
+
+    //Game Object
+    public GameObject ResultStage;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,9 +37,4 @@ public class PlayerInput : MonoBehaviour
             SceneManager.LoadScene("MainMenu");
         }
     }
-
-    //public void SelectPiece(GameObject piece)
-    //{
-        
-    //}
 }
