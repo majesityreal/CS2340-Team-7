@@ -14,16 +14,96 @@ using UnityEngine;
  */
 public class PieceOnClick : MonoBehaviour
 {
+    private int xPos;
+    private int yPos;
+    private int color;
     private void OnMouseDown()
     {
-        if (PlayerInput.CurrSelected == null)
+        if (PlayerInput.IsPlayerTurn)
         {
-            PlayerInput.CurrSelected = gameObject;
-            Debug.Log("You Select " + gameObject.name.ToString());
+            if (PlayerInput.CurrSelected == null)
+            {
+                if (GetColor() == PlayerInput.PlayerColor)
+                {
+                    PlayerInput.CurrSelected = gameObject;
+                    // Show Possible Moves.
+                    PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
+                    Debug.Log("You Select " + gameObject.name.ToString());
+                }
+                else
+                {
+                    Debug.Log("You Can't Select it!");
+                }
+            }
+            else
+            {
+                if (GetColor() == PlayerInput.PlayerColor)// Switch Piece
+                {
+                    PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                    PlayerInput.CurrSelected = gameObject;
+                    PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
+                    Debug.Log("You Switch to " + gameObject.name.ToString());
+                }
+                else
+                {
+                    if (ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].MovePosition(PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex(), GetIndex()))
+                    {
+                        Debug.Log("Move Success!");
+                    } else
+                    {
+                        // Invalid Move
+                        Debug.Log("You Can't Move There!");
+                    }
+                    PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                    PlayerInput.CurrSelected = null;
+                }
+            }
         }
-        else
-        {
-            Debug.Log("You Already Selected " + PlayerInput.CurrSelected.name.ToString());
-        }
+    }
+
+    private void moveTo(int x, int y)
+    {
+        
+    }
+
+
+    // Getter && Setter
+    public void SetPos(int x, int y)
+    {
+        SetXPos(x);
+        SetYPos(y);
+    }
+
+    public void SetXPos(int x) {
+        xPos = x;
+    }
+
+    public void SetYPos(int y)
+    {
+        yPos = y;
+    }
+
+    public int GetXPos()
+    {
+        return xPos;
+    }
+    public int GetYPos()
+    {
+        return yPos;
+    }
+
+    public int GetIndex()
+    {
+        return xPos + yPos * 8;
+    }
+    
+    public void SetColor(int color)
+    {
+        this.color = color;
+    }
+
+    public int GetColor()
+    {
+        return color;
     }
 }
