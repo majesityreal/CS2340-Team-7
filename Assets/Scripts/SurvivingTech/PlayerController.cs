@@ -36,8 +36,9 @@ public class PlayerController : MonoBehaviour
         }
         movementVect.x = Input.GetAxis("Horizontal"); // works with arrows and WASD
         movementVect.y = Input.GetAxis("Vertical");
-        transform.localRotation = Quaternion.Euler(0, 0, 0);
-        movementVect *= playerSpeed;
+        //transform.localRotation = Quaternion.Euler(0, 0, 0);
+        movementVect = Vector3.ClampMagnitude(movementVect, 1.0f) * playerSpeed;
+        //movementVect *= playerSpeed;
         rgb.velocity = movementVect;
         
     }
