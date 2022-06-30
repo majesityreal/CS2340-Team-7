@@ -15,22 +15,18 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     public static GameObject CurrSelected;
-    public static bool isPlayerTurn;
+    public static int PlayerColor = 1;// White1 Black-1
+    public static bool IsPlayerTurn = true;
     // Start is called before the first frame update
     void Start()
     {
-        CurrSelected = null;
-        isPlayerTurn = false;
+        //CurrSelected = null;
+        //IsPlayerTurn = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            CurrSelected = null;
-            Debug.Log("Cancel Selection");
-        }
             
     }
 

@@ -44,6 +44,7 @@ public class ChessManager : MonoBehaviour
 {
     public static Dictionary<int, Piece> board;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -174,13 +175,21 @@ public abstract class Piece
 
             blackKillMap = blackKillMap.Union(entry.Value.legalMoves).ToList();
         }
+    public int GetXPos()
+    {
+        return xCoord;
+    }
+
+    public int GetYPos()
+    {
+        return yCoord;
     }
 
     // Updates legal moves and handles edge cases
     public abstract void UpdateLegalMoves(Dictionary<int, Piece> dict);
 
     // Removes piece from dictionary, then reassigns location.
-    public virtual void MovePosition(int startPosition, int endPosition)
+    public virtual bool MovePosition(int startPosition, int endPosition)
     {
         // Assume that the system already updated the legal moves
         if (legalMoves.Contains(endPosition))
@@ -189,7 +198,9 @@ public abstract class Piece
             this.xCoord = endPosition % 8;
             this.yCoord = endPosition / 8;
             ChessManager.board.Add(endPosition, this);
+            return true;
         }
+        return false;
     }
 
     protected bool IsSquareOccupied(int pos, Dictionary<int, Piece> dict)
@@ -313,7 +324,8 @@ class Pawn : Piece
         return didDoubleMove;
     }
 
-    public override void MovePosition(int startPosition, int endPosition)
+
+    public override bool MovePosition(int startPosition, int endPosition)
     {
         if (isFirstMove) 
         {
@@ -327,7 +339,7 @@ class Pawn : Piece
         {
             didDoubleMove = true;
         }
-        base.MovePosition(startPosition, endPosition);
+        return base.MovePosition(startPosition, endPosition);
     }
 }
 
