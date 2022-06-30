@@ -4,17 +4,17 @@ using UnityEngine;
 
 /**
  *  Author: Kevin Kwan
- *  Date:   2022.06.16
+ *  Date:   2022.06.30
  *  Ver:    1.0
  *  
  *  This script is used to pause the game and bring up the pause menu.
  */
 
-public class PauseMenu : MonoBehaviour
+public class ModPauseMenu : MonoBehaviour
 {
     
     bool isPaused = false;
-    public GameObject pauseMenu;
+    [SerializeField] GameObject pauseMenu;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,11 +33,13 @@ public class PauseMenu : MonoBehaviour
             {
                 pauseMenu.SetActive(false);
                 isPaused = false;
+                Time.timeScale = 1;
             }
             else
             {
                 pauseMenu.SetActive(true);
                 isPaused = true;
+                Time.timeScale = 0;
             }
         }
         
