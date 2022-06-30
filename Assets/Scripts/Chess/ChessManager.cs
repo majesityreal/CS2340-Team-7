@@ -166,7 +166,7 @@ public abstract class Piece
     {
         blackKillMap = new List<int>();
 
-        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
         {
             if (entry.Value.GetColor() == 1)
             {
@@ -175,6 +175,8 @@ public abstract class Piece
 
             blackKillMap = blackKillMap.Union(entry.Value.legalMoves).ToList();
         }
+    }
+
     public int GetXPos()
     {
         return xCoord;
@@ -617,6 +619,6 @@ class King : Piece
 
     private bool CheckUnderAttack(int pos, int color) 
     {
-
+        return true;
     }
 }
