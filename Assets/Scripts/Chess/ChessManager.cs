@@ -1,12 +1,47 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/*
+TODO:
+1. Check & Checkmate
+    - Make kill map
+    - If king move is in kill map, don't move
+    - If in check, only moves that will block kill map will be allowed.
+    - If no moves left, checkmate.
+2. Stalemate
+    - King is the only piece left
+    - No possible moves left for king.
+    - Makes it a draw
+3. En Passant
+    - When pawn comes to the side of enemy pawn by double move.
+    - Can en passant immediately after that turn
+4. Castling
+    - When king is not in check,
+    - When both king and rook did not move
+    - When there are no pieces between king and rook
+    - When any of the squares between king and rook are in opponent's legal moves.
+    - King goes 2 squares left or right
+    - Rook goes next to the king, at the opposite side where it originally was.
+5. Tie
+    - No capture has been made and no pawn has been moved inthe last 50 moves.
+    - Repetition of 3 moves
+    - Agreement
+    - Insufficient materials:
+        - A long king
+        - A king and bishop
+        - A king and knight
+6. Promotion
+    - When pawn reaches the enemies base line(?)
+    - Promotes pawn into Queen/Rook/Knight/Bishop
+*/
+
+
 public class ChessManager : MonoBehaviour
 {
     public static Dictionary<int, Piece> board;
-    public Sprite[] pieceImages;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +75,7 @@ public class ChessManager : MonoBehaviour
         {
             board.Add(j, new Pawn(j, 1));
         }
+
         // white pieces
         board.Add(56, new Rook(56, 1));
         board.Add(57, new Knight(57, 1));
@@ -53,7 +89,7 @@ public class ChessManager : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log(ChessAI.EvaluateBoard());
+        Debug.Log(ChessAI.EvaluateBoard());
     }
 }
 
@@ -64,13 +100,12 @@ public abstract class Piece
     protected int yCoord;
     protected int color;
     protected int[,] possibleMoves;
-    public List<int> legalMoves;
+    protected List<int> legalMoves;
     protected int pieceID; // 1: Pawn, 2: Bishop, 3: Knight, 4: Rook, 5: Queen, 6: King
     protected static int posWhiteKing;
     protected static int posBlackKing;
     protected static List<int> whiteKillMap;
     protected static List<int> blackKillMap;
-
     // Default constructor
     public Piece(int position, int color)
     {
@@ -116,7 +151,7 @@ public abstract class Piece
 
         foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
         {
-            if (entry.Value.GetColor == -1)
+            if (entry.Value.GetColor() == -1)
             {
                 continue;
             }
@@ -131,7 +166,7 @@ public abstract class Piece
 
         foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
         {
-            if (entry.Value.GetColor == 1)
+            if (entry.Value.GetColor() == 1)
             {
                 continue;
             }
@@ -149,21 +184,13 @@ public abstract class Piece
         // Assume that the system already updated the legal moves
         if (legalMoves.Contains(endPosition))
         {
-/*            int startPosition = this.xCoord + this.yCoord * 8;
-*/            ChessManager.board.Remove(startPosition);
+            ChessManager.board.Remove(startPosition);
             this.xCoord = endPosition % 8;
             this.yCoord = endPosition / 8;
             ChessManager.board.Add(endPosition, this);
         }
     }
 
-    public int GetPosition()
-    {
-        return this.xCoord + this.yCoord * 8;
-    }
-
-
-    
     protected bool IsSquareOccupied(int pos, Dictionary<int, Piece> dict)
     {
         return dict.ContainsKey(pos);
@@ -183,10 +210,13 @@ class Pawn : Piece
 {
     // Used for double move of a Pawn
     bool isFirstMove;
+    bool didEnPassant;
+    bool didDoubleMove;
 
     public Pawn(int position, int color) : base(position, color)
     { 
         isFirstMove = true;
+        didDoubleMove = false;
         pieceID = 1;
 
         if (color == 0)
@@ -277,10 +307,24 @@ class Pawn : Piece
         return false;
     }
 
+    public bool GetDidDoubleMove()
+    {
+        return didDoubleMove;
+    }
+
     public override void MovePosition(int startPosition, int endPosition)
     {
-        if (isFirstMove) {
+        if (isFirstMove) 
+        {
             isFirstMove = false;
+        }
+        if (didDoubleMove)
+        {
+            didDoubleMove = false;
+        }
+        if (Math.Abs(endPosition - startPosition) == 16)
+        {
+            didDoubleMove = true;
         }
         base.MovePosition(startPosition, endPosition);
     }
@@ -556,5 +600,10 @@ class King : Piece
                 }
             }
         }
+    }
+
+    private bool CheckUnderAttack(int pos, int color) 
+    {
+
     }
 }
