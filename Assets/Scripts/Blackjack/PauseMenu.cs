@@ -1,21 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /**
  *  Author: Kevin Kwan
- *  Date:   2022.06.30
+ *  Date:   2022.06.16
  *  Ver:    1.0
  *  
  *  This script is used to pause the game and bring up the pause menu.
  */
 
-public class ModPauseMenu : MonoBehaviour
+public class PauseMenu : MonoBehaviour
 {
     
     bool isPaused = false;
-    [SerializeField] GameObject pauseMenu;
+    public GameObject pauseMenu;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,18 +45,16 @@ public class ModPauseMenu : MonoBehaviour
     {
         pauseMenu.SetActive(false);
         isPaused = false;
-        Time.timeScale = 1;
     }
 
     public void pause()
     {
         pauseMenu.SetActive(true);
         isPaused = true;
-        Time.timeScale = 0;
     }
 
     public void backToMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        GameManager.Instance.QuitGame();
     }
 }
