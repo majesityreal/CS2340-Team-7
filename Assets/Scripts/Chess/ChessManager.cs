@@ -7,6 +7,7 @@ public class ChessManager : MonoBehaviour
     public static Dictionary<int, Piece> board;
     public Sprite[] pieceImages;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -107,7 +108,7 @@ public abstract class Piece
     public abstract void UpdateLegalMoves();
 
     // Removes piece from dictionary, then reassigns location.
-    public virtual void MovePosition(int startPosition, int endPosition)
+    public virtual bool MovePosition(int startPosition, int endPosition)
     {
         // Assume that the system already updated the legal moves
         if (legalMoves.Contains(endPosition))
@@ -116,7 +117,9 @@ public abstract class Piece
             this.xCoord = endPosition % 8;
             this.yCoord = endPosition / 8;
             ChessManager.board.Add(endPosition, this);
+            return true;
         }
+        return false;
     }
 
     public int GetPosition()
@@ -237,12 +240,12 @@ class Pawn : Piece
         return false;
     }
 
-    public override void MovePosition(int startPosition, int endPosition)
+    public override bool MovePosition(int startPosition, int endPosition)
     {
         if (isFirstMove) {
             isFirstMove = false;
         }
-        base.MovePosition(startPosition, endPosition);
+        return base.MovePosition(startPosition, endPosition);
     }
 }
 

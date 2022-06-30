@@ -77,6 +77,8 @@ public class GameStage : MonoBehaviour
                 }
                 SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
                 SpriteBoard[col, row].transform.parent = EmptyPiece.transform;
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetPos(col - 4, 4 - row);
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetColor(0);
             }
         }
     }
@@ -91,6 +93,8 @@ public class GameStage : MonoBehaviour
                 Destroy(SpriteBoard[col, row]);
                 SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
                 SpriteBoard[col, row].transform.parent = EmptyPiece.transform;
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetPos(col, row);
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetColor(0);
             }
         }
     }
@@ -200,6 +204,9 @@ public class GameStage : MonoBehaviour
                     SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
                 }
             }
+
+            SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].GetComponent<PieceOnClick>().SetPos(entry.Value.GetXPos(), entry.Value.GetYPos());
+            SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].GetComponent<PieceOnClick>().SetColor(entry.Value.GetColor());
         }
     }
 
