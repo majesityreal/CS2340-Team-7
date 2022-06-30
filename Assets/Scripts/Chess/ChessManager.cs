@@ -87,7 +87,7 @@ public class ChessManager : MonoBehaviour
         board.Add(61, new Bishop(61, 1));
         board.Add(62, new Knight(62, 1));
         board.Add(63, new Rook(63, 1));
-        board.Add(40, new Knight(40, 1));
+        board.Add(17, new Knight(17, 1));
 
         // THE ERROR COULD BE WITH THIS THIS THIS ADDING A PIECE WITH WRONG KEY OF THE PIECE ITSELF
 
@@ -97,8 +97,8 @@ public class ChessManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            int test = ChessAI.negaMax(4, 1, ChessManager.board);
-            Debug.Log(test);
+            int test = ChessAI.negaMax(2, 1, board);
+            Debug.Log("THIS IS THE END VALUE OF THE NEGA MAX FUNCTION" + test);
         }
     }
 }

@@ -96,7 +96,7 @@ public class ChessAI : MonoBehaviour
         if (depth == 0)
         {
             // this function returns a positive value based on whose turn it is
-            int val = EvaluateBoard(turn);
+            int val = EvaluateBoard(turn, board);
             Debug.Log("Reached end of board with eval: " + val);
             return val;
         }
@@ -136,12 +136,6 @@ public class ChessAI : MonoBehaviour
                 }
                 temp.Add(move, entry.Value);
 
-                Debug.Log("The board: ================================= ");
-                foreach (KeyValuePair<int, Piece> entry2 in temp)
-                {
-                    Debug.Log(entry2.Key + " " + entry2.Value);
-                }
-
                 // re does algorithm with opposite turn, with newly moved piece on board
                 int score = -negaMax(depth - 1, turn * -1, temp);
                 if (score > max)
@@ -161,11 +155,11 @@ public class ChessAI : MonoBehaviour
 
     }
 
-    public static int EvaluateBoard(int turn)
+    public static int EvaluateBoard(int turn, Dictionary<int, Piece> board)
     {
         // material section - starts at 3900 for both
-        int whiteMaterial = CountMaterial(1);
-        int blackMaterial = CountMaterial(-1);
+        int whiteMaterial = CountMaterial(1, board);
+        int blackMaterial = CountMaterial(-1, board);
         int totalMaterial = whiteMaterial - blackMaterial;
 
         // trying to balance down by weighting
@@ -173,8 +167,8 @@ public class ChessAI : MonoBehaviour
 
 
         // positions of the pieces - starts at 95 for both
-        int whitePosition = EvaluatePositionWhite();
-        int blackPosition = EvaluatePositionBlack();
+        int whitePosition = EvaluatePositionWhite(board);
+        int blackPosition = EvaluatePositionBlack(board);
         int totalPosition = whitePosition - blackPosition;
 
         // TODO - check the perspective, change the totalEval based on this
@@ -182,11 +176,11 @@ public class ChessAI : MonoBehaviour
         return (totalMaterial + totalPosition) * turn;
     }
 
-    static int EvaluatePositionWhite()
+    static int EvaluatePositionWhite(Dictionary<int, Piece> board)
     {
         int value = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        foreach(KeyValuePair<int, Piece> entry in board)
         {
             if (entry.Value.GetColor() != 1)
             {
@@ -217,11 +211,11 @@ public class ChessAI : MonoBehaviour
         return value;
     }
 
-    static int EvaluatePositionBlack()
+    static int EvaluatePositionBlack(Dictionary<int, Piece> board)
     {
         int value = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        foreach(KeyValuePair<int, Piece> entry in board)
         {
             if (entry.Value.GetColor() != -1)
             {
@@ -253,11 +247,11 @@ public class ChessAI : MonoBehaviour
     }
 
     // returns value of all the material of the pieces still in play
-    static int CountMaterial(int color)
+    static int CountMaterial(int color, Dictionary<int, Piece> board)
     {
         int material = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        foreach(KeyValuePair<int, Piece> entry in board)
         {
             if (entry.Value.GetColor() != color)
             {
