@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &166442886
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 166442887}
+  m_Layer: 0
+  m_Name: PossibleMoves
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &166442887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 166442886}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1163784005}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &662356387
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,6 +335,7 @@ Transform:
   m_Children:
   - {fileID: 1892090708}
   - {fileID: 1176492561}
+  - {fileID: 166442887}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -323,6 +355,7 @@ MonoBehaviour:
   EmptyPiece: {fileID: 1431184034}
   BlackPiece: {fileID: 662356387}
   WhitePiece: {fileID: 1403698430}
+  PossibleMoves: {fileID: 166442886}
   Board1: {fileID: 4567769315611386728, guid: 4eab3ff7fd505724ca7144f9efb7d5dc, type: 3}
   Board2: {fileID: 4567769315611386728, guid: 8c780c7b062903a41a52c57f44a10750, type: 3}
   emptyPiece: {fileID: 4512750180484276558, guid: bf6234033e1c8414090c7bbb132d51c9, type: 3}
@@ -338,6 +371,7 @@ MonoBehaviour:
   wPown: {fileID: 8696343285711295674, guid: 0f2273ef9c79f724d9541ad3269668be, type: 3}
   wQueen: {fileID: 8517108463322699595, guid: bb53c5ebd59b55f43b06e638ec84c7d4, type: 3}
   wRook: {fileID: 686692761778711871, guid: be0712f4db3567d43af0ddb049d30e93, type: 3}
+  possibleBlock: {fileID: 4567769315611386728, guid: eb0ccf2ea054def49811bb89b10c2ab4, type: 3}
 --- !u!114 &1163784007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,6 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f75352d59cc6e94ea3552ac1b6fa783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pieceImages: []
 --- !u!4 &1431056200
 Transform:
   m_ObjectHideFlags: 0

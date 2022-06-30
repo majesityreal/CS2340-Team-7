@@ -34,17 +34,4 @@ public class PlayerInput : MonoBehaviour
     //{
         
     //}
-    public void MoveCurrentPiece()
-    {
-
-    }
-    private void showPossibleMove()
-    {
-
-    }
-
-    private void hidePossibleMove()
-    {
-
-    }
 }

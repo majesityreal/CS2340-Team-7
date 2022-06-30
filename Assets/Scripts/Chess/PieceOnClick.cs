@@ -26,7 +26,7 @@ public class PieceOnClick : MonoBehaviour
                 if (GetColor() == PlayerInput.PlayerColor)
                 {
                     PlayerInput.CurrSelected = gameObject;
-                    // Show Possible Moves.
+                    GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].GetLegalMoves();
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
                     Debug.Log("You Select " + gameObject.name.ToString());
                 }
@@ -42,6 +42,7 @@ public class PieceOnClick : MonoBehaviour
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                     PlayerInput.CurrSelected = gameObject;
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
+                    GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].GetLegalMoves();
                     Debug.Log("You Switch to " + gameObject.name.ToString());
                 }
                 else

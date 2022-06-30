@@ -21,6 +21,7 @@ public class GameStage : MonoBehaviour
     public GameObject EmptyPiece;
     public GameObject BlackPiece;
     public GameObject WhitePiece;
+    public GameObject PossibleMoves;
 
     // Prefabs
     public GameObject Board1;
@@ -42,7 +43,11 @@ public class GameStage : MonoBehaviour
     public GameObject wQueen;
     public GameObject wRook;
 
+    public GameObject possibleBlock;
+
     public static GameObject[,] SpriteBoard = new GameObject[8, 8];
+    public static List<int> HighLightIndex = null;
+    public static GameObject[,] HighLightBlock = new GameObject[8, 8];
 
     // Start is called before the first frame update
     void Start()
@@ -54,9 +59,22 @@ public class GameStage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Initalize the Board Pieces.
         if (Input.GetKeyDown(KeyCode.S))
         {
             UpdatePieces();
+        }
+
+        // If Player selected a piece, update it's possible move.
+        if (HighLightIndex != null)
+        {
+            HidePossibleMoves();
+            ShowPossibleMoves();
+        }
+
+        if (PlayerInput.CurrSelected == null)
+        {
+            HidePossibleMoves();
         }
     }
 
@@ -77,7 +95,7 @@ public class GameStage : MonoBehaviour
                 }
                 SpriteBoard[col, row] = Instantiate(emptyPiece, new Vector3(col - 4, 4 - row, 0), Quaternion.identity);
                 SpriteBoard[col, row].transform.parent = EmptyPiece.transform;
-                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetPos(col - 4, 4 - row);
+                SpriteBoard[col, row].GetComponent<PieceOnClick>().SetPos(col,row);
                 SpriteBoard[col, row].GetComponent<PieceOnClick>().SetColor(0);
             }
         }
@@ -210,4 +228,23 @@ public class GameStage : MonoBehaviour
         }
     }
 
+    public void ShowPossibleMoves()
+    {
+        foreach (int index in HighLightIndex)
+        {
+            int x = index % 8;
+            int y = index / 8;
+            HighLightBlock[x, y] = Instantiate(possibleBlock, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            HighLightBlock[x, y].transform.parent = PossibleMoves.transform;
+        }
+        HighLightIndex = null;
+    }
+
+    public void HidePossibleMoves()
+    {
+        for (int i = 0; i < PossibleMoves.transform.childCount; i++)
+        {
+            Destroy(PossibleMoves.transform.GetChild(i));
+        }
+    }
 }
