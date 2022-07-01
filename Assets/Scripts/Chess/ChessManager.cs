@@ -25,6 +25,10 @@ public class ChessManager : MonoBehaviour
         board = new Piece[8, 8];
 
         // Black pieces [new Piece(Color, X, Y)]
+        for (int i = 0; i < 8; i++)
+        {
+            board[i, 1] = new Pawn(-1, i, 1);
+        }
         board[0, 0] = new Rook(-1, 0, 0);
         board[1, 0] = new Knight(-1, 1, 0);
         board[2, 0] = new Bishop(-1, 2, 0);
@@ -33,7 +37,7 @@ public class ChessManager : MonoBehaviour
         board[5, 0] = new Bishop(-1, 5, 0);
         board[6, 0] = new Knight(-1, 6, 0);
         board[7, 0] = new Rook(-1, 7, 0);
-        for (int i = 0; i < 8; i++)
+        
 
 
         // White pieces [new Piece(Color, X, Y)]
