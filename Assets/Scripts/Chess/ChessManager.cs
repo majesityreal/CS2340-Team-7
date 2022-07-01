@@ -1,635 +1,155 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-/*
-TODO:
-1. Check & Checkmate
-    - Make kill map
-    - If king move is in kill map, don't move
-    - If in check, only moves that will block kill map will be allowed.
-    - If no moves left, checkmate.
-    - Implement bool movable to the piece (If that piece moves, it will make a check)
-2. Stalemate
-    - King is the only piece left
-    - No possible moves left for king.
-    - Makes it a draw
-3. En Passant
-    - When pawn comes to the side of enemy pawn by double move.
-    - Can en passant immediately after that turn
-4. Castling
-    - When king is not in check,
-    - When both king and rook did not move
-    - When there are no pieces between king and rook
-    - When any of the squares between king and rook are in opponent's legal moves.
-    - King goes 2 squares left or right
-    - Rook goes next to the king, at the opposite side where it originally was.
-5. Tie
-    - No capture has been made and no pawn has been moved inthe last 50 moves.
-    - Repetition of 3 moves
-    - Agreement
-    - Insufficient materials:
-        - A long king
-        - A king and bishop
-        - A king and knight
-6. Promotion
-    - When pawn reaches the enemies base line(?)
-    - Promotes pawn into Queen/Rook/Knight/Bishop
-*/
 
 
 public class ChessManager : MonoBehaviour
 {
-    public static Dictionary<int, Piece> board;
+    // [xCoord, yCoord]
+    public static Piece[,] board;
+    public List<string> moveRecord;
+    public bool isWhiteTurn;
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        InitializeBoard();
+        InitializeGame();
     }
 
-    public void InitializeBoard()
+    public void InitializeGame()
     {
-        // Dictionary<piece position, piece object>
-        board = new Dictionary<int, Piece>();
+        isWhiteTurn = true;
+        moveRecord = new List<string>();
 
-        // black pieces
-        board.Add(0, new Rook(0, -1));
-        board.Add(1, new Knight(1, -1));
-        board.Add(2, new Bishop(2, -1));
-        board.Add(3, new Queen(3, -1));
-        board.Add(4, new King(4, -1));
-        board.Add(5, new Bishop(5, -1));
-        board.Add(6, new Knight(6, -1));
-        board.Add(7, new Rook(7, -1));
+        // Clears 2D array
+        board = new Piece[8, 8];
 
-        // black pawns
-        for (int i = 8; i < 16; i++) 
+        // Black pieces [new Piece(Color, X, Y)]
+        board[0, 0] = new Rook(-1, 0, 0);
+        board[1, 0] = new Knight(-1, 1, 0);
+        board[2, 0] = new Bishop(-1, 2, 0);
+        board[3, 0] = new Queen(-1, 3, 0);
+        board[4, 0] = new King(-1, 4, 0);
+        board[5, 0] = new Bishop(-1, 5, 0);
+        board[6, 0] = new Knight(-1, 6, 0);
+        board[7, 0] = new Rook(-1, 7, 0);
+        for (int i = 0; i < 8; i++)
+
+
+        // White pieces [new Piece(Color, X, Y)]
+        for (int j = 0; j < 8; j++)
         {
-            board.Add(i, new Pawn(i, -1));
+            board[j, 6] = new Pawn(1, j, 6);
         }
-
-        // white pawns
-        for (int j = 48; j < 55; j++) 
-        {
-            board.Add(j, new Pawn(j, 1));
-        }
-
-        // white pieces
-        board.Add(56, new Rook(56, 1));
-        board.Add(57, new Knight(57, 1));
-        board.Add(58, new Bishop(58, 1));
-        board.Add(59, new Queen(59, 1));
-        board.Add(60, new King(60, 1));
-        board.Add(61, new Bishop(61, 1));
-        board.Add(62, new Knight(62, 1));
-        board.Add(63, new Rook(63, 1));
-        board.Add(17, new Knight(17, 1));
-
-        // THE ERROR COULD BE WITH THIS THIS THIS ADDING A PIECE WITH WRONG KEY OF THE PIECE ITSELF
-
+        board[0, 7] = new Rook(1, 0, 7);
+        board[1, 7] = new Knight(1, 1, 7);
+        board[2, 7] = new Bishop(1, 2, 7);
+        board[3, 7] = new King(1, 3, 7);
+        board[4, 7] = new Queen(1, 4, 7);
+        board[5, 7] = new Bishop(1, 5, 7);
+        board[6, 7] = new Knight(1, 6, 7);
+        board[7, 7] = new Rook(1, 7, 7);
     }
 
-    private void Update()
+    public void MovePosition(int oldX, int oldY, int newX, int newY)
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log("Current time: " + DateTime.Now);
-            int test = ChessAI.negaMax(3, 1, board);
-            Debug.Log("THIS IS THE END VALUE OF THE NEGA MAX FUNCTION" + test);
-            Debug.Log("Current time: " + DateTime.Now);
-        }
-    }
-}
-
-public abstract class Piece
-{
-    protected Sprite sprite;
-    protected int xCoord;
-    protected int yCoord;
-    protected int color;
-    protected int[,] possibleMoves;
-    protected List<int> legalMoves;
-    protected int pieceID; // 1: Pawn, 2: Bishop, 3: Knight, 4: Rook, 5: Queen, 6: King
-    protected static int posWhiteKing;
-    protected static int posBlackKing;
-    protected static List<int> whiteKillMap;
-    protected static List<int> blackKillMap;
-    // Default constructor
-    public Piece(int position, int color)
-    {
-        this.xCoord = position % 8;
-        this.yCoord = position / 8;
-        this.color = color;
-        this.legalMoves = new List<int>();
-    }
-
-    public int GetColor()
-    {
-        return this.color;
-    }
-
-    // Returns a list [# of legal move] = position (0-64)
-    public List<int> GetLegalMoves(Dictionary<int, Piece> dict)
-    {
-        UpdateLegalMoves(dict);
-        return this.legalMoves;
-    }
-
-    public int GetPieceID()
-    {
-        return this.pieceID;
-    }
-
-
-    // Method that assumes that a king is at a position, then checks if it is check for that color's king.
-    protected bool CheckIfCheck(int pos, int color)
-    {
-        if (color == 1)
-        {
-            UpdateBlackKillMap();
-            return blackKillMap.Contains(pos);
-        }
-        UpdateWhiteKillMap();
-        return whiteKillMap.Contains(pos);
-    }
-
-    protected void UpdateWhiteKillMap()
-    {
-        whiteKillMap = new List<int>();
-
-        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
-        {
-            if (entry.Value.GetColor() == -1)
-            {
-                continue;
-            }
-
-            whiteKillMap = whiteKillMap.Union(entry.Value.legalMoves).ToList();
-        }
-    }
-
-    protected void UpdateBlackKillMap()
-    {
-        blackKillMap = new List<int>();
-
-        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
-        {
-            if (entry.Value.GetColor() == 1)
-            {
-                continue;
-            }
-
-            blackKillMap = blackKillMap.Union(entry.Value.legalMoves).ToList();
-        }
-    }
-
-    public int GetXPos()
-    {
-        return xCoord;
-    }
-
-    public int GetYPos()
-    {
-        return yCoord;
-    }
-
-    // Updates legal moves and handles edge cases
-    public abstract void UpdateLegalMoves(Dictionary<int, Piece> dict);
-
-    // Removes piece from dictionary, then reassigns location.
-    public virtual bool MovePosition(int startPosition, int endPosition)
-    {
-        // Assume that the system already updated the legal moves
-        if (legalMoves.Contains(endPosition))
-        {
-            ChessManager.board.Remove(startPosition);
-            this.xCoord = endPosition % 8;
-            this.yCoord = endPosition / 8;
-            ChessManager.board.Add(endPosition, this);
-            return true;
-        }
-        return false;
-    }
-
-    protected bool IsSquareOccupied(int pos, Dictionary<int, Piece> dict)
-    {
-        return dict.ContainsKey(pos);
-    }
-
-    protected bool IsSameColor(int pos, int color, Dictionary<int, Piece> dict)
-    {
-        if (IsSquareOccupied(pos, dict))
-        {
-            return color == dict[pos].GetColor();
-        }
-        return false;
-    }
-}
-
-class Pawn : Piece
-{
-    // Used for double move of a Pawn
-    bool isFirstMove;
-    bool didEnPassant;
-    bool didDoubleMove;
-
-    public Pawn(int position, int color) : base(position, color)
-    { 
-        isFirstMove = true;
-        didDoubleMove = false;
-        pieceID = 1;
-
-        if (color == 0)
-        {
-            // TODO: sprite = WHITE PAWN IMAGE;
-            possibleMoves = new int[1, 2]
-            {
-                {0, -1}
-            };
-        }
-        else
-        {
-            // TODO: sprite = BLACK PAWN IMAGE;
-            possibleMoves = new int[1, 2]
-            {
-                {0, 1}
-            };
-        }
-    }
-
-    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
-    {
-        // Clears list
-        legalMoves = new List<int>();
-
-        // Add double move to the legal moves list
-        if (isFirstMove)
-        {
-            int doubleMove = yCoord * 8 + possibleMoves[0, 1] * 16 + xCoord;
-
-            // Check if both 2 squares are empty before moving.
-            if (!IsSquareOccupied(doubleMove, dict) && !IsSquareOccupied(yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord, dict))
-            {
-                legalMoves.Add(doubleMove);
-            }
-        }
-
-        // Add single move to the legal moves list
-        int singleMove = yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord;
-        if (!IsSquareOccupied(singleMove, dict))
-        {
-            legalMoves.Add(singleMove);
-        }
-
-        // Add capturing the left to the legal moves list
-        int captureLeft = yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord - 1;
-        if (!IsSameColor(captureLeft, color, dict))
-        {
-            // TODO: Capture the unit on the left
-            legalMoves.Add(captureLeft);
-        }
-
-        // Add capturing the right to the legal moves list
-        int captureRight = yCoord * 8 + possibleMoves[0, 1] * 8 + xCoord + 1;
-        if (!IsSameColor(captureRight, color, dict))
-        {
-            // TODO: Capture the unit on the right
-            legalMoves.Add(captureRight);
-        }
-
-        // Add En Passant (left) to the legal moves list
-        int enPassantLeft = yCoord * 8 + xCoord - 1;
-        if (CheckEnPassant(enPassantLeft, color, dict))
-        {
-            // TODO: Capture the pawn on the left
-            if (!legalMoves.Contains(captureLeft)) {
-                legalMoves.Add(captureLeft);
-            }
-        }
-
-        // Add En Passant (right) to the legal moves list
-        int enPassantRight = yCoord * 8 + xCoord + 1;
-        if (CheckEnPassant(enPassantRight, color, dict))
-        {
-            // TODO: Capture the pawn on the right
-            if (!legalMoves.Contains(captureRight)) {
-                legalMoves.Add(captureRight);
-            }
-        }
-    }
-
-    private bool CheckEnPassant(int pos, int color, Dictionary<int, Piece> dict)
-    {
-        if (IsSquareOccupied(pos, dict))
-        {
-            return color != dict[pos].GetColor() && dict[pos].GetPieceID() == 1;
-        }
-        return false;
-    }
-
-    public bool GetDidDoubleMove()
-    {
-        return didDoubleMove;
-    }
-
-
-    public override bool MovePosition(int startPosition, int endPosition)
-    {
-        if (isFirstMove) 
-        {
-            isFirstMove = false;
-        }
-        if (didDoubleMove)
-        {
-            didDoubleMove = false;
-        }
-        if (Math.Abs(endPosition - startPosition) == 16)
-        {
-            didDoubleMove = true;
-        }
-        return base.MovePosition(startPosition, endPosition);
-    }
-}
-
-class Bishop : Piece
-{
-    public Bishop(int position, int color) : base(position, color)
-    {
-        if (color == 0)
-        {
-            // sprite = WHITE BISHOP IMAGE;
-        }
-        else
-        {
-            // sprite = BLACK BISHOP IMAGE;
-        }
-
-        possibleMoves = new int[4, 2]
-        {
-            {-1, -1},
-            {1, -1},
-            {-1, 1},
-            {1, 1}
-        };
-    }
-
-    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
-    {
-        // Clears list
-        legalMoves = new List<int>();
+        RecordMove(oldX, oldY, newX, newY);
         
-        for (int i = 0; i < 4; i++)
+        board[oldX, oldY].xCoord = newX;
+        board[oldX, oldY].yCoord = newY;
+        board[newX, newY] = board[oldX, oldY];
+        board[oldX, oldY] = null;
+
+        // Promotion
+        // TODO: Ask player for piece type 
+        if ((int) board[newX, newY].type == 3 && newY == 0 || newY == 7)
         {
-            int newXCoord = xCoord + possibleMoves[i, 0];
-            int newYCoord = yCoord + possibleMoves[i, 1];
+            board[newX, newY] = new Queen(board[newX, newY].color, newX, newY);
+        }
 
-            while (newXCoord > -1 && newXCoord < 8 && newYCoord > -1 && newYCoord < 8)
+        isWhiteTurn = !isWhiteTurn;
+    }
+
+    public void SpecialMovePosition(int oldX, int oldY, int newX, int newY)
+    {
+        RecordMove(oldX, oldY, newX, newY);
+        int pieceType = (int) board[oldX, oldY].type;
+
+        // If Pawn, En Passant. If King, Castling
+        if (pieceType == 3)
+        {
+            board[oldX, oldY].xCoord = newX;
+            board[oldX, oldY].yCoord = newY;
+            board[newX, newY] = board[oldX, oldY];
+            board[oldX, oldY] = null;
+            // Removes the pawn that double moved
+            board[newX, oldY] = null;
+        }
+        else if (pieceType == 1)
+        {
+            board[oldX, oldY].xCoord = newX;
+            board[newX, newY] = board[oldX, oldY];
+            board[oldX, oldY] = null;
+
+            if (newX == 1)
             {
-                int newPosition = newXCoord + newYCoord * 8;
-
-                if (!IsSquareOccupied(newPosition, dict))
-                {
-                    legalMoves.Add(newPosition);
-                }
-                else if (!IsSameColor(newPosition, color, dict))
-                {
-                    legalMoves.Add(newPosition);
-                    break;
-                }
-
-                newXCoord += possibleMoves[i, 0];
-                newYCoord += possibleMoves[i, 1];
+                board[0, oldY].xCoord = newX + 1;
+                board[newX + 1, newY] = board[0, oldY];
+                board[0, oldY] = null;
+            }
+            else
+            {
+                board[7, oldY].xCoord = newX - 1;
+                board[newX - 1, newY] = board[7, oldY];
+                board[7, oldY] = null;
             }
         }
+
+        isWhiteTurn = !isWhiteTurn;
     }
-}
 
-class Knight : Piece
-{
-    public Knight(int position, int color) : base(position, color)
+    // Records each move into a string: [Piece Type][oldX][oldY][newX][newY]
+    private void RecordMove(int oldX, int oldY, int newX, int newY)
     {
-        if (color == 0)
+        string record = "";
+        switch ((int) board[oldX, oldY].type)
         {
-            // sprite = WHITE KNIGHT IMAGE;
-        }
-        else
-        {
-            // sprite = BLACK KNIGHT IMAGE;
-        }
-
-        possibleMoves = new int[8, 2]
-        {
-            {-1, -2},
-            {1, -2},
-            {-2, -1},
-            {2, -1},
-            {-2, 1},
-            {2, 1},
-            {-1, 2},
-            {1, 2}
+            case 0:
+                record += "";
+                break;
+            case 1:
+                record += "K";
+                break;
+            case 2:
+                record += "N";
+                break;
+            case 3:
+                break;
+            case 4:
+                record += "Q";
+                break;
+            case 5:
+                record += "R";
+                break;
         };
+        
+        if (board[newX, newY] != null)
+        {
+            record += "x";
+        }
+        record += "" + oldX + oldY + newX + newY;
+        moveRecord.Add(record);
     }
 
-    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
+    public void CheckMate(int color)
     {
-        // Clears list
-        legalMoves = new List<int>();
-
-        for (int i = 0; i < 8; i++)
-        {
-            int newXCoord = xCoord + possibleMoves[i, 0];
-            int newYCoord = yCoord + possibleMoves[i, 1];
-            if (newXCoord > -1 && newXCoord < 8 && newYCoord > -1 && newYCoord < 8)
-            {
-                int newPosition = newXCoord + newYCoord * 8;
-
-                if (!IsSquareOccupied(newPosition, dict) || !IsSameColor(newPosition, color, dict))
-                {
-                    legalMoves.Add(newPosition);
-                }
-            }
-        }
-    }
-}
-
-class Rook : Piece
-{
-    public Rook(int position, int color) : base(position, color)
-    {
-        if (color == 0)
-        {
-            // sprite = WHITE ROOK IMAGE;
-        }
-        else
-        {
-            // sprite = BLACK ROOK IMAGE;
-        }
-        possibleMoves = new int[4, 2]
-        {
-            {0, -1},
-            {-1, 0},
-            {1, 0},
-            {0, 1}
-        };
-    }
-
-    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
-    {
-        // Clears list
-        legalMoves = new List<int>();
-
-        for (int i = 0; i < 4; i++)
-        {
-            int newXCoord = xCoord + possibleMoves[i, 0];
-            int newYCoord = yCoord + possibleMoves[i, 1];
-
-            while (newXCoord > -1 && newXCoord < 8 && newYCoord > -1 && newYCoord < 8)
-            {
-                int newPosition = newXCoord + newYCoord * 8;
-
-                if (!IsSquareOccupied(newPosition, dict))
-                {
-                    legalMoves.Add(newPosition);
-                }
-                else if (!IsSameColor(newPosition, color, dict))
-                {
-                    legalMoves.Add(newPosition);
-                    break;
-                }
-
-                newXCoord += possibleMoves[i, 0];
-                newYCoord += possibleMoves[i, 1];
-            }
-        }
-    }
-}
-
-class Queen : Piece
-{
-    public Queen(int position, int color) : base(position, color)
-    {
-        if (color == 0)
-        {
-            // sprite = WHITE QUEEN IMAGE;
-        }
-        else
-        {
-            // sprite = BLACK QUEEN IMAGE;
-        }
-
-        possibleMoves = new int[8, 2]
-        {
-            {-1, -1},
-            {1, -1},
-            {-1, 1},
-            {1, 1},
-            {0, -1},
-            {-1, 0},
-            {1, 0},
-            {0, 1}
-        };
-    }
-
-    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
-    {
-        // Clears list
-        legalMoves = new List<int>();
-
-        for (int i = 0; i < 8; i++)
-        {
-            int newXCoord = xCoord + possibleMoves[i, 0];
-            int newYCoord = yCoord + possibleMoves[i, 1];
-
-            while (newXCoord > -1 && newXCoord < 8 && newYCoord > -1 && newYCoord < 8)
-            {
-                int newPosition = newXCoord + newYCoord * 8;
-
-                if (!IsSquareOccupied(newPosition, dict))
-                {
-                    legalMoves.Add(newPosition);
-                }
-                else if (!IsSameColor(newPosition, color, dict))
-                {
-                    legalMoves.Add(newPosition);
-                    break;
-                }
-
-                newXCoord += possibleMoves[i, 0];
-                newYCoord += possibleMoves[i, 1];
-            }
-        }
-    }
-}
-
-class King : Piece
-{
-    public King(int position, int color) : base(position, color)
-    {
-        if (color == 0)
-        {
-            // sprite = WHITE KING IMAGE;
-        }
-        else
-        {
-            // sprite = BLACK KING IMAGE;
-        }
-
-        possibleMoves = new int[8, 2]
-        {
-            {-1, -1},
-            {0, -1},
-            {1, -1},
-            {-1, 0},
-            {1, 0},
-            {-1, 1},
-            {0, 1},
-            {1, 1}
-        };
-
         if (color == 1)
         {
-            posWhiteKing = position;
+            // TODO: White Win
         }
         else
         {
-            posWhiteKing = position;
+            // TODO: Black Win
         }
-    }
-
-    public override void UpdateLegalMoves(Dictionary<int, Piece> dict)
-    {
-        // Clears list
-        legalMoves = new List<int>();
-
-        for (int i = 0; i < 8; i++)
-        {
-            int newXCoord = xCoord + possibleMoves[i, 0];
-            int newYCoord = yCoord + possibleMoves[i, 1];
-
-            if (newXCoord > -1 && newXCoord < 8 && newYCoord > -1 && newYCoord < 8)
-            {
-                int newPosition = newXCoord + newYCoord * 8;
-
-                if (!IsSquareOccupied(newPosition, dict))
-                {
-                    legalMoves.Add(newPosition);
-                }
-                else if (!IsSameColor(newPosition, color, dict))
-                {
-                    legalMoves.Add(newPosition);
-                    break;
-                }
-            }
-        }
-    }
-
-    private bool CheckUnderAttack(int pos, int color) 
-    {
-        return true;
     }
 }

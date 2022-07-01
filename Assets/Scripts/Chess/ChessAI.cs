@@ -85,10 +85,8 @@ public class ChessAI : MonoBehaviour
 
     // go through all the pieces in the board for a color (whose turn is it?)
     // go through all the moves for each piece
+
     // BREADTH FIRST SEARCH
-
-    private static Queue<Dictionary<int, Piece>> boardList = new Queue<Dictionary<int, Piece>>();
-
 
     public static int negaMax(int depth, int turn, Dictionary<int, Piece> board)
     {
@@ -180,32 +178,36 @@ public class ChessAI : MonoBehaviour
     {
         int value = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in board)
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != 1)
+            if (ChessManager.board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            if (ChessManager.board[i % 8, i / 8].color != 1)
             {
                 continue;
             }
 
-            if (entry.Value is Pawn)
+            if (ChessManager.board[i % 8, i / 8] is Pawn)
             {
-                value += pawnSquareValues[entry.Key];
+                value += pawnSquareValues[i];
             }
-            else if (entry.Value is Knight)
+            else if (ChessManager.board[i % 8, i / 8] is Knight)
             {
-                value += knightSquareValues[entry.Key];
+                value += knightSquareValues[i];
             }
-            else if (entry.Value is Bishop)
+            else if (ChessManager.board[i % 8, i / 8] is Bishop)
             {
-                value += bishopSquareValues[entry.Key];
+                value += bishopSquareValues[i];
             }
-            else if (entry.Value is Rook)
+            else if (ChessManager.board[i % 8, i / 8] is Rook)
             {
-                value += rookSquareValues[entry.Key];
+                value += rookSquareValues[i];
             }
-            else if (entry.Value is Queen)
+            else if (ChessManager.board[i % 8, i / 8] is Queen)
             {
-                value += queenSquareValues[entry.Key];
+                value += queenSquareValues[i];
             }
         }
         return value;
@@ -215,32 +217,36 @@ public class ChessAI : MonoBehaviour
     {
         int value = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in board)
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != -1)
+            if (ChessManager.board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            if (ChessManager.board[i % 8, i / 8].color != -1)
             {
                 continue;
             }
 
-            if (entry.Value is Pawn)
+            if (ChessManager.board[i % 8, i / 8] is Pawn)
             {
-                value += pawnSquareValues[63 - entry.Key];
+                value += pawnSquareValues[63 - i];
             }
-            else if (entry.Value is Knight)
+            else if (ChessManager.board[i % 8, i / 8] is Knight)
             {
-                value += knightSquareValues[63 - entry.Key];
+                value += knightSquareValues[63 - i];
             }
-            else if (entry.Value is Bishop)
+            else if (ChessManager.board[i % 8, i / 8] is Bishop)
             {
-                value += bishopSquareValues[63 - entry.Key];
+                value += bishopSquareValues[63 - i];
             }
-            else if (entry.Value is Rook)
+            else if (ChessManager.board[i % 8, i / 8] is Rook)
             {
-                value += rookSquareValues[63 - entry.Key];
+                value += rookSquareValues[63 - i];
             }
-            else if (entry.Value is Queen)
+            else if (ChessManager.board[i % 8, i / 8] is Queen)
             {
-                value += queenSquareValues[63 - entry.Key];
+                value += queenSquareValues[63 - i];
             }
         }
         return value;
@@ -251,11 +257,17 @@ public class ChessAI : MonoBehaviour
     {
         int material = 0;
 
-        // count pawns first, because knight and rook value change based on this!
-        int pawnCount = 0;
-        foreach (KeyValuePair<int, Piece> entry in board)
+        // get all the tiles from the square
+        for (int i = 0; i < 64; i++)
+
         {
-            if (entry.Value.GetColor() != color)
+            // if nothing there, go to next piece
+            if (ChessManager.board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            // if they are not the color, go to next piece
+            if (ChessManager.board[i % 8, i / 8].color != color)
             {
                 continue;
             }
@@ -270,25 +282,24 @@ public class ChessAI : MonoBehaviour
         // adding 40 to keep same start, as pawns decrease, the value inreases
         int newRookValue = rookValue - (5 * pawnCount) + 40;
 
-        foreach (KeyValuePair<int, Piece> entry in board)
+
+            if (ChessManager.board[i % 8, i / 8] is Pawn)
             {
-            if (entry.Value.GetColor() != color)
-            {
-                continue;
+                material += pawnValue;
             }
-            else if (entry.Value is Knight)
+            else if (ChessManager.board[i % 8, i / 8] is Knight)
             {
                 material += newKnightValue;
             }
-            else if (entry.Value is Bishop)
+            else if (ChessManager.board[i % 8, i / 8] is Bishop)
             {
                 material += bishopValue;
             }
-            else if (entry.Value is Rook)
+            else if (ChessManager.board[i % 8, i / 8] is Rook)
             {
                 material += newRookValue;
             }
-            else if (entry.Value is Queen)
+            else if (ChessManager.board[i % 8, i / 8] is Queen)
             {
                 material += queenValue;
             }

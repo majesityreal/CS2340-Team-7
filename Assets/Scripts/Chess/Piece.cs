@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Piece : MonoBehaviour
+public abstract class Piece
 {
     public PieceType type;
     public int color;
@@ -17,16 +17,19 @@ public abstract class Piece : MonoBehaviour
         this.yCoord = yCoord;
     }
 
-    public abstract List<int[]> GetLegalMoves(ref Piece[,] pieces);
+    public abstract List<int[]> GetLegalMoves(Piece[,] board);
+    public virtual List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
+    {
+        return new List<int[]>();
+    }
 }
 
 public enum PieceType
 {
-    Empty = 0,
-    Bishop = 1,
-    King = 2,
-    Knight = 3,
-    Pawn = 4,
-    Queen = 5,
-    Rook = 6
+    Bishop,
+    King,
+    Knight,
+    Pawn,
+    Queen,
+    Rook
 }

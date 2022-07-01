@@ -120,110 +120,110 @@ public class GameStage : MonoBehaviour
     public void UpdatePieces()
     {
         initChessGameObjects();
-        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetType() == typeof(Bishop))
+            if (ChessManager.board[i % 8, i / 8].GetType() == typeof(Bishop))
             {
-                if (entry.Value.GetColor() < 0)
+                if (ChessManager.board[i % 8, i / 8].color < 0)
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bBishop, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(bBishop, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wBishop, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(wBishop, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = WhitePiece.transform;
                 }
             }
 
             // King
-            if (entry.Value.GetType() == typeof(King))
+            if (ChessManager.board[i % 8, i / 8].GetType() == typeof(King))
             {
-                if (entry.Value.GetColor() < 0)
+                if (ChessManager.board[i % 8, i / 8].color < 0)
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bKing, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(bKing, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wKing, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(wKing, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = WhitePiece.transform;
                 }
             }
 
             // Knight
-            if (entry.Value.GetType() == typeof(Knight))
+            if (ChessManager.board[i % 8, i / 8].GetType() == typeof(Knight))
             {
-                if (entry.Value.GetColor() < 0)
+                if (ChessManager.board[i % 8, i / 8].color < 0)
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bKnight, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(bKnight, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wKnight, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(wKnight, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = WhitePiece.transform;
                 }
             }
 
             // Pawn
-            if (entry.Value.GetType() == typeof(Pawn))
+            if (ChessManager.board[i % 8, i / 8].GetType() == typeof(Pawn))
             {
-                if (entry.Value.GetColor() < 0)
+                if (ChessManager.board[i % 8, i / 8].color < 0)
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bPown, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(bPown, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wPown, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(wPown, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = WhitePiece.transform;
                 }
             }
 
             // Queen
-            if (entry.Value.GetType() == typeof(Queen))
+            if (ChessManager.board[i % 8, i / 8].GetType() == typeof(Queen))
             {
-                if (entry.Value.GetColor() < 0)
+                if (ChessManager.board[i % 8, i / 8].color < 0)
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bQueen, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(bQueen, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wQueen, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(wQueen, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = WhitePiece.transform;
                 }
             }
             // Rook
-            if (entry.Value.GetType() == typeof(Rook))
+            if (ChessManager.board[i % 8, i / 8].GetType() == typeof(Rook))
             {
-                if (entry.Value.GetColor() < 0)
+                if (ChessManager.board[i % 8, i / 8].color < 0)
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(bRook, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = BlackPiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(bRook, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = BlackPiece.transform;
                 }
                 else
                 {
-                    Destroy(SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()]);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()] = Instantiate(wRook, new Vector3(entry.Value.GetXPos() - 4, 4 - entry.Value.GetYPos(), transform.position.z), Quaternion.identity);
-                    SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].transform.parent = WhitePiece.transform;
+                    Destroy(SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord]);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord] = Instantiate(wRook, new Vector3(ChessManager.board[i % 8, i / 8].xCoord - 4, 4 - ChessManager.board[i % 8, i / 8].yCoord, 0), Quaternion.identity);
+                    SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].transform.parent = WhitePiece.transform;
                 }
             }
 
-            SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].GetComponent<PieceOnClick>().SetPos(entry.Value.GetXPos(), entry.Value.GetYPos());
-            SpriteBoard[entry.Value.GetXPos(), entry.Value.GetYPos()].GetComponent<PieceOnClick>().SetColor(entry.Value.GetColor());
+            SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].GetComponent<PieceOnClick>().SetPos(ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord);
+            SpriteBoard[ChessManager.board[i % 8, i / 8].xCoord, ChessManager.board[i % 8, i / 8].yCoord].GetComponent<PieceOnClick>().SetColor(ChessManager.board[i % 8, i / 8].color);
         }
     }
 
