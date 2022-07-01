@@ -8,7 +8,7 @@ public class MainMenuHandler : MonoBehaviour
     public GameObject mainMenu;
     public GameObject selectionMenu;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         // basically, if the game has not been loaded before, then load the main menu
         if (PlayerPrefs.GetInt("loaded", 0) == 0) {
@@ -26,6 +26,7 @@ public class MainMenuHandler : MonoBehaviour
             // this works as intended because when the player hits yes on quit, "loaded" will be reset to 0
             // if they alt f4, the game will start at the selection screen instead (saving where you left off feature?)
         }
+        AudioListener.volume = PlayerPrefs.GetFloat("volume");
     }
 
     // Update is called once per frame
@@ -41,8 +42,13 @@ public class MainMenuHandler : MonoBehaviour
     }
     public void StartChess()
     {
-        PlayerPrefs.SetInt("loaded", 2);
+        PlayerPrefs.SetInt("loaded", 1);
         Application.LoadLevel("Chess");
+    }
+    public void StartST()
+    {
+        PlayerPrefs.SetInt("loaded", 1);
+        Application.LoadLevel("SurvivingTech");
     }
     public void QuitGame()
     {

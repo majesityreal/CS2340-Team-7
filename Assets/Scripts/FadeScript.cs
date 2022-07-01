@@ -24,7 +24,7 @@ public class FadeScript : MonoBehaviour
         fadeOut = true;
     }
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         UIGroup = gameObject.GetComponent<CanvasGroup>();
         // if (gameObject.name == "Landing" && gameObject.layer == 5)
