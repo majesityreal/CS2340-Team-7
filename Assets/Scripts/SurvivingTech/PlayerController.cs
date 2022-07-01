@@ -9,8 +9,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxHitpoints = 100;
     [SerializeField] float currentHitpoints = 100;
     [SerializeField] float playerSpeed = 5.0f;
-    [SerializeField] float damageReduction = 0.0f; // percentage of damage taken mitagated by armor
+    [SerializeField] float damageReduction = 0.0f; // percentage of damage taken mitagated by armor, 1.0f is invincible
     [SerializeField] float lives = 1;
+    [SerializeField] HPBarStatus HPBar;
 
     // Start is called before the first frame update
     void Start()
@@ -43,7 +44,7 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public void Hurt(float damage)
+    public void takeDamage(float damage)
     {
         currentHitpoints -= damage * (1 - damageReduction);
         if (currentHitpoints <= 0)
@@ -61,5 +62,6 @@ public class PlayerController : MonoBehaviour
                 currentHitpoints = maxHitpoints;
             }
         }
+        HPBar.HPIndicator(currentHitpoints, maxHitpoints);
     }
 }

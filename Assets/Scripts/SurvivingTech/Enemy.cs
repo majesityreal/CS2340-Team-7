@@ -39,6 +39,19 @@ public class Enemy : MonoBehaviour
 
     void Harm()
     {
-        targetPlayer.GetComponent<PlayerController>().Hurt(damage);
+        if (targetPlayer != null)
+        {
+            targetPlayer.GetComponent<PlayerController>().takeDamage(damage);
+        }
+    }
+
+    public void takeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            // spawn crystal for xp?
+            Destroy(gameObject);
+        }
     }
 }
