@@ -86,28 +86,95 @@ public class ChessAI : MonoBehaviour
     // go through all the pieces in the board for a color (whose turn is it?)
     // go through all the moves for each piece
 
-    public static int EvaluateBoard()
+    // BREADTH FIRST SEARCH
+
+    public static int negaMax(int depth, int turn, Dictionary<int, Piece> board)
+    {
+        Debug.Log("Depth: " + depth);
+        if (depth == 0)
+        {
+            // this function returns a positive value based on whose turn it is
+            int val = EvaluateBoard(turn, board);
+            Debug.Log("Reached end of board with eval: " + val);
+            return val;
+        }
+
+        int max = int.MinValue;
+
+        // go through all the moves!
+        foreach (KeyValuePair<int, Piece> entry in board)
+        {
+            if (entry.Value.GetColor() != turn)
+            {
+                continue;
+            }
+            // the list of legal moves
+            List<int> moves = entry.Value.GetLegalMoves(board);
+            foreach (int move in moves)
+            {
+                Debug.Log("The piece " + entry.Value.GetColor() + " " + entry.Value + " at position: " + (entry.Value.GetXPos() + (entry.Value.GetYPos() * 8)) + " can move to " + move);
+            }
+            foreach (int move in moves)
+            {
+                // create temp dictionary - THIS NEEDS TO CREATE A DEEP COPY
+                // the other thing to try here is: (I think that does the same thing)
+                // Dictionary<int, Piece> temp = new Dictionary<int, Piece>(board);
+                Dictionary<int, Piece> temp = new Dictionary<int, Piece>();
+                foreach(KeyValuePair<int, Piece> entry2 in board)
+                {
+                    temp.Add(entry2.Key, entry2.Value);
+                }
+
+                // making the move on the temp board
+                // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
+                temp.Remove(entry.Key);
+                if (temp.ContainsKey(move))
+                {
+                    temp.Remove(move);
+                }
+                temp.Add(move, entry.Value);
+
+                // re does algorithm with opposite turn, with newly moved piece on board
+                int score = -negaMax(depth - 1, turn * -1, temp);
+                if (score > max)
+                {
+                    max = score;
+                    // TODO - STORE THE MOVE HERE STORE THE MOVE HERE STORE THE MOVE HERE
+                }
+            }
+        }
+
+        return max;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    public static int EvaluateBoard(int turn, Dictionary<int, Piece> board)
     {
         // material section - starts at 3900 for both
-        int whiteMaterial = CountMaterial(1);
-        int blackMaterial = CountMaterial(-1);
+        int whiteMaterial = CountMaterial(1, board);
+        int blackMaterial = CountMaterial(-1, board);
         int totalMaterial = whiteMaterial - blackMaterial;
 
         // trying to balance down by weighting
-        totalMaterial /= 30;
+        totalMaterial /= 10;
 
 
         // positions of the pieces - starts at 95 for both
-        int whitePosition = EvaluatePositionWhite();
-        int blackPosition = EvaluatePositionBlack();
+        int whitePosition = EvaluatePositionWhite(board);
+        int blackPosition = EvaluatePositionBlack(board);
         int totalPosition = whitePosition - blackPosition;
 
         // TODO - check the perspective, change the totalEval based on this
 
-        return totalMaterial + totalPosition;
+        return (totalMaterial + totalPosition) * turn;
     }
 
-    static int EvaluatePositionWhite()
+    static int EvaluatePositionWhite(Dictionary<int, Piece> board)
     {
         int value = 0;
 
@@ -146,7 +213,7 @@ public class ChessAI : MonoBehaviour
         return value;
     }
 
-    static int EvaluatePositionBlack()
+    static int EvaluatePositionBlack(Dictionary<int, Piece> board)
     {
         int value = 0;
 
@@ -182,17 +249,17 @@ public class ChessAI : MonoBehaviour
                 value += queenSquareValues[63 - i];
             }
         }
-
         return value;
     }
 
-    // returns value of all the material of the pieces still in play
-    static int CountMaterial(int color)
+    // returns value of all the material of the pieces still in play. Accounts for pawn loss in knight and rook value
+    static int CountMaterial(int color, Dictionary<int, Piece> board)
     {
         int material = 0;
 
         // get all the tiles from the square
         for (int i = 0; i < 64; i++)
+
         {
             // if nothing there, go to next piece
             if (ChessManager.board[i % 8, i / 8] == null)
@@ -204,6 +271,16 @@ public class ChessAI : MonoBehaviour
             {
                 continue;
             }
+            if (entry.Value is Pawn)
+            {
+                pawnCount++;
+            }
+        }
+
+        // subtracting 40 here to keep the same starting value, as the pawn # decrease however, the value decreases
+        int newKnightValue = knightValue + (5 * pawnCount) - 40;
+        // adding 40 to keep same start, as pawns decrease, the value inreases
+        int newRookValue = rookValue - (5 * pawnCount) + 40;
 
 
             if (ChessManager.board[i % 8, i / 8] is Pawn)
@@ -212,7 +289,7 @@ public class ChessAI : MonoBehaviour
             }
             else if (ChessManager.board[i % 8, i / 8] is Knight)
             {
-                material += knightValue;
+                material += newKnightValue;
             }
             else if (ChessManager.board[i % 8, i / 8] is Bishop)
             {
@@ -220,20 +297,74 @@ public class ChessAI : MonoBehaviour
             }
             else if (ChessManager.board[i % 8, i / 8] is Rook)
             {
-                material += rookValue;
+                material += newRookValue;
             }
             else if (ChessManager.board[i % 8, i / 8] is Queen)
             {
                 material += queenValue;
             }
         }
-
         return material;
     }
 
-    // Update is called once per frame
-    void Update()
+
+    /*    public static int GetBestMove(int color)
     {
-        
-    }
+        // clear queue
+        boardList.Clear();
+
+        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
+        {
+            if (entry.Value.GetColor() != color)
+            {
+                continue;
+            }
+            // the list of legal moves
+            List<int> moves = entry.Value.GetLegalMoves(ChessManager.board);
+            foreach (int move in moves)
+            {
+                // create temp dictionary
+                Dictionary<int, Piece> temp = ChessManager.board;
+
+                // making the move on the temp board
+                temp.Remove(entry.Key);
+                temp.Add(move, entry.Value);
+
+                // adding temp board to queue for breadth first search
+                boardList.Enqueue(temp);
+            }
+        }
+
+        // go through the queue, analyzing the position, adding again the possible moves from that
+
+        return 0;
+    }*/
+
+    // recurse through this with a board
+    /*    int GetBestMoveRecursion(int color)
+        {
+            Dictionary<int, Piece> tempBoard = boardList.Dequeue();
+            foreach (KeyValuePair<int, Piece> entry in tempBoard)
+            {
+                if (entry.Value.GetColor() != color)
+                {
+                    continue;
+                }
+                // the list of legal moves
+                List<int> moves = entry.Value.GetLegalMoves(tempBoard);
+                foreach (int move in moves)
+                {
+                    // create temp dictionary
+                    Dictionary<int, Piece> temp = ChessManager.board;
+
+                    // making the move on the temp board
+                    temp.Remove(entry.Key);
+                    temp.Add(move, entry.Value);
+
+                    // adding temp board to queue for breadth first search
+                    boardList.Enqueue(temp);
+                }
+            }
+            return 0;
+        }*/
 }

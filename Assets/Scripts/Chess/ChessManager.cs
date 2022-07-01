@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class ChessManager : MonoBehaviour
@@ -33,9 +34,7 @@ public class ChessManager : MonoBehaviour
         board[6, 0] = new Knight(-1, 6, 0);
         board[7, 0] = new Rook(-1, 7, 0);
         for (int i = 0; i < 8; i++)
-        {
-            board[i, 1] = new Pawn(-1, i, 1);
-        }
+
 
         // White pieces [new Piece(Color, X, Y)]
         for (int j = 0; j < 8; j++)
