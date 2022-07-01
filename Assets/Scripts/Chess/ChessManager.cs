@@ -8,8 +8,8 @@ public class ChessManager : MonoBehaviour
 {
     // [xCoord, yCoord]
     public static Piece[,] board;
-    public List<string> moveRecord;
-    public bool isWhiteTurn;
+    public static List<string> moveRecord;
+    public static bool isWhiteTurn;
 
     void Start()
     {
@@ -51,7 +51,7 @@ public class ChessManager : MonoBehaviour
         board[7, 7] = new Rook(1, 7, 7);
     }
 
-    public void MovePosition(int oldX, int oldY, int newX, int newY)
+    public static void MovePosition(int oldX, int oldY, int newX, int newY)
     {
         RecordMove(oldX, oldY, newX, newY);
         
@@ -109,7 +109,7 @@ public class ChessManager : MonoBehaviour
     }
 
     // Records each move into a string: [Piece Type][oldX][oldY][newX][newY]
-    private void RecordMove(int oldX, int oldY, int newX, int newY)
+    private static void RecordMove(int oldX, int oldY, int newX, int newY)
     {
         string record = "";
         switch ((int) board[oldX, oldY].type)
