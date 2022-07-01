@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuHandler : MonoBehaviour
 {
     // Kevin Kwan
-    public GameObject mainMenu;
-    public GameObject selectionMenu;
+    [SerializeField] GameObject mainMenu;
+    [SerializeField] GameObject selectionMenu;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         // basically, if the game has not been loaded before, then load the main menu
         if (PlayerPrefs.GetInt("loaded", 0) == 0) {
@@ -26,6 +27,7 @@ public class MainMenuHandler : MonoBehaviour
             // this works as intended because when the player hits yes on quit, "loaded" will be reset to 0
             // if they alt f4, the game will start at the selection screen instead (saving where you left off feature?)
         }
+        AudioListener.volume = PlayerPrefs.GetFloat("volume");
     }
 
     // Update is called once per frame
@@ -37,12 +39,17 @@ public class MainMenuHandler : MonoBehaviour
     public void StartBlackjack()
     {
         PlayerPrefs.SetInt("loaded", 1); // player has loaded the first game
-        Application.LoadLevel("Blackjack");
+        SceneManager.LoadScene("Blackjack");
     }
     public void StartChess()
     {
-        PlayerPrefs.SetInt("loaded", 2);
-        Application.LoadLevel("Chess");
+        PlayerPrefs.SetInt("loaded", 1);
+        SceneManager.LoadScene("Chess");
+    }
+    public void StartST()
+    {
+        PlayerPrefs.SetInt("loaded", 1);
+        SceneManager.LoadScene("SurvivingTech");
     }
     public void QuitGame()
     {
