@@ -17,8 +17,8 @@ public abstract class Piece
         this.yCoord = yCoord;
     }
 
-    public abstract List<int[]> GetLegalMoves(Piece[,] pieces);
-    public virtual List<int[]> GetSpecialMoves(Piece[,] pieces, List<string> moveRecord)
+    public abstract List<int[]> GetLegalMoves(Piece[,] board);
+    public virtual List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
     {
         return new List<int[]>();
     }

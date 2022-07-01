@@ -8,7 +8,7 @@ public class Pawn : Piece
     {
     }
 
-    public override List<int[]> GetLegalMoves(Piece[,] pieces)
+    public override List<int[]> GetLegalMoves(Piece[,] board)
     {
         List<int[]> possibleMoves = new List<int[]>();
         int move = 0;
@@ -23,7 +23,7 @@ public class Pawn : Piece
         }
         
         // Single Move
-        if (pieces[xCoord, yCoord + move] == null)
+        if (board[xCoord, yCoord + move] == null)
         {
             possibleMoves.Add(new int[2] {xCoord, yCoord + move});
         }
@@ -31,25 +31,25 @@ public class Pawn : Piece
         // Double Move
         if ((yCoord == 6 && color == 1) || (yCoord == 1 && color == -1))
         {
-            if (pieces[xCoord, yCoord + move] == null && pieces[xCoord, yCoord + move * 2] == null)
+            if (board[xCoord, yCoord + move] == null && board[xCoord, yCoord + move * 2] == null)
             {
                 possibleMoves.Add(new int[2] {xCoord, yCoord + move * 2});
             }
         }
 
         // Left Capture
-        if (xCoord != 0 && pieces[xCoord - 1, yCoord + move] == null)
+        if (xCoord != 0 && board[xCoord - 1, yCoord + move] == null)
         {
-            if (color != pieces[xCoord - 1, yCoord + move].color)
+            if (color != board[xCoord - 1, yCoord + move].color)
             {
                 possibleMoves.Add(new int[2] {xCoord - 1, yCoord + move});
             }
         }
 
         // Right Capture
-        if (xCoord != 7 && pieces[xCoord + 1, yCoord + move] == null)
+        if (xCoord != 7 && board[xCoord + 1, yCoord + move] == null)
         {
-            if (color != pieces[xCoord + 1, yCoord + move].color)
+            if (color != board[xCoord + 1, yCoord + move].color)
             {
                 possibleMoves.Add(new int[2] {xCoord + 1, yCoord + move});
             }
@@ -58,34 +58,41 @@ public class Pawn : Piece
         return possibleMoves;
     }
 
-    public override List<int[]> GetSpecialMoves(Piece[,] pieces, List<string> moveRecord)
+    public override List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
     {
         List<int[]> specialMove = new List<int[]>();
         
+        // Don't check En Passant on the first 4 moves
+        if (moveRecord.Count < 5)
+        {
+            return specialMove;
+        }
+
         // Check if it is the pawn's turn.
         if (color == 1 && moveRecord.Count % 2 != 0)
         {
             return specialMove;
         }
-        else if (color == 0 && moveRecord.Count % 2 == 0)
+        else if (color == -1 && moveRecord.Count % 2 == 0)
         {
             return specialMove;
         }
         
         // En Passant
         string lastMove = moveRecord[moveRecord.Count - 1];
-        if (lastMove.Length == 2)
+        if (lastMove.Length == 4)
         {
-            int lastMoveX = lastMove[0] - '0';
-            int lastMoveY = lastMove[1] - '0';
+            int prevY = lastMove[1] - '0';
+            int lastMoveX = lastMove[2] - '0';
+            int lastMoveY = lastMove[3] - '0';
             
             if (lastMoveX == xCoord + 1 || lastMoveX == xCoord - 1)
             {
-                if (color == 1 && lastMoveY == 3)
+                if (lastMoveY - prevY == 2) // White Pawn double moved
                 {
                     specialMove.Add(new int[2] {lastMoveX, lastMoveY - 1});
                 }
-                else if (color == -1 && lastMoveY == 4)
+                else if (prevY - lastMoveY == 2) // Black Pawn double moved
                 {
                     specialMove.Add(new int[2] {lastMoveX, lastMoveY + 1});
                 }

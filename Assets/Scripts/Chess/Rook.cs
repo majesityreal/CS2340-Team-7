@@ -8,19 +8,19 @@ public class Rook : Piece
     {
     }
 
-    public override List<int[]> GetLegalMoves(Piece[,] pieces) {
+    public override List<int[]> GetLegalMoves(Piece[,] board) {
         List<int[]> possibleMoves = new List<int[]>();
 
         // Top Mid
         for (int i = 1; yCoord - i > -1; i++)
         {
-            if (pieces[xCoord, yCoord - i] == null)
+            if (board[xCoord, yCoord - i] == null)
             {
                 possibleMoves.Add(new int[2] {xCoord, yCoord - i});
             }
             else
             {
-                if (color != pieces[xCoord, yCoord - i].color)
+                if (color != board[xCoord, yCoord - i].color)
                 {
                     possibleMoves.Add(new int[2] {xCoord, yCoord - i});
                 }
@@ -31,13 +31,13 @@ public class Rook : Piece
         // Mid Left
         for (int i = 1; xCoord - i > -1; i++)
         {
-            if (pieces[xCoord - i, yCoord] == null)
+            if (board[xCoord - i, yCoord] == null)
             {
                 possibleMoves.Add(new int[2] {xCoord - i, yCoord});
             }
             else
             {
-                if (color != pieces[xCoord - i, yCoord].color)
+                if (color != board[xCoord - i, yCoord].color)
                 {
                     possibleMoves.Add(new int[2] {xCoord - i, yCoord});
                 }
@@ -48,13 +48,13 @@ public class Rook : Piece
         // Mid Right
         for (int i = 1; xCoord + i < 8 ; i++)
         {
-            if (pieces[xCoord + i, yCoord] == null)
+            if (board[xCoord + i, yCoord] == null)
             {
                 possibleMoves.Add(new int[2] {xCoord + i, yCoord});
             }
             else
             {
-                if (color != pieces[xCoord + i, yCoord].color)
+                if (color != board[xCoord + i, yCoord].color)
                 {
                     possibleMoves.Add(new int[2] {xCoord + i, yCoord});
                 }
@@ -65,13 +65,13 @@ public class Rook : Piece
         // Bottom Mid
         for (int i = 1; yCoord + i < 8; i++)
         {
-            if (pieces[xCoord, yCoord + i] == null)
+            if (board[xCoord, yCoord + i] == null)
             {
                 possibleMoves.Add(new int[2] {xCoord, yCoord + i});
             }
             else
             {
-                if (color != pieces[xCoord, yCoord + i].color)
+                if (color != board[xCoord, yCoord + i].color)
                 {
                     possibleMoves.Add(new int[2] {xCoord, yCoord + i});
                 }
