@@ -5,8 +5,8 @@ using UnityEngine;
 public class MainMenuHandler : MonoBehaviour
 {
     // Kevin Kwan
-    public GameObject mainMenu;
-    public GameObject selectionMenu;
+    [SerializeField] GameObject mainMenu;
+    [SerializeField] GameObject selectionMenu;
     // Start is called before the first frame update
     void Awake()
     {
