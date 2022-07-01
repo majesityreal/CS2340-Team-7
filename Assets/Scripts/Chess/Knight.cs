@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Knight : Piece
 {
+    public Knight(int color, int xCoord, int yCoord) : base(PieceType.Knight, color, xCoord, yCoord)
+    {
+    }
+    
     public override List<int[]> GetLegalMoves(Piece[,] pieces)
     {
         List<int[]> possibleMoves = new List<int[]>();

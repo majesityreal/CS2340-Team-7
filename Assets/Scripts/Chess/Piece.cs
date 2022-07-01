@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Piece : MonoBehaviour
+public abstract class Piece
 {
     public PieceType type;
     public int color;
@@ -18,7 +18,10 @@ public abstract class Piece : MonoBehaviour
     }
 
     public abstract List<int[]> GetLegalMoves(Piece[,] pieces);
-    public abstract List<int[]> GetSpecialMoves(Piece[,] pieces, List<string> moveRecord);
+    public virtual List<int[]> GetSpecialMoves(Piece[,] pieces, List<string> moveRecord)
+    {
+        return new List<int[]>();
+    }
 }
 
 public enum PieceType

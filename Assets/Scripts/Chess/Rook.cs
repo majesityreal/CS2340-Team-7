@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Rook : Piece
 {
+    public Rook(int color, int xCoord, int yCoord) : base(PieceType.Rook, color, xCoord, yCoord)
+    {
+    }
+
     public override List<int[]> GetLegalMoves(Piece[,] pieces) {
         List<int[]> possibleMoves = new List<int[]>();
 
