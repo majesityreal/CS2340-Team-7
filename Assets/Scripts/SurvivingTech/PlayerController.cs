@@ -68,4 +68,14 @@ public class PlayerController : MonoBehaviour
         }
         HPBar.HPIndicator(currentHitpoints, maxHitpoints);
     }
+
+    public void Heal(float healAmount)
+    {
+        currentHitpoints += healAmount;
+        if (currentHitpoints > maxHitpoints)
+        {
+            currentHitpoints = maxHitpoints;
+        }
+        HPBar.HPIndicator(currentHitpoints, maxHitpoints);
+    }
 }
