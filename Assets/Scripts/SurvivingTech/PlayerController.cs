@@ -12,26 +12,30 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float damageReduction = 0.0f; // percentage of damage taken mitagated by armor, 1.0f is invincible
     [SerializeField] float lives = 1;
     [SerializeField] HPBarStatus HPBar;
+    Vector3 initialScaleOfSprite;
 
     // Start is called before the first frame update
     void Start()
     {
         rgb = GetComponent<Rigidbody2D>();
         movementVect = new Vector3();
+        initialScaleOfSprite = transform.GetChild(0).localScale;
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {   
         // flip character sprite if moving left or right
         if (movementVect.x < 0) // go left
         {
-            transform.localScale = new Vector3(1, 1, 1);   
+            //flip child sprite
+            transform.GetChild(0).localScale = new Vector3(initialScaleOfSprite.x, initialScaleOfSprite.y, initialScaleOfSprite.z);
+            // localScale = new Vector3(1, 1, 1);   
             //transform.localRotation = Quaternion.Euler(0, 0, 0);
         }
         else if (movementVect.x > 0) // go right
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.GetChild(0).localScale = new Vector3(-initialScaleOfSprite.x, initialScaleOfSprite.y, initialScaleOfSprite.z);
             //transform.localRotation = Quaternion.Euler(0, 0, 0);
             
         }
