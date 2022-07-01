@@ -6,7 +6,7 @@ using UnityEngine;
 public class ChessManager : MonoBehaviour
 {
     // [xCoord, yCoord]
-    public Piece[,] board;
+    public static Piece[,] board;
     public List<string> moveRecord;
     public bool isWhiteTurn;
 

@@ -85,69 +85,6 @@ public class ChessAI : MonoBehaviour
 
     // go through all the pieces in the board for a color (whose turn is it?)
     // go through all the moves for each piece
-    // BREADTH FIRST SEARCH
-
-    private static Queue<Dictionary<int, Piece>> boardList = new Queue<Dictionary<int, Piece>>();
-
-    public static int GetBestMove(int color)
-    {
-        // clear queue
-        boardList.Clear();
-
-        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
-        {
-            if (entry.Value.GetColor() != color)
-            {
-                continue;
-            }
-            // the list of legal moves
-            List<int> moves = entry.Value.GetLegalMoves(ChessManager.board);
-            foreach (int move in moves)
-            {
-                // create temp dictionary
-                Dictionary<int, Piece> temp = ChessManager.board;
-
-                // making the move on the temp board
-                temp.Remove(entry.Key);
-                temp.Add(move, entry.Value);
-
-                // adding temp board to queue for breadth first search
-                boardList.Enqueue(temp);
-            }
-        }
-
-        // go through the queue, analyzing the position, adding again the possible moves from that
-
-        return 0;
-    }
-
-    // recurse through this with a board
-    int GetBestMoveRecursion(int color)
-    {
-        Dictionary<int, Piece> tempBoard = boardList.Dequeue();
-        foreach (KeyValuePair<int, Piece> entry in tempBoard)
-        {
-            if (entry.Value.GetColor() != color)
-            {
-                continue;
-            }
-            // the list of legal moves
-            List<int> moves = entry.Value.GetLegalMoves(tempBoard);
-            foreach (int move in moves)
-            {
-                // create temp dictionary
-                Dictionary<int, Piece> temp = ChessManager.board;
-
-                // making the move on the temp board
-                temp.Remove(entry.Key);
-                temp.Add(move, entry.Value);
-
-                // adding temp board to queue for breadth first search
-                boardList.Enqueue(temp);
-            }
-        }
-        return 0;
-    }
 
     public static int EvaluateBoard()
     {
@@ -174,67 +111,38 @@ public class ChessAI : MonoBehaviour
     {
         int value = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != 1)
+            if (ChessManager.board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            if (ChessManager.board[i % 8, i / 8].color != 1)
             {
                 continue;
             }
 
-            if (entry.Value is Pawn)
+            if (ChessManager.board[i % 8, i / 8] is Pawn)
             {
-                value += pawnSquareValues[entry.Key];
+                value += pawnSquareValues[i];
             }
-            else if (entry.Value is Knight)
+            else if (ChessManager.board[i % 8, i / 8] is Knight)
             {
-                value += knightSquareValues[entry.Key];
+                value += knightSquareValues[i];
             }
-            else if (entry.Value is Bishop)
+            else if (ChessManager.board[i % 8, i / 8] is Bishop)
             {
-                value += bishopSquareValues[entry.Key];
+                value += bishopSquareValues[i];
             }
-            else if (entry.Value is Rook)
+            else if (ChessManager.board[i % 8, i / 8] is Rook)
             {
-                value += rookSquareValues[entry.Key];
+                value += rookSquareValues[i];
             }
-            else if (entry.Value is Queen)
+            else if (ChessManager.board[i % 8, i / 8] is Queen)
             {
-                value += queenSquareValues[entry.Key];
+                value += queenSquareValues[i];
             }
         }
-
-        // for (int i = 0; i < 64; i++)
-        // {
-        //     if (ChessManager.board[i % 8, i / 8] == null)
-        //     {
-        //         continue;
-        //     }
-        //     if (ChessManager.board[i % 8, i / 8].color != 1)
-        //     {
-        //         continue;
-        //     }
-
-        //     if (ChessManager.board[i % 8, i / 8] is Pawn)
-        //     {
-        //         value += pawnSquareValues[i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Knight)
-        //     {
-        //         value += knightSquareValues[i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Bishop)
-        //     {
-        //         value += bishopSquareValues[i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Rook)
-        //     {
-        //         value += rookSquareValues[i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Queen)
-        //     {
-        //         value += queenSquareValues[i];
-        //     }
-        // }
         return value;
     }
 
@@ -242,67 +150,39 @@ public class ChessAI : MonoBehaviour
     {
         int value = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != -1)
+            if (ChessManager.board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            if (ChessManager.board[i % 8, i / 8].color != -1)
             {
                 continue;
             }
 
-            if (entry.Value is Pawn)
+            if (ChessManager.board[i % 8, i / 8] is Pawn)
             {
-                value += pawnSquareValues[63 - entry.Key];
+                value += pawnSquareValues[63 - i];
             }
-            else if (entry.Value is Knight)
+            else if (ChessManager.board[i % 8, i / 8] is Knight)
             {
-                value += knightSquareValues[63 - entry.Key];
+                value += knightSquareValues[63 - i];
             }
-            else if (entry.Value is Bishop)
+            else if (ChessManager.board[i % 8, i / 8] is Bishop)
             {
-                value += bishopSquareValues[63 - entry.Key];
+                value += bishopSquareValues[63 - i];
             }
-            else if (entry.Value is Rook)
+            else if (ChessManager.board[i % 8, i / 8] is Rook)
             {
-                value += rookSquareValues[63 - entry.Key];
+                value += rookSquareValues[63 - i];
             }
-            else if (entry.Value is Queen)
+            else if (ChessManager.board[i % 8, i / 8] is Queen)
             {
-                value += queenSquareValues[63 - entry.Key];
+                value += queenSquareValues[63 - i];
             }
         }
 
-        // for (int i = 0; i < 64; i++)
-        // {
-        //     if (ChessManager.board[i % 8, i / 8] == null)
-        //     {
-        //         continue;
-        //     }
-        //     if (ChessManager.board[i % 8, i / 8].color != -1)
-        //     {
-        //         continue;
-        //     }
-
-        //     if (ChessManager.board[i % 8, i / 8] is Pawn)
-        //     {
-        //         value += pawnSquareValues[63 - i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Knight)
-        //     {
-        //         value += knightSquareValues[63 - i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Bishop)
-        //     {
-        //         value += bishopSquareValues[63 - i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Rook)
-        //     {
-        //         value += rookSquareValues[63 - i];
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Queen)
-        //     {
-        //         value += queenSquareValues[63 - i];
-        //     }
-        // }
         return value;
     }
 
@@ -311,70 +191,42 @@ public class ChessAI : MonoBehaviour
     {
         int material = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in ChessManager.board)
+        // get all the tiles from the square
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != color)
+            // if nothing there, go to next piece
+            if (ChessManager.board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            // if they are not the color, go to next piece
+            if (ChessManager.board[i % 8, i / 8].color != color)
             {
                 continue;
             }
 
-            if (entry.Value is Pawn) {
+
+            if (ChessManager.board[i % 8, i / 8] is Pawn)
+            {
                 material += pawnValue;
             }
-            else if (entry.Value is Knight)
+            else if (ChessManager.board[i % 8, i / 8] is Knight)
             {
                 material += knightValue;
             }
-            else if (entry.Value is Bishop)
+            else if (ChessManager.board[i % 8, i / 8] is Bishop)
             {
                 material += bishopValue;
             }
-            else if (entry.Value is Rook)
+            else if (ChessManager.board[i % 8, i / 8] is Rook)
             {
                 material += rookValue;
             }
-            else if (entry.Value is Queen)
+            else if (ChessManager.board[i % 8, i / 8] is Queen)
             {
                 material += queenValue;
             }
         }
-
-
-        // // get all the tiles from the square
-        // for (int i = 0; i < 64; i++)
-        // {
-        //     // if nothing there, go to next piece
-        //     if (ChessManager.board[i % 8, i / 8] == null)
-        //     {
-        //         continue;
-        //     }
-        //     // if they are not the color, go to next piece
-        //     if (ChessManager.board[i % 8, i / 8].color != color)
-        //     {
-        //         continue;
-        //     }
-
-
-        //     if (ChessManager.board[i % 8, i / 8] is Pawn) {
-        //         material += pawnValue;
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Knight)
-        //     {
-        //         material += knightValue;
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Bishop)
-        //     {
-        //         material += bishopValue;
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Rook)
-        //     {
-        //         material += rookValue;
-        //     }
-        //     else if (ChessManager.board[i % 8, i / 8] is Queen)
-        //     {
-        //         material += queenValue;
-        //     }
-        // }
 
         return material;
     }
