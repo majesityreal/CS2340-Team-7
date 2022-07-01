@@ -85,12 +85,10 @@ public class ChessAI : MonoBehaviour
 
     // go through all the pieces in the board for a color (whose turn is it?)
     // go through all the moves for each piece
+
     // BREADTH FIRST SEARCH
 
-    private static Queue<Dictionary<int, Piece>> boardList = new Queue<Dictionary<int, Piece>>();
-
-
-    public static int negaMax(int depth, int turn, Dictionary<int, Piece> board)
+/*    public static int negaMax(int depth, int turn, Piece[,] board)
     {
         Debug.Log("Depth: " + depth);
         if (depth == 0)
@@ -104,19 +102,19 @@ public class ChessAI : MonoBehaviour
         int max = int.MinValue;
 
         // go through all the moves!
-        foreach (KeyValuePair<int, Piece> entry in board)
+        for(int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != turn)
+            if (board != turn)
             {
                 continue;
             }
             // the list of legal moves
-            List<int> moves = entry.Value.GetLegalMoves(board);
-            foreach (int move in moves)
+            List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board);
+            foreach (int[] move in moves)
             {
                 Debug.Log("The piece " + entry.Value.GetColor() + " " + entry.Value + " at position: " + (entry.Value.GetXPos() + (entry.Value.GetYPos() * 8)) + " can move to " + move);
             }
-            foreach (int move in moves)
+            foreach (int[] move in moves)
             {
                 // create temp dictionary - THIS NEEDS TO CREATE A DEEP COPY
                 // the other thing to try here is: (I think that does the same thing)
@@ -147,7 +145,7 @@ public class ChessAI : MonoBehaviour
         }
 
         return max;
-    }
+    }*/
 
     // Update is called once per frame
     void Update()
@@ -155,7 +153,7 @@ public class ChessAI : MonoBehaviour
 
     }
 
-    public static int EvaluateBoard(int turn, Dictionary<int, Piece> board)
+    public static int EvaluateBoard(int turn, Piece[,] board)
     {
         // material section - starts at 3900 for both
         int whiteMaterial = CountMaterial(1, board);
@@ -176,169 +174,137 @@ public class ChessAI : MonoBehaviour
         return (totalMaterial + totalPosition) * turn;
     }
 
-    static int EvaluatePositionWhite(Dictionary<int, Piece> board)
+    static int EvaluatePositionWhite(Piece[,] board)
     {
         int value = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in board)
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != 1)
+            if (board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            if (board[i % 8, i / 8].color != 1)
             {
                 continue;
             }
 
-            if (entry.Value is Pawn)
+            if (board[i % 8, i / 8] is Pawn)
             {
-                value += pawnSquareValues[entry.Key];
+                value += pawnSquareValues[i];
             }
-            else if (entry.Value is Knight)
+            else if (board[i % 8, i / 8] is Knight)
             {
-                value += knightSquareValues[entry.Key];
+                value += knightSquareValues[i];
             }
-            else if (entry.Value is Bishop)
+            else if (board[i % 8, i / 8] is Bishop)
             {
-                value += bishopSquareValues[entry.Key];
+                value += bishopSquareValues[i];
             }
-            else if (entry.Value is Rook)
+            else if (board[i % 8, i / 8] is Rook)
             {
-                value += rookSquareValues[entry.Key];
+                value += rookSquareValues[i];
             }
-            else if (entry.Value is Queen)
+            else if (board[i % 8, i / 8] is Queen)
             {
-                value += queenSquareValues[entry.Key];
+                value += queenSquareValues[i];
             }
         }
         return value;
     }
 
-    static int EvaluatePositionBlack(Dictionary<int, Piece> board)
+    static int EvaluatePositionBlack(Piece[,] board)
     {
         int value = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in board)
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != -1)
+            if (board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            if (board[i % 8, i / 8].color != -1)
             {
                 continue;
             }
 
-            if (entry.Value is Pawn)
+            if (board[i % 8, i / 8] is Pawn)
             {
-                value += pawnSquareValues[63 - entry.Key];
+                value += pawnSquareValues[63 - i];
             }
-            else if (entry.Value is Knight)
+            else if (board[i % 8, i / 8] is Knight)
             {
-                value += knightSquareValues[63 - entry.Key];
+                value += knightSquareValues[63 - i];
             }
-            else if (entry.Value is Bishop)
+            else if (board[i % 8, i / 8] is Bishop)
             {
-                value += bishopSquareValues[63 - entry.Key];
+                value += bishopSquareValues[63 - i];
             }
-            else if (entry.Value is Rook)
+            else if (board[i % 8, i / 8] is Rook)
             {
-                value += rookSquareValues[63 - entry.Key];
+                value += rookSquareValues[63 - i];
             }
-            else if (entry.Value is Queen)
+            else if (board[i % 8, i / 8] is Queen)
             {
-                value += queenSquareValues[63 - entry.Key];
+                value += queenSquareValues[63 - i];
             }
         }
         return value;
     }
 
-    // returns value of all the material of the pieces still in play
-    static int CountMaterial(int color, Dictionary<int, Piece> board)
+    // returns value of all the material of the pieces still in play. Accounts for pawn loss in knight and rook value
+    static int CountMaterial(int color, Piece[,] board)
     {
         int material = 0;
+        int pawnCount = 0;
 
-        foreach(KeyValuePair<int, Piece> entry in board)
+        // get all the tiles from the square
+        for (int i = 0; i < 64; i++)
         {
-            if (entry.Value.GetColor() != color)
+            // if nothing there, go to next piece
+            if (board[i % 8, i / 8] == null)
             {
                 continue;
             }
+            // if they are not the color, go to next piece
+            if (board[i % 8, i / 8].color != color)
+            {
+                continue;
+            }
+            if (board[i % 8, i / 8] is Pawn)
+            {
+                pawnCount++;
+            }
+        }
 
-            if (entry.Value is Pawn) {
+        // subtracting 40 here to keep the same starting value, as the pawn # decrease however, the value decreases
+        int newKnightValue = knightValue + (5 * pawnCount) - 40;
+        // adding 40 to keep same start, as pawns decrease, the value inreases
+        int newRookValue = rookValue - (5 * pawnCount) + 40;
+
+        for (int i = 0; i < 64; i++)
+        {
+            if (board[i % 8, i / 8] is Pawn)
+            {
                 material += pawnValue;
             }
-            else if (entry.Value is Knight)
+            else if (board[i % 8, i / 8] is Knight)
             {
-                material += knightValue;
+                material += newKnightValue;
             }
-            else if (entry.Value is Bishop)
+            else if (board[i % 8, i / 8] is Bishop)
             {
                 material += bishopValue;
             }
-            else if (entry.Value is Rook)
+            else if (board[i % 8, i / 8] is Rook)
             {
-                material += rookValue;
+                material += newRookValue;
             }
-            else if (entry.Value is Queen)
+            else if (board[i % 8, i / 8] is Queen)
             {
                 material += queenValue;
             }
         }
         return material;
     }
-
-
-    /*    public static int GetBestMove(int color)
-    {
-        // clear queue
-        boardList.Clear();
-
-        foreach (KeyValuePair<int, Piece> entry in ChessManager.board)
-        {
-            if (entry.Value.GetColor() != color)
-            {
-                continue;
-            }
-            // the list of legal moves
-            List<int> moves = entry.Value.GetLegalMoves(ChessManager.board);
-            foreach (int move in moves)
-            {
-                // create temp dictionary
-                Dictionary<int, Piece> temp = ChessManager.board;
-
-                // making the move on the temp board
-                temp.Remove(entry.Key);
-                temp.Add(move, entry.Value);
-
-                // adding temp board to queue for breadth first search
-                boardList.Enqueue(temp);
-            }
-        }
-
-        // go through the queue, analyzing the position, adding again the possible moves from that
-
-        return 0;
-    }*/
-
-    // recurse through this with a board
-    /*    int GetBestMoveRecursion(int color)
-        {
-            Dictionary<int, Piece> tempBoard = boardList.Dequeue();
-            foreach (KeyValuePair<int, Piece> entry in tempBoard)
-            {
-                if (entry.Value.GetColor() != color)
-                {
-                    continue;
-                }
-                // the list of legal moves
-                List<int> moves = entry.Value.GetLegalMoves(tempBoard);
-                foreach (int move in moves)
-                {
-                    // create temp dictionary
-                    Dictionary<int, Piece> temp = ChessManager.board;
-
-                    // making the move on the temp board
-                    temp.Remove(entry.Key);
-                    temp.Add(move, entry.Value);
-
-                    // adding temp board to queue for breadth first search
-                    boardList.Enqueue(temp);
-                }
-            }
-            return 0;
-        }*/
 }
