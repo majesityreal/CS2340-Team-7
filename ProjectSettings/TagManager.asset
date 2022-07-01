@@ -50,9 +50,6 @@ TagManager:
   - name: Pieces
     uniqueID: 1789794377
     locked: 0
-  - name: Background
-    uniqueID: 1836190889
-    locked: 0
-  - name: PlayerEnemy
-    uniqueID: 3952237409
+  - name: UI
+    uniqueID: 3753387923
     locked: 0
