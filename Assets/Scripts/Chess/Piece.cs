@@ -17,16 +17,16 @@ public abstract class Piece : MonoBehaviour
         this.yCoord = yCoord;
     }
 
-    public abstract List<int[]> GetLegalMoves(ref Piece[,] pieces);
+    public abstract List<int[]> GetLegalMoves(Piece[,] pieces);
+    public abstract List<int[]> GetSpecialMoves(Piece[,] pieces, List<string> moveRecord);
 }
 
 public enum PieceType
 {
-    Empty = 0,
-    Bishop = 1,
-    King = 2,
-    Knight = 3,
-    Pawn = 4,
-    Queen = 5,
-    Rook = 6
+    Bishop,
+    King,
+    Knight,
+    Pawn,
+    Queen,
+    Rook
 }

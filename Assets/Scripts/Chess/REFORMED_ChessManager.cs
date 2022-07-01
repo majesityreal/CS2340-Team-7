@@ -7,14 +7,19 @@ public class REFORMED_ChessManager : MonoBehaviour
     // [xCoord, yCoord]
     public Piece[,] pieces;
     public List<int[]> legalMoves;
+    public List<string> moveRecord;
+    public bool isWhiteTurn;
 
     void Start()
     {
-        InitializeBoard();
+        InitializeGame();
     }
 
-    public void InitializeBoard()
+    public void InitializeGame()
     {
+        isWhiteTurn = true;
+        moveRecord = new List<string>();
+
         // Clears 2D array
         pieces = new Piece[8, 8];
 
@@ -49,9 +54,51 @@ public class REFORMED_ChessManager : MonoBehaviour
 
     public void MovePosition(int oldX, int oldY, int newX, int newY)
     {
-        Pieces[oldX, oldY].xCoord = newX;
-        Pieces[oldX, oldY].yCoord = newY;
-        Pieces[newX, newY] = Piece[oldX, oldY];
-        Pieces[oldX, oldY] = null;
+        string record = "";
+        switch ((int) pieces[oldX, oldY].PieceType)
+        {
+            case 1:
+                record += "B";
+                break;
+            case 2:
+                record += "K";
+                break;
+            case 3:
+                record += "N";
+                break;
+            case 4:
+                break;
+            case 5:
+                record += "Q";
+                break;
+            case 6:
+                record += "R";
+                break;
+        };
+        
+        if (pieces[newX, newY] != null)
+        {
+            record += "x";
+        }
+        record += "" + newX + newY;
+        moveRecord.Add(record);
+        
+        pieces[oldX, oldY].xCoord = newX;
+        pieces[oldX, oldY].yCoord = newY;
+        pieces[newX, newY] = Piece[oldX, oldY];
+        pieces[oldX, oldY] = null;
+        isWhiteTurn = !isWhiteTurn;
+    }
+
+    public void CheckMate(int color)
+    {
+        if (color == 1)
+        {
+            // TODO: White Win
+        }
+        else
+        {
+            // TODO: Black Win
+        }
     }
 }

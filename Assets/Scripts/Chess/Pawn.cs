@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pawn : Piece
 {
-    public override List<int[]> GetLegalMoves(ref Piece[,] pieces)
+    public override List<int[]> GetLegalMoves(Piece[,] pieces)
     {
         List<int[]> possibleMoves = new List<int[]>();
         int move = 0;
@@ -52,5 +52,31 @@ public class Pawn : Piece
         }
 
         return possibleMoves;
+    }
+
+    public override List<int[]> GetSpecialMoves(Piece[,] pieces, List<string> moveRecord)
+    {
+        // Check if it is the pawn's turn.
+        if (color == 1 && moveRecord.size() % 2 != 0)
+        {
+            return null;
+        }
+        else if (color == 0 && moveRecord.size() % 2 == 0)
+        {
+            return null;
+        }
+        
+        // En Passant
+        List<int[]> specialMove = new List<int[]>();
+        string lastMove == moveRecord.get(moveRecord.size() - 1);
+        if (lastMove.Length == 2)
+        {
+            if (lastMove.Substring(0, 0) == (xCoord + 1) + "" || lastMove[0] == (xCoord - 1) + "")
+            {
+                if (color == 1 && moveRecord[1] == ) {
+                    
+                }
+            }
+        }
     }
 }

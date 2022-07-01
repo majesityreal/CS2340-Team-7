@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Queen : Piece
 {
-    public override List<int[]> GetLegalMoves(ref Piece[,] pieces)
+    public override List<int[]> GetLegalMoves(Piece[,] pieces)
     {
         List<int[]> possibleMoves = new List<int[]>();
 
