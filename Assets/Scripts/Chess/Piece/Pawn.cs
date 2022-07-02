@@ -8,7 +8,7 @@ public class Pawn : Piece
     {
     }
 
-    public override List<int[]> GetLegalMoves(Piece[,] board)
+    public override List<int[]> GetLegalMoves(Piece[,] board, List<string> moveRecord)
     {
         List<int[]> possibleMoves = new List<int[]>();
         int move = 0;
@@ -55,28 +55,36 @@ public class Pawn : Piece
             }
         }
 
-        return possibleMoves;
+        List<int[]> specials = GetSpecialMoves(board, moveRecord);
+        if (specials != null)
+        {
+            for (int i = 0; i < specials.Count; i++)
+            {
+                possibleMoves.Add(specials[i]);
+            }
+        }
+
+        return ReturnValidMoves(possibleMoves, board);
     }
 
-    public override List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
+    private List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
     {
-        List<int[]> specialMove = new List<int[]>();
-        
         // Don't check En Passant on the first 4 moves
         if (moveRecord.Count < 5)
         {
-            return specialMove;
+            return null;
         }
-
         // Check if it is the pawn's turn.
         if (color == 1 && moveRecord.Count % 2 != 0)
         {
-            return specialMove;
+            return null;
         }
         else if (color == -1 && moveRecord.Count % 2 == 0)
         {
-            return specialMove;
+            return null;
         }
+        
+        List<int[]> specialMove = new List<int[]>();
         
         // En Passant
         string lastMove = moveRecord[moveRecord.Count - 1];
@@ -97,6 +105,11 @@ public class Pawn : Piece
                     specialMove.Add(new int[2] {lastMoveX, lastMoveY + 1});
                 }
             }
+        }
+
+        if (specialMove.Count == 0)
+        {
+            return null;
         }
 
         return specialMove;
