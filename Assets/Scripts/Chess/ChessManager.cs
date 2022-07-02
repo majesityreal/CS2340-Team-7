@@ -106,7 +106,7 @@ public class ChessManager : MonoBehaviour
         CheckRepetition();
     }
 
-    private void CheckCheckmate(int color)
+    private static void CheckCheckmate(int color)
     {
         for (int i = 0; i < 8; i++)
         {
@@ -136,7 +136,7 @@ public class ChessManager : MonoBehaviour
         }
     }
 
-    private void CheckInsufficientMaterials()
+    private static void CheckInsufficientMaterials()
     {
         int countWhite = 0;
         int countBlack = 0;
@@ -181,7 +181,7 @@ public class ChessManager : MonoBehaviour
         Draw("Insufficient Materials");
     }
 
-    private void Check50Move()
+    private static void Check50Move()
     {
         if (moveRecord.Count < 50)
         {
@@ -203,7 +203,7 @@ public class ChessManager : MonoBehaviour
         Draw("50 move rule");
     }
 
-    private void CheckRepetition()
+    private static void CheckRepetition()
     {
         if (moveRecord.Count < 5)
         {
@@ -224,7 +224,7 @@ public class ChessManager : MonoBehaviour
         return;
     }
 
-    public List<int[]> GetMoves(int posX, int posY)
+    public static List<int[]> GetMoves(int posX, int posY)
     {
         List<int[]> pieceMoves = board[posX, posY].GetLegalMoves(board, moveRecord);
         int kingX = -1;
@@ -273,7 +273,7 @@ public class ChessManager : MonoBehaviour
         return pieceMoves;
     }
 
-    private bool CheckIfSafe(int posX, int posY, int testX, int testY, int kingX, int kingY, List<Piece> enemies, Piece[,] copyBoard, List<string> moveRecord)
+    private static bool CheckIfSafe(int posX, int posY, int testX, int testY, int kingX, int kingY, List<Piece> enemies, Piece[,] copyBoard, List<string> moveRecord)
     {
         MovePosition(posX, posY, testX, testY, copyBoard);
 
@@ -324,7 +324,7 @@ public class ChessManager : MonoBehaviour
         moveRecord.Add(record);
     }
 
-    private void Draw(string cause)
+    private static void Draw(string cause)
     {
         // TODO: Show Draw(Tie) Screen
         Debug.Log("It is a tie \n" + cause);
