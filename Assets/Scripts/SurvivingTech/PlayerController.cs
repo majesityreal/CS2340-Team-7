@@ -67,21 +67,21 @@ public class PlayerController : MonoBehaviour
         if (currentHitpoints <= 0)
         {
             lives--;
-            if (lives == 0)
+            if (lives > 0)
+            {
+                Debug.Log("Extra life used!");
+                currentHitpoints = maxHitpoints;
+            }
+            else
             {
                 //Destroy(gameObject);
                 Debug.Log("Player has died!");
                 Time.timeScale = 0; // use this for pause too
             }
-            else
-            {
-                Debug.Log("Extra life used!");
-                currentHitpoints = maxHitpoints;
-            }
         }
         HPBar.HPIndicator(currentHitpoints, maxHitpoints);
     }
-    
+
     public void Heal(float healAmount)
     {
         currentHitpoints += healAmount;
