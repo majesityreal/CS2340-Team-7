@@ -28,9 +28,9 @@ public class PieceOnClick : MonoBehaviour
                     PlayerInput.CurrSelected = gameObject;
 
                     //Replace when Game Move Check Fixed.
-                    //GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].GetLegalMoves();
-                    GameStage.HighLightIndex = new List<int>();
-                    GameStage.HighLightIndex.Add(GetIndex() - 8);
+                    GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos()].GetLegalMoves(ChessManager.board);
+                    //GameStage.HighLightIndex = new List<int>();
+                    //GameStage.HighLightIndex.Add(GetIndex() - 8);
 
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
                     Debug.Log("You Select " + gameObject.name.ToString());
@@ -51,17 +51,19 @@ public class PieceOnClick : MonoBehaviour
                     //Replace when Game Move Check Fixed.
                     //GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].GetLegalMoves();
                     GameStage.HighLightIndex = new List<int>();
-                    GameStage.HighLightIndex.Add(GetIndex() - 8);
-                    GameStage.HighLightIndex.Add(GetIndex() - 16);
-                    GameStage.HighLightIndex.Add(GetIndex() - 24);
+                    // GameStage.HighLightIndex.Add(GetIndex() - 8);
+                    // GameStage.HighLightIndex.Add(GetIndex() - 16);
+                    // GameStage.HighLightIndex.Add(GetIndex() - 24);
 
                     Debug.Log("You Switch to " + gameObject.name.ToString());
                 }
                 else
                 {
-                    if (ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex()].MovePosition(PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetIndex(), GetIndex()))
+
+                    if (IsPossibleMove())
                     {
-                        PlayerInput.IsPlayerTurn = false;
+                        ChessManager.MovePosition(PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos(), GetXPos(), GetYPos());
+                        //PlayerInput.IsPlayerTurn = false;
                         PlayerInput.CurrSelected.transform.position = new Vector3(GetXPos(), GetYPos());
                         Debug.Log("Move Success!");
                     } else
@@ -76,6 +78,11 @@ public class PieceOnClick : MonoBehaviour
         }
     }
 
+    public bool IsPossibleMove()
+    {
+        return false;
+    }
+    
     // Getter && Setter
     public void SetPos(int x, int y)
     {

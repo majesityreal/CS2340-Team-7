@@ -8,8 +8,8 @@ public class ChessManager : MonoBehaviour
 {
     // [xCoord, yCoord]
     public static Piece[,] board;
-    public List<string> moveRecord;
-    public bool isWhiteTurn;
+    public static List<string> moveRecord;
+    public static bool isWhiteTurn;
 
     void Start()
     {
@@ -34,7 +34,9 @@ public class ChessManager : MonoBehaviour
         board[6, 0] = new Knight(-1, 6, 0);
         board[7, 0] = new Rook(-1, 7, 0);
         for (int i = 0; i < 8; i++)
-
+        {
+            board[i, 1] = new Pawn(-1, i, 1);
+        }
 
         // White pieces [new Piece(Color, X, Y)]
         for (int j = 0; j < 8; j++)
