@@ -8,7 +8,7 @@ public class King : Piece
     {  
     }
     
-    public override List<int[]> GetLegalMoves(Piece[,] board)
+    public override List<int[]> GetLegalMoves(Piece[,] board, List<string> moveRecord)
     {
         List<int[]> possibleMoves = new List<int[]>();
 
@@ -142,21 +142,29 @@ public class King : Piece
             }
         }
 
+        List<int[]> specials = GetSpecialMoves(board, moveRecord);
+        if (specials != null)
+        {
+            foreach(int[] move in specials)
+            {
+                possibleMoves.Add(move);
+            }
+        }
+
         return possibleMoves;
     }
 
-    public override List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
+    private List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
     {
-        List<int[]> specialMove = new List<int[]>();
-
         // Cannot do castling for the first 4 moves
         if (moveRecord.Count < 5)
         {
-            return specialMove;
+            return null;
         }
 
         bool leftCastle = true;
         bool rightCastle = true;
+
         // Check if any of the squares are occupied (left)
         if (board[1, yCoord] != null || board[2, yCoord] != null || board[3, yCoord] != null)
         {
@@ -169,42 +177,57 @@ public class King : Piece
             rightCastle = false;
         }
 
-        
-        int count = 0;
+        if (!leftCastle && !rightCastle)
+        {
+            return null;
+        }
 
+        // Adjust count start for each team (Evens for white, Odds for black)
+        int count = 0;
         if (color == -1)
         {
             count = 1;
         }
-
+        
+        // Check every single move record to find whether the king or the rook moved
         for (int i = count; (leftCastle || rightCastle) && i < moveRecord.Count; i += 2)
         {
+            // King moved? Don't even look anymore
             if (moveRecord[i][0] == 'K')
             {
-                return specialMove;
+                return null;
             }
+
+            // Rook moved? Check which one moved
             if (moveRecord[i][0] == 'R')
             {
-                if (moveRecord[i][1] == '0' && leftCastle)
+                if (moveRecord[i][1] == '0' && leftCastle) // Left Rook
                 {
                     leftCastle = false;
                 }
-                else if (moveRecord[i][1] == '7' && rightCastle)
+                else if (moveRecord[i][1] == '7' && rightCastle) // Right Rook
                 {
                     rightCastle = false;
                 }
             }
         }
 
+        List<int[]> specialMove = new List<int[]>();
+
         if (leftCastle)
         {
             specialMove.Add(new int[2] {xCoord - 2, yCoord});
         }
+
         if (rightCastle)
         {
             specialMove.Add(new int[2] {xCoord + 2, yCoord});
         }
-
+        
+        if (specialMove.Count == 0)
+        {
+            return null;
+        }
         return specialMove;
     }
 }
