@@ -8,7 +8,7 @@ public class Rook : Piece
     {
     }
 
-    public override List<int[]> GetLegalMoves(Piece[,] board) {
+    public override List<int[]> GetLegalMoves(Piece[,] board, List<string> moveRecord) {
         List<int[]> possibleMoves = new List<int[]>();
 
         // Top Mid
