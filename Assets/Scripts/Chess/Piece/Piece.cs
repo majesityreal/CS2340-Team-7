@@ -61,7 +61,7 @@ public abstract class Piece
         return moves;
     }
 
-    private bool CheckIfSafe(int kingX, int kingY, int[] move, Piece[,] board)
+    protected bool CheckIfSafe(int kingX, int kingY, int[] move, Piece[,] board)
     {
         board[move[0], move[1]] = board[xCoord, yCoord];
         board[xCoord, yCoord] = null;
