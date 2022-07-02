@@ -116,11 +116,11 @@ public class ChessManager : MonoBehaviour
 
         if (isWhiteTurn)
         {
-            Debug.Log("White: " + moveRecord[moveRecord.Count - 1]);
+            Debug.Log("White:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
         }
         else
         {
-            Debug.Log("White: " + moveRecord[moveRecord.Count - 1]);
+            Debug.Log("Black:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
         }
 
         isWhiteTurn = !isWhiteTurn;
@@ -132,24 +132,26 @@ public class ChessManager : MonoBehaviour
 
     private void CheckCheckmate(int color)
     {
-        Debug.Log("Checking if Checkmate: " + color);
+        //Debug.Log("Checking if Checkmate: " + color);
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
                 if (board[i, j] == null)
                 {
+                    Debug.Log("CCM: x: " + i + ", y: " + j + " is null.");
                     continue;
                 }
 
                 if (color == board[i, j].color)
                 {
+                    Debug.Log("CCM: x: " + i + ", y: " + j + " is ally.");
                     continue;
                 }
 
                 if (board[i, j].GetLegalMoves(board, moveRecord).Count != 0)
                 {
-                    Debug.Log("Checking if Checkmate: " + color + " failed");
+                    Debug.Log("CCM: x: " + i + ", y: " + j + " has legal moves. It is not checkmate.");
                     return;
                 }
             }
@@ -169,7 +171,7 @@ public class ChessManager : MonoBehaviour
 
     private void CheckInsufficientMaterials()
     {
-        Debug.Log("Checking if insufficient materials");
+        //Debug.Log("Checking if insufficient materials");
 
         int countWhite = 0;
         int countBlack = 0;
@@ -188,7 +190,7 @@ public class ChessManager : MonoBehaviour
             // If pawn or rook are alive, don't end game.
             if (ty == 3 || ty == 5)
             {
-                Debug.Log("Pawn or Rook is alive, not insufficient.");
+                //Debug.Log("Pawn or Rook is alive, not insufficient.");
                 return;
             }
 
@@ -200,7 +202,7 @@ public class ChessManager : MonoBehaviour
                     countWhite++;
                     if (countWhite > 1)
                     {
-                        Debug.Log("Enough white pieces to play");
+                        //Debug.Log("Enough white pieces to play");
                         return;
                     }
                 }
@@ -209,7 +211,7 @@ public class ChessManager : MonoBehaviour
                     countBlack++;
                     if (countBlack > 1)
                     {
-                        Debug.Log("Enough black pieces to play");
+                        //Debug.Log("Enough black pieces to play");
                         return;
                     }
                 }
@@ -252,7 +254,7 @@ public class ChessManager : MonoBehaviour
 
     private void Check50Move()
     {
-        Debug.Log("Checking if 50 move rule");
+        //Debug.Log("Checking if 50 move rule");
         if (moveRecord.Count < 50)
         {
             return;

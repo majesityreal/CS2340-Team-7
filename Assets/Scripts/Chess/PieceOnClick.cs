@@ -90,15 +90,14 @@ public class PieceOnClick : MonoBehaviour
 
     public bool IsPossibleMove()
     {
-        //foreach (int[] pos in GameStage.CurrPossibleMove)
-        //{
-        //    if (pos[0] == GetXPos() && pos[1] == GetYPos())
-        //    {
-        //        return true;
-        //    }
-        //}
-        //return false;
-        return true;
+        foreach (int[] pos in GameStage.CurrPossibleMove)
+        {
+           if (pos[0] == GetXPos() && pos[1] == GetYPos())
+           {
+               return true;
+           }
+        }
+        return false;
     }
 
     // Getter && Setter
