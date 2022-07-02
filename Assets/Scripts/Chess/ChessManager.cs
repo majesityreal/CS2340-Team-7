@@ -142,6 +142,8 @@ public class ChessManager : MonoBehaviour
     {
         int countWhite = 0;
         int countBlack = 0;
+        int[] whiteKingPos = new int[2];
+        int[] blackKingPos = new int[2];
 
         foreach (Piece piece in board)
         {
@@ -177,6 +179,34 @@ public class ChessManager : MonoBehaviour
                         return;
                     }
                 }
+            }
+            else
+            {
+                if (piece.color == 1)
+                {
+                    whiteKingPos[0] = piece.xCoord;
+                    whiteKingPos[1] = piece.yCoord;
+                }
+                else
+                {
+                    blackKingPos[0] = piece.xCoord;
+                    blackKingPos[1] = piece.yCoord;
+                }
+            }
+        }
+
+        if (countWhite == 0)
+        {
+            if (board[whiteKingPos[0], whiteKingPos[1]].GetLegalMoves(board, moveRecord).Count == 0)
+            {
+                Draw("Stalemate");
+            }
+        }
+        else if (countBlack == 0)
+        {
+            if (board[blackKingPos[0], blackKingPos[1]].GetLegalMoves(board, moveRecord).Count == 0)
+            {
+                Draw("Stalemate");
             }
         }
 
