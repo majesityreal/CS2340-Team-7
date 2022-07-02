@@ -19,7 +19,6 @@ public class PlayerInput : MonoBehaviour
     public static int PlayerColor = 1;// White1 Black-1
     public static bool IsPlayerTurn = true;
     public static bool IsGameEnd = false;
-
     //Game Object
     public GameObject ResultStage;
     // Start is called before the first frame update
@@ -34,7 +33,12 @@ public class PlayerInput : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene("MainMenu");
+            ExitGame();
         }
+    }
+
+    private void ExitGame()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

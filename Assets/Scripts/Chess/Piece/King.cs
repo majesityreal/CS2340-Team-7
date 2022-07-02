@@ -143,11 +143,40 @@ public class King : Piece
         }
 
         List<int[]> specials = GetSpecialMoves(board, moveRecord);
+        Piece[,] copyBoard = (Piece[,]) board.Clone();
+
+        /* 
+        Check if the King is under check
+            If so, cannot do Castling
+            If not, check if the square between Castling is not under attack.
+                If so, cannot do Castling
+                If not, can do Castling 
+        */
         if (specials != null)
         {
             foreach(int[] move in specials)
             {
-                possibleMoves.Add(move);
+                if (CheckIfSafe(xCoord, yCoord, new int[] {move[0], move[1]}, copyBoard))
+                {
+                    if (move[0] == 6)
+                    {
+                        if (CheckIfSafe(xCoord, yCoord, new int[] {move[0] + 1, move[1]}, copyBoard))
+                        {
+                            possibleMoves.Add(move);   
+                        }
+                    }
+                    else
+                    {
+                        if (CheckIfSafe(xCoord, yCoord, new int[] {move[0] - 1, move[1]}, copyBoard))
+                        {
+                            possibleMoves.Add(move); 
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
             }
         }
 
