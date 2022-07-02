@@ -99,6 +99,9 @@ public class ChessManager : MonoBehaviour
 
         isWhiteTurn = !isWhiteTurn;
         CheckCheckmate(board[newX, newY].color);
+        CheckInsufficientMaterials();
+        Check50Move();
+        CheckRepetition();
     }
 
     private void CheckCheckmate(int color)
@@ -112,7 +115,7 @@ public class ChessManager : MonoBehaviour
                     continue;
                 }
 
-                if (Getmoves(i, j).Count != 0)
+                if (GetMoves(i, j).Count != 0)
                 {
                     return;
                 }
@@ -129,6 +132,94 @@ public class ChessManager : MonoBehaviour
             // TODO: Black Win
             Debug.Log("Black Win");
         }
+    }
+
+    private void CheckInsufficientMaterials()
+    {
+        int countWhite = 0;
+        int countBlack = 0;
+
+        foreach (Piece piece in board)
+        {
+            if (piece == null)
+            {
+                continue;
+            }
+
+            int ty = (int) piece.type;
+
+            // If pawn or rook are alive, don't end game.
+            if (ty == 3 || ty == 5)
+            {
+                return;
+            }
+
+            // Count everything except king
+            if (ty != 1)
+            {
+                if (piece.color == 1)
+                {
+                    countWhite++;
+                    if (countWhite > 1)
+                    {
+                        return;
+                    }
+                }
+                else if (piece.color == -1)
+                {
+                    countBlack++;
+                    if (countBlack > 1)
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
+        Draw("Insufficient Materials");
+    }
+
+    private void Check50Move()
+    {
+        if (moveRecord.Count < 50)
+        {
+            return;
+        }
+        
+        for (int i = 0; i < 50; i++)
+        {
+            if (moveRecord[moveRecord.Count - i].Length == 4)
+            {
+                return;
+            }
+            else if (moveRecord[moveRecord.Count - i][0] == 'x' || moveRecord[moveRecord.Count - i][1] == 'x')
+            {
+                return;
+            }
+        }
+        
+        Draw("50 move rule");
+    }
+
+    private void CheckRepetition()
+    {
+        if (moveRecord.Count < 5)
+        {
+            return;
+        }
+
+        // Check if last and the 5th last are the same.
+        // If so, check if the starting position of the last and ending position of the 3rd are the same.
+        if (moveRecord[moveRecord.Count - 1] == moveRecord[moveRecord.Count - 5])
+        {
+            if (moveRecord[moveRecord.Count - 1].Substring(moveRecord[moveRecord.Count - 1].Length - 4, moveRecord[moveRecord.Count - 1].Length - 2) 
+            == moveRecord[moveRecord.Count - 3].Substring(moveRecord[moveRecord.Count - 3].Length - 2))
+            {
+                Draw("Repetition");
+            }
+        }
+
+        return;
     }
 
     public List<int[]> GetMoves(int posX, int posY)
@@ -231,15 +322,9 @@ public class ChessManager : MonoBehaviour
         moveRecord.Add(record);
     }
 
-    public void CheckMate(int color)
+    private void Draw(string cause)
     {
-        if (color == 1)
-        {
-            // TODO: White Win
-        }
-        else
-        {
-            // TODO: Black Win
-        }
+        // TODO: Show Draw(Tie) Screen
+        Debug.Log("It is a tie \n" + cause);
     }
 }
