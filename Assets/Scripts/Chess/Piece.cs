@@ -17,11 +17,7 @@ public abstract class Piece
         this.yCoord = yCoord;
     }
 
-    public abstract List<int[]> GetLegalMoves(Piece[,] board);
-    public virtual List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
-    {
-        return new List<int[]>();
-    }
+    public abstract List<int[]> GetLegalMoves(Piece[,] board, List<string> moveRecord);
 }
 
 public enum PieceType

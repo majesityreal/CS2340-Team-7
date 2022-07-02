@@ -259,7 +259,6 @@ public class ChessAI : MonoBehaviour
 
         // get all the tiles from the square
         for (int i = 0; i < 64; i++)
-
         {
             // if nothing there, go to next piece
             if (ChessManager.board[i % 8, i / 8] == null)
@@ -283,26 +282,25 @@ public class ChessAI : MonoBehaviour
         int newRookValue = rookValue - (5 * pawnCount) + 40;
 
 
-            if (ChessManager.board[i % 8, i / 8] is Pawn)
-            {
-                material += pawnValue;
-            }
-            else if (ChessManager.board[i % 8, i / 8] is Knight)
-            {
-                material += newKnightValue;
-            }
-            else if (ChessManager.board[i % 8, i / 8] is Bishop)
-            {
-                material += bishopValue;
-            }
-            else if (ChessManager.board[i % 8, i / 8] is Rook)
-            {
-                material += newRookValue;
-            }
-            else if (ChessManager.board[i % 8, i / 8] is Queen)
-            {
-                material += queenValue;
-            }
+        if (ChessManager.board[i % 8, i / 8] is Pawn)
+        {
+            material += pawnValue;
+        }
+        else if (ChessManager.board[i % 8, i / 8] is Knight)
+        {
+            material += newKnightValue;
+        }
+        else if (ChessManager.board[i % 8, i / 8] is Bishop)
+        {
+            material += bishopValue;
+        }
+        else if (ChessManager.board[i % 8, i / 8] is Rook)
+        {
+            material += newRookValue;
+        }
+        else if (ChessManager.board[i % 8, i / 8] is Queen)
+        {
+            material += queenValue;
         }
         return material;
     }
