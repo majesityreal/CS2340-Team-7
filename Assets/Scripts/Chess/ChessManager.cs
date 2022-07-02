@@ -46,46 +46,54 @@ public class ChessManager : MonoBehaviour
         board[0, 7] = new Rook(1, 0, 7);
         board[1, 7] = new Knight(1, 1, 7);
         board[2, 7] = new Bishop(1, 2, 7);
-        board[3, 7] = new King(1, 3, 7);
-        board[4, 7] = new Queen(1, 4, 7);
+        board[3, 7] = new Queen(1, 3, 7);
+        board[4, 7] = new King(1, 4, 7);
         board[5, 7] = new Bishop(1, 5, 7);
         board[6, 7] = new Knight(1, 6, 7);
         board[7, 7] = new Rook(1, 7, 7);
     }
 
     public void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)
-    {
-        int pieceType = (int) board[oldX, oldY].type;
+    {       
+        if (board[newX, newY] != null && (int) board[newX, newY].type == 1)
+        {
+            Debug.Log("Game End");
+            return;
+        }
         
-        if (pieceType == 3) // Check if En Passant
+        RecordMove(oldX, oldY, newX, newY);
+
+        int pieceType = (int) board[oldX, oldY].type;
+
+        if (pieceType == 1) // When King is moved
         {
             board[oldX, oldY].xCoord = newX;
             board[oldX, oldY].yCoord = newY;
             board[newX, newY] = board[oldX, oldY];
             board[oldX, oldY] = null;
-            board[newX, oldY] = null;
-        }
-        else if (pieceType == 1) // Check if Castling
+            
+            if (newX - oldX == 2) // Right Castling
+            {
+                board[7, newY].xCoord = 5;
+                board[5, newY] = board[7, newY];
+                board[7, newY] = null;
+            }
+            else if (newX - oldX == -2) // Left Castling
+            {
+                board[0, newY].xCoord = 3;
+                board[3, newY] = board[0, newY];
+                board[0, newY] = null;
+            }
+        } 
+        else if (pieceType == 3) // When Pawn is moved
         {
-            board[oldX, oldY].xCoord = newX;
-            board[newX, newY] = board[oldX, oldY];
-            board[oldX, oldY] = null;
+            // En Passant
+            if (newX != oldX && board[newX, newY] == null) // When capturing move, but square is empty
+            {
+                board[newX, oldY] = null;
+            }
 
-            if (newX == 1)
-            {
-                board[0, oldY].xCoord = newX + 1;
-                board[newX + 1, newY] = board[0, oldY];
-                board[0, oldY] = null;
-            }
-            else
-            {
-                board[7, oldY].xCoord = newX - 1;
-                board[newX - 1, newY] = board[7, oldY];
-                board[7, oldY] = null;
-            }
-        }
-        else // Any other move
-        {
+            // Moves the piece to the destination and removes the old pointer index
             board[oldX, oldY].xCoord = newX;
             board[oldX, oldY].yCoord = newY;
             board[newX, newY] = board[oldX, oldY];
@@ -93,21 +101,38 @@ public class ChessManager : MonoBehaviour
 
             // Promotion
             // TODO: Ask player for piece type. Setted it to Queen for right now.
-            if ((int) board[newX, newY].type == 3 && newY == 0 || newY == 7)
+            if ((newY == 0 && board[newX, newY].color == 1) || (newY == 7 && board[newX, newY].color == -1))
             {
                 board[newX, newY] = new Queen(board[newX, newY].color, newX, newY);
             }
+        } 
+        else // Any other piece
+        {
+            board[oldX, oldY].xCoord = newX;
+            board[oldX, oldY].yCoord = newY;
+            board[newX, newY] = board[oldX, oldY];
+            board[oldX, oldY] = null;
+        }
+
+        if (isWhiteTurn)
+        {
+            Debug.Log("White: " + moveRecord[moveRecord.Count - 1]);
+        }
+        else
+        {
+            Debug.Log("White: " + moveRecord[moveRecord.Count - 1]);
         }
 
         isWhiteTurn = !isWhiteTurn;
-        //CheckCheckmate(board[newX, newY].color);
-        //CheckInsufficientMaterials();
-        //Check50Move();
-        //CheckRepetition();
+        CheckCheckmate(board[newX, newY].color);
+        CheckInsufficientMaterials();
+        Check50Move();
+        CheckRepetition();
     }
 
     private void CheckCheckmate(int color)
     {
+        Debug.Log("Checking if Checkmate: " + color);
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -122,8 +147,9 @@ public class ChessManager : MonoBehaviour
                     continue;
                 }
 
-                if (GetMoves(i, j).Count != 0)
+                if (board[i, j].GetLegalMoves(board, moveRecord).Count != 0)
                 {
+                    Debug.Log("Checking if Checkmate: " + color + " failed");
                     return;
                 }
             }
@@ -143,8 +169,12 @@ public class ChessManager : MonoBehaviour
 
     private void CheckInsufficientMaterials()
     {
+        Debug.Log("Checking if insufficient materials");
+
         int countWhite = 0;
         int countBlack = 0;
+        int[] whiteKingPos = new int[2];
+        int[] blackKingPos = new int[2];
 
         foreach (Piece piece in board)
         {
@@ -158,6 +188,7 @@ public class ChessManager : MonoBehaviour
             // If pawn or rook are alive, don't end game.
             if (ty == 3 || ty == 5)
             {
+                Debug.Log("Pawn or Rook is alive, not insufficient.");
                 return;
             }
 
@@ -169,6 +200,7 @@ public class ChessManager : MonoBehaviour
                     countWhite++;
                     if (countWhite > 1)
                     {
+                        Debug.Log("Enough white pieces to play");
                         return;
                     }
                 }
@@ -177,17 +209,50 @@ public class ChessManager : MonoBehaviour
                     countBlack++;
                     if (countBlack > 1)
                     {
+                        Debug.Log("Enough black pieces to play");
                         return;
                     }
                 }
             }
+            else
+            {
+                if (piece.color == 1)
+                {
+                    whiteKingPos[0] = piece.xCoord;
+                    whiteKingPos[1] = piece.yCoord;
+                }
+                else
+                {
+                    blackKingPos[0] = piece.xCoord;
+                    blackKingPos[1] = piece.yCoord;
+                }
+            }
         }
 
+        if (countWhite == 0)
+        {
+            if (board[whiteKingPos[0], whiteKingPos[1]].GetLegalMoves(board, moveRecord).Count == 0)
+            {
+                Debug.Log("Stalemate123");
+                Draw("Stalemate");
+            }
+        }
+        else if (countBlack == 0)
+        {
+            if (board[blackKingPos[0], blackKingPos[1]].GetLegalMoves(board, moveRecord).Count == 0)
+            {
+                Debug.Log("Stalemate123");
+                Draw("Stalemate");
+            }
+        }
+
+        Debug.Log("Insufficient Materials 123");
         Draw("Insufficient Materials");
     }
 
     private void Check50Move()
     {
+        Debug.Log("Checking if 50 move rule");
         if (moveRecord.Count < 50)
         {
             return;
@@ -205,6 +270,7 @@ public class ChessManager : MonoBehaviour
             }
         }
         
+        Debug.Log("50 move rule123");
         Draw("50 move rule");
     }
 
@@ -229,75 +295,9 @@ public class ChessManager : MonoBehaviour
         return;
     }
 
-    public List<int[]> GetMoves(int posX, int posY)
-    {
-        List<int[]> pieceMoves = board[posX, posY].GetLegalMoves(board, moveRecord);
-        int kingX = -1;
-        int kingY = -1;
-        Piece[,] copyBoard = new Piece[8, 8];
-        List<Piece> enemies = new List<Piece>();
-        
-        // Copy over all pieces
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (board[i, j] == null)
-                {
-                    continue;
-                }
-
-                if (board[posX, posY].color == board[i, j].color)
-                {
-                    if ((int) board[i, j].type == 1)
-                    {
-                        kingX = board[i, j].xCoord;
-                        kingY = board[i, j].yCoord;
-                    }
-                }
-                else
-                {
-                    enemies.Add(board[i, j]);
-                }
-
-                copyBoard[i, j] = board[i, j];
-            }
-        }
-
-        int count = 0;
-        while (count < pieceMoves.Count)
-        {
-            if (!CheckIfSafe(posX, posY, pieceMoves[count][0], pieceMoves[count][1], kingX, kingY, enemies, copyBoard, moveRecord))
-            {
-                pieceMoves.RemoveAt(count);
-                continue;
-            }
-            count++;
-        }
-
-        return pieceMoves;
-    }
-
-    private bool CheckIfSafe(int posX, int posY, int testX, int testY, int kingX, int kingY, List<Piece> enemies, Piece[,] copyBoard, List<string> moveRecord)
-    {
-        MovePosition(posX, posY, testX, testY, copyBoard);
-
-        foreach (Piece enemy in enemies)
-        {
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (enemies[i].xCoord == kingX && enemies[i].yCoord == kingY)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
 
     // Records each move into a string: [Piece Type][oldX][oldY][newX][newY]
-    public void RecordMove(int oldX, int oldY, int newX, int newY)
+    private void RecordMove(int oldX, int oldY, int newX, int newY)
     {
         string record = "";
         switch ((int) board[oldX, oldY].type)

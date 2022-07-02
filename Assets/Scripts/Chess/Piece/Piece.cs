@@ -153,7 +153,7 @@ public abstract class Piece
             // If bishop or queen, check if it's an enemy
             if ((int) board[kingX - i, kingY - i].type == 1 || (int) board[kingX - i, kingY - i].type == 4)
             {
-                if (color != board[kingX, kingY + i].color)
+                if (color != board[kingX - i, kingY - i].color)
                 {
                     return false;
                 }
@@ -172,7 +172,7 @@ public abstract class Piece
             // If bishop or queen, check if it's an enemy
             if ((int) board[kingX + i, kingY - i].type == 1 || (int) board[kingX + i, kingY - i].type == 4)
             {
-                if (color != board[kingX + i, kingY + i].color)
+                if (color != board[kingX + i, kingY - i].color)
                 {
                     return false;
                 }
