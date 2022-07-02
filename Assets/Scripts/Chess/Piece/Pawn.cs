@@ -111,6 +111,7 @@ public class Pawn : Piece
         {
             return null;
         }
+
         return specialMove;
     }
 }
