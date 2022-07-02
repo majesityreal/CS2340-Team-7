@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPlayer: {fileID: 0}
   speed: 2
-  health: 50
+  health: 1
   damage: 1
 --- !u!212 &4963424189755715058
 SpriteRenderer:

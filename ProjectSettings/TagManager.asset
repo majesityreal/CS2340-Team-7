@@ -59,3 +59,6 @@ TagManager:
   - name: Entity
     uniqueID: 1940886403
     locked: 0
+  - name: Weapon
+    uniqueID: 2382437147
+    locked: 0
