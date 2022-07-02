@@ -39,10 +39,10 @@ public class ChessManager : MonoBehaviour
         }
 
         // White pieces [new Piece(Color, X, Y)]
-        //for (int j = 0; j < 8; j++)
-        //{
-        //    board[j, 6] = new Pawn(1, j, 6);
-        //}
+        for (int j = 0; j < 8; j++)
+        {
+            board[j, 6] = new Pawn(1, j, 6);
+        }
         board[0, 7] = new Rook(1, 0, 7);
         board[1, 7] = new Knight(1, 1, 7);
         board[2, 7] = new Bishop(1, 2, 7);
@@ -100,10 +100,10 @@ public class ChessManager : MonoBehaviour
         }
 
         isWhiteTurn = !isWhiteTurn;
-        CheckCheckmate(board[newX, newY].color);
-        CheckInsufficientMaterials();
-        Check50Move();
-        CheckRepetition();
+        //CheckCheckmate(board[newX, newY].color);
+        //CheckInsufficientMaterials();
+        //Check50Move();
+        //CheckRepetition();
     }
 
     private void CheckCheckmate(int color)
@@ -112,6 +112,11 @@ public class ChessManager : MonoBehaviour
         {
             for (int j = 0; j < 8; j++)
             {
+                if (board[i, j] == null)
+                {
+                    continue;
+                }
+
                 if (color == board[i, j].color)
                 {
                     continue;

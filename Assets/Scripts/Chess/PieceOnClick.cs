@@ -71,7 +71,8 @@ public class PieceOnClick : MonoBehaviour
                     {
                         chessManager.transform.GetComponent<ChessManager>().MovePosition(PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos(), GetXPos(), GetYPos(), ChessManager.board);
                         //PlayerInput.IsPlayerTurn = false;
-                        PlayerInput.CurrSelected.transform.position = new Vector3(GetXPos(), GetYPos());
+                        PlayerInput.CurrSelected.GetComponent<PieceOnClick>().SetPos(GetXPos(), GetYPos());
+                        PlayerInput.CurrSelected.transform.position = new Vector3(GetXPos() - 4, 4 - GetYPos());
                         Debug.Log("Move Success!");
                     }
                     else
@@ -89,14 +90,15 @@ public class PieceOnClick : MonoBehaviour
 
     public bool IsPossibleMove()
     {
-        foreach (int[] pos in GameStage.CurrPossibleMove)
-        {
-            if (pos[0] == GetXPos() && pos[1] == GetYPos())
-            {
-                return true;
-            }
-        }
-        return false;
+        //foreach (int[] pos in GameStage.CurrPossibleMove)
+        //{
+        //    if (pos[0] == GetXPos() && pos[1] == GetYPos())
+        //    {
+        //        return true;
+        //    }
+        //}
+        //return false;
+        return true;
     }
 
     // Getter && Setter

@@ -60,12 +60,6 @@ public class GameStage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Initalize the Board Pieces.
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            UpdatePieces();
-        }
-
         // If Player selected a piece, update it's possible move.
         if (HighLightIndex != null)
         {
@@ -76,6 +70,7 @@ public class GameStage : MonoBehaviour
         if (PlayerInput.CurrSelected == null)
         {
             HidePossibleMoves();
+            UpdatePieces();
         }
     }
 

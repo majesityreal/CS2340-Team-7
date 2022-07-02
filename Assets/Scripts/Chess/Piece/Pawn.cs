@@ -38,7 +38,7 @@ public class Pawn : Piece
         }
 
         // Left Capture
-        if (xCoord != 0 && board[xCoord - 1, yCoord + move] == null)
+        if (xCoord != 0 && board[xCoord - 1, yCoord + move] != null)
         {
             if (color != board[xCoord - 1, yCoord + move].color)
             {
@@ -47,7 +47,7 @@ public class Pawn : Piece
         }
 
         // Right Capture
-        if (xCoord != 7 && board[xCoord + 1, yCoord + move] == null)
+        if (xCoord != 7 && board[xCoord + 1, yCoord + move] != null)
         {
             if (color != board[xCoord + 1, yCoord + move].color)
             {
