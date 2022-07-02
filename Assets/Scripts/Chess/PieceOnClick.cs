@@ -69,7 +69,7 @@ public class PieceOnClick : MonoBehaviour
                 {
                     if (IsPossibleMove())
                     {
-                        chessManager.transform.GetComponent<ChessManager>().MovePosition(PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos(), GetXPos(), GetYPos(), ChessManager.board);
+                        ChessManager.MovePosition(PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos(), GetXPos(), GetYPos(), ChessManager.board);
                         //PlayerInput.IsPlayerTurn = false;
                         PlayerInput.CurrSelected.transform.position = new Vector3(GetXPos(), GetYPos());
                         Debug.Log("Move Success!");
