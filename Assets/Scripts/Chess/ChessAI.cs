@@ -88,7 +88,7 @@ public class ChessAI : MonoBehaviour
 
     // BREADTH FIRST SEARCH
 
-/*    public static int negaMax(int depth, int turn, Piece[,] board)
+    public static int negaMax(int depth, int turn, Piece[,] board)
     {
         Debug.Log("Depth: " + depth);
         if (depth == 0)
@@ -102,37 +102,30 @@ public class ChessAI : MonoBehaviour
         int max = int.MinValue;
 
         // go through all the moves!
-        for(int i = 0; i < 64; i++)
+        for (int i = 0; i < 64; i++)
         {
-            if (board != turn)
+            // if not turn skip
+            if (board[i % 8, i / 8].color != turn)
             {
                 continue;
             }
+
             // the list of legal moves
-            List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board);
+            List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board, ChessManager.moveRecord);
             foreach (int[] move in moves)
             {
-                Debug.Log("The piece " + entry.Value.GetColor() + " " + entry.Value + " at position: " + (entry.Value.GetXPos() + (entry.Value.GetYPos() * 8)) + " can move to " + move);
-            }
-            foreach (int[] move in moves)
-            {
-                // create temp dictionary - THIS NEEDS TO CREATE A DEEP COPY
-                // the other thing to try here is: (I think that does the same thing)
-                // Dictionary<int, Piece> temp = new Dictionary<int, Piece>(board);
-                Dictionary<int, Piece> temp = new Dictionary<int, Piece>();
-                foreach(KeyValuePair<int, Piece> entry2 in board)
-                {
-                    temp.Add(entry2.Key, entry2.Value);
-                }
+                // create temp array - THIS NEEDS TO CREATE A DEEP COPY
+                Piece[,] temp = new Piece[8,8];
+                board.CopyTo(temp, 0);
+                /*                for (int i = 0; i < 64; i++)
+                                {
+                                    temp[i % 8, i / 8] = board[i % 8, i / 8];
+                                }*/
 
                 // making the move on the temp board
                 // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
-                temp.Remove(entry.Key);
-                if (temp.ContainsKey(move))
-                {
-                    temp.Remove(move);
-                }
-                temp.Add(move, entry.Value);
+                Piece pos1 = temp[i % 8, i / 8];
+                ChessManager.MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp);
 
                 // re does algorithm with opposite turn, with newly moved piece on board
                 int score = -negaMax(depth - 1, turn * -1, temp);
@@ -145,7 +138,7 @@ public class ChessAI : MonoBehaviour
         }
 
         return max;
-    }*/
+    }
 
     // Update is called once per frame
     void Update()
