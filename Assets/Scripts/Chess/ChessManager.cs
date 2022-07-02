@@ -53,7 +53,7 @@ public class ChessManager : MonoBehaviour
         board[7, 7] = new Rook(1, 7, 7);
     }
 
-    public void MovePosition(int oldX, int oldY, int newX, int newY, ref Piece[,] board)
+    public void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)
     {
         RecordMove(oldX, oldY, newX, newY);
 
