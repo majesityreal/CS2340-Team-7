@@ -39,10 +39,10 @@ public class ChessManager : MonoBehaviour
         }
 
         // White pieces [new Piece(Color, X, Y)]
-        for (int j = 0; j < 8; j++)
-        {
-            board[j, 6] = new Pawn(1, j, 6);
-        }
+        //for (int j = 0; j < 8; j++)
+        //{
+        //    board[j, 6] = new Pawn(1, j, 6);
+        //}
         board[0, 7] = new Rook(1, 0, 7);
         board[1, 7] = new Knight(1, 1, 7);
         board[2, 7] = new Bishop(1, 2, 7);
@@ -53,7 +53,7 @@ public class ChessManager : MonoBehaviour
         board[7, 7] = new Rook(1, 7, 7);
     }
 
-    public void MovePosition(int oldX, int oldY, int newX, int newY, ref Piece[,] board)
+    public void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)
     {
         int pieceType = (int) board[oldX, oldY].type;
         
@@ -275,7 +275,7 @@ public class ChessManager : MonoBehaviour
 
     private bool CheckIfSafe(int posX, int posY, int testX, int testY, int kingX, int kingY, List<Piece> enemies, Piece[,] copyBoard, List<string> moveRecord)
     {
-        MovePosition(posX, posY, testX, testY, ref copyBoard);
+        MovePosition(posX, posY, testX, testY, copyBoard);
 
         foreach (Piece enemy in enemies)
         {

@@ -64,7 +64,7 @@ public class Pawn : Piece
             }
         }
 
-        return possibleMoves;
+        return ReturnValidMoves(possibleMoves, board);
     }
 
     private List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
