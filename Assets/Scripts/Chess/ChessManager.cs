@@ -20,8 +20,7 @@ public class ChessManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            Piece[,] pieces = new Piece[8,8];
-            ChessAI.negaMax(2, 1, board, pieces);
+            ChessAI.negaMax(2, 1, board);
         }
     }
 
