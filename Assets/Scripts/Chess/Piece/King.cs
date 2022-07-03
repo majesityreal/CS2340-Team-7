@@ -158,18 +158,21 @@ public class King : Piece
             {
                 if (CheckIfSafe(xCoord, yCoord, new int[] {move[0], move[1]}, copyBoard))
                 {
-                    if (move[0] == 6)
+                    if (CheckIfSafe(xCoord, yCoord, new int[] {move[0], move[1]}, copyBoard))
                     {
-                        if (CheckIfSafe(xCoord, yCoord, new int[] {move[0] + 1, move[1]}, copyBoard))
+                        if (move[0] == 6)
                         {
-                            possibleMoves.Add(move);   
+                            if (CheckIfSafe(xCoord, yCoord, new int[] {move[0] + 1, move[1]}, copyBoard))
+                            {
+                                possibleMoves.Add(move);   
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (CheckIfSafe(xCoord, yCoord, new int[] {move[0] - 1, move[1]}, copyBoard))
+                        else
                         {
-                            possibleMoves.Add(move); 
+                            if (CheckIfSafe(xCoord, yCoord, new int[] {move[0] - 1, move[1]}, copyBoard))
+                            {
+                                possibleMoves.Add(move); 
+                            }
                         }
                     }
                 }
@@ -180,7 +183,7 @@ public class King : Piece
             }
         }
 
-        return possibleMoves;
+        return ReturnValidMoves(possibleMoves, board);
     }
 
     private List<int[]> GetSpecialMoves(Piece[,] board, List<string> moveRecord)
@@ -195,13 +198,13 @@ public class King : Piece
         bool rightCastle = true;
 
         // Check if any of the squares are occupied (left)
-        if (board[1, yCoord] != null || board[2, yCoord] != null || board[3, yCoord] != null)
+        if (board[0, yCoord] == null || board[1, yCoord] != null || board[2, yCoord] != null || board[3, yCoord] != null)
         {
             leftCastle = false;
         }
         
         // Check if any of the squares are occupied (right)
-        if (board[6, yCoord] != null || board[5, yCoord] != null)
+        if (board[7, yCoord] == null || board[6, yCoord] != null || board[5, yCoord] != null)
         {
             rightCastle = false;
         }
@@ -245,12 +248,12 @@ public class King : Piece
 
         if (leftCastle)
         {
-            specialMove.Add(new int[2] {xCoord - 2, yCoord});
+            specialMove.Add(new int[2] {2, yCoord});
         }
 
         if (rightCastle)
         {
-            specialMove.Add(new int[2] {xCoord + 2, yCoord});
+            specialMove.Add(new int[2] {6, yCoord});
         }
         
         if (specialMove.Count == 0)

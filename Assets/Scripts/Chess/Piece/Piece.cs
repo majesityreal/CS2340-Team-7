@@ -37,7 +37,7 @@ public abstract class Piece
 
                 if (color == board[i, j].color)
                 {
-                    if ((int) board[i, j].type == 1)
+                    if (board[i, j].type == PieceType.King)
                     {
                         kingX = board[i, j].xCoord;
                         kingY = board[i, j].yCoord;
@@ -48,10 +48,15 @@ public abstract class Piece
         }
         
         int count = 0;
+        Debug.Log("King Position: x:" + kingX + " y:" + kingY);
         while (count < moves.Count)
         {
             if (!CheckIfSafe(kingX, kingY, moves[count], copyBoard))
             {
+                if (board[xCoord, yCoord] != null)
+                {
+                    Debug.Log(board[xCoord, yCoord].type + "x:" + moves[count][0] + " y:" + moves[count][1] + " is not safe.");
+                }
                 moves.RemoveAt(count);
                 continue;
             }
@@ -63,84 +68,123 @@ public abstract class Piece
 
     protected bool CheckIfSafe(int kingX, int kingY, int[] move, Piece[,] board)
     {
-        board[move[0], move[1]] = board[xCoord, yCoord];
+        Piece temp = board[xCoord, yCoord];
         board[xCoord, yCoord] = null;
+        board[move[0], move[1]] = temp;
 
-        // Check Top
-        for (int i = 1; kingY - i > -1; i++)
+        // If this piece is the king, then update the kingX and kingY.
+        if (type == PieceType.King)
         {
-            if (board[kingX, kingY - i] == null)
-            {
-                continue;
-            }
-
-            // If rook, check if it is enemy's queen or rook.
-            if ((int) board[kingX, kingY - i].type == 4 || (int) board[kingX, kingY - i].type == 5)
-            {
-                if (color != board[kingX, kingY - i].color)
-                {
-                    return false;
-                }
-            }
-            break;
+            kingX = move[0];
+            kingY = move[1];
+            Debug.Log("This piece is King changing to x:" + kingX + " y:" + kingY);
         }
 
-        // Check Left
-        for (int i = 1; kingX - i > -1; i++)
+        PieceType thisType = PieceType.Empty;
+        for (int i = 1; i < 8; i++) // Check Up
         {
-            if (board[kingX - i, kingY] == null)
+            if (kingY - i < 0) // Stop when out of bound
             {
-                continue;
+                break;
             }
 
-            // If rook, check if it is enemy's queen or rook.
-            if ((int) board[kingX - i, kingY].type == 4 || (int) board[kingX - i, kingY].type == 5)
+            if (board[kingX, kingY - i] != null) // When its not an empty square
             {
-                if (color != board[kingX - i, kingY].color)
+                if (color == board[kingX, kingY - i].color) // If it's an ally, don't look anymore
                 {
-                    return false;
+                    break;
                 }
+                thisType = board[kingX, kingY - i].type; // If enemy, get it's PieceType
             }
-            break;
+            
+            if (thisType == PieceType.King || thisType == PieceType.Queen || thisType == PieceType.Rook) // If one of these, move is not safe.
+            {
+                return false;
+            }
         }
 
-        // Check Right
-        for (int i = 1; kingX + i < 8; i++)
+        thisType = PieceType.Empty;
+        for (int i = 1; i < 8; i++) // Check Left
         {
-            if (board[kingX + i, kingY] == null)
+            if (kingX - i < 0)
             {
-                continue;
+                break;
             }
 
-            // If rook, check if it is enemy's queen or rook.
-            if ((int) board[kingX + i, kingY].type == 4 || (int) board[kingX + i, kingY].type == 5)
+            if (board[kingX - i, kingY] != null)
             {
-                if (color != board[kingX + i, kingY].color)
+                if (color == board[kingX - i, kingY].color)
                 {
-                    return false;
+                    break;
                 }
+                thisType = board[kingX - i, kingY].type;
             }
-            break;
+
+            if (thisType == PieceType.King || thisType == PieceType.Queen || thisType == PieceType.Rook)
+            {
+                return false;
+            }
         }
 
-        // Check Down
-        for (int i = 1; kingY + i < 8; i++)
+        thisType = PieceType.Empty;
+        for (int i = 1; i < 8; i++) // Check Right
         {
-            if (board[kingX, kingY + i] == null)
+            if (kingX + i > 7)
             {
-                continue;
+                break;
             }
 
-            // If queen or rook, check if it's an enemy.
-            if ((int) board[kingX, kingY + i].type == 4 || (int) board[kingX, kingY + i].type == 5)
-            {
-                if (color != board[kingX, kingY + i].color)
+            if (board[kingX + i, kingY] != null)
+            { 
+                if (color == board[kingX + i, kingY].color)
                 {
-                    return false;
+                    break;
                 }
+                thisType = board[kingX + i, kingY].type;
             }
-            break;
+
+            if (thisType == PieceType.King || thisType == PieceType.Queen || thisType == PieceType.Rook)
+            {
+                return false;
+            }
         }
+
+        thisType = PieceType.Empty;
+        for (int i = 1; i < 8; i++)
+        {
+            if (kingY + i > 7)
+            {
+                break;
+            }
+
+            if (board[kingX, kingY + i] != null) // Down
+            {
+                if (color == board[kingX, kingY + i].color)
+                {
+                    break;
+                }
+                thisType = board[kingX, kingY + i].type;
+            }
+
+            if (thisType == PieceType.King || thisType == PieceType.Queen || thisType == PieceType.Rook)
+            {
+                return false;
+            }
+        }
+
+        // thisType = PieceType.Empty;
+        // for (int i = i; i < 8; i++) // Top Left
+        // {
+        //     if (kingX )
+        // }
+
+        // thisType = PieceType.Empty;
+
+
+        // thisType = PieceType.Empty;
+
+
+        // thisType = PieceType.Empty;
 
         // Check Top Left Diagonal
         for (int i = 1; kingX - i > -1 && kingY - i > -1; i++)
@@ -150,10 +194,10 @@ public abstract class Piece
                 continue;
             }
 
-            // If bishop or queen, check if it's an enemy
-            if ((int) board[kingX - i, kingY - i].type == 1 || (int) board[kingX - i, kingY + i].type == 4)
+            // If bishop, king or queen, check if it's an enemy
+            if (board[kingX - i, kingY - i].type == PieceType.Bishop || board[kingX - i, kingY - i].type == PieceType.King || board[kingX - i, kingY - i].type == PieceType.Queen)
             {
-                if (color != board[kingX, kingY + i].color)
+                if (color != board[kingX - i, kingY - i].color)
                 {
                     return false;
                 }
@@ -169,10 +213,10 @@ public abstract class Piece
                 continue;
             }
 
-            // If bishop or queen, check if it's an enemy
-            if ((int) board[kingX + i, kingY - i].type == 1 || (int) board[kingX + i, kingY + i].type == 4)
+            // If bishop, king or queen, check if it's an enemy
+            if (board[kingX + i, kingY - i].type == PieceType.Bishop || board[kingX + i, kingY - i].type == PieceType.King || board[kingX + i, kingY - i].type == PieceType.Queen)
             {
-                if (color != board[kingX + i, kingY + i].color)
+                if (color != board[kingX + i, kingY - i].color)
                 {
                     return false;
                 }
@@ -188,8 +232,8 @@ public abstract class Piece
                 continue;
             }
 
-            // If bishop or queen, check if it's an enemy
-            if ((int) board[kingX - i, kingY + i].type == 1 || (int) board[kingX - i, kingY + i].type == 4)
+            // If bishop, king or queen, check if it's an enemy
+            if (board[kingX - i, kingY + i].type == PieceType.Bishop || board[kingX - i, kingY + i].type == PieceType.King || board[kingX - i, kingY + i].type == PieceType.Queen)
             {
                 if (color != board[kingX - i, kingY + i].color)
                 {
@@ -207,8 +251,8 @@ public abstract class Piece
                 continue;
             }
 
-            // If bishop or queen, check if it's an enemy
-            if ((int) board[kingX + i, kingY + i].type == 1 || (int) board[kingX + i, kingY + i].type == 4)
+            // If bishop, king or queen, check if it's an enemy
+            if (board[kingX + i, kingY + i].type == PieceType.Bishop || board[kingX + i, kingY + i].type == PieceType.King || board[kingX + i, kingY + i].type == PieceType.Queen)
             {
                 if (color != board[kingX + i, kingY + i].color)
                 {
@@ -224,7 +268,7 @@ public abstract class Piece
         {
             if (board[kingX - 1, kingY - 2] != null)
             {
-                if ((int) board[kingX - 1, kingY - 2].type == 2)
+                if (board[kingX - 1, kingY - 2].type == PieceType.Knight)
                 {
                     if (color != board[kingX - 1, kingY - 2].color)
                     {
@@ -239,7 +283,7 @@ public abstract class Piece
         {
             if (board[kingX + 1, kingY - 2] != null)
             {
-                if ((int) board[kingX + 1, kingY - 2].type == 2)
+                if (board[kingX + 1, kingY - 2].type == PieceType.Knight)
                 {
                     if (color != board[kingX + 1, kingY - 2].color)
                     {
@@ -254,7 +298,7 @@ public abstract class Piece
         {
             if (board[kingX - 2, kingY - 1] != null)
             {
-                if ((int) board[kingX - 2, kingY - 1].type == 2)
+                if (board[kingX - 2, kingY - 1].type == PieceType.Knight)
                 {
                     if (color != board[kingX - 2, kingY - 1].color)
                     {
@@ -269,7 +313,7 @@ public abstract class Piece
         {
             if (board[kingX + 2, kingY - 1] != null)
             {
-                if ((int) board[kingX + 2, kingY - 1].type == 2)
+                if (board[kingX + 2, kingY - 1].type == PieceType.Knight)
                 {
                     if (color != board[kingX + 2, kingY - 1].color)
                     {
@@ -284,7 +328,7 @@ public abstract class Piece
         {
             if (board[kingX - 2, kingY + 1] != null)
             {
-                if ((int) board[kingX - 2, kingY + 1].type == 2)
+                if (board[kingX - 2, kingY + 1].type == PieceType.Knight)
                 {
                     if (color != board[kingX - 2, kingY + 1].color)
                     {
@@ -299,7 +343,7 @@ public abstract class Piece
         {
             if (board[kingX + 2, kingY + 1] != null)
             {
-                if ((int) board[kingX + 2, kingY + 1].type == 2)
+                if (board[kingX + 2, kingY + 1].type == PieceType.Knight)
                 {
                     if (color != board[kingX + 2, kingY + 1].color)
                     {
@@ -314,7 +358,7 @@ public abstract class Piece
         {
             if (board[kingX - 1, kingY + 2] != null)
             {
-                if ((int) board[kingX - 1, kingY + 2].type == 2)
+                if (board[kingX - 1, kingY + 2].type == PieceType.Knight)
                 {
                     if (color != board[kingX - 1, kingY + 2].color)
                     {
@@ -329,7 +373,7 @@ public abstract class Piece
         {
             if (board[kingX + 1, kingY + 2] != null)
             {
-                if ((int) board[kingX + 1, kingY + 2].type == 2)
+                if (board[kingX + 1, kingY + 2].type == PieceType.Knight)
                 {
                     if (color != board[kingX + 1, kingY + 2].color)
                     {
@@ -350,5 +394,6 @@ public enum PieceType
     Knight,
     Pawn,
     Queen,
-    Rook
+    Rook,
+    Empty
 }
