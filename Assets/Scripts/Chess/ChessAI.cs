@@ -132,7 +132,7 @@ public class ChessAI : MonoBehaviour
                 // making the move on the temp board
                 // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
                 Piece pos1 = temp[i % 8, i / 8];
-                FindObjectOfType<ChessManager>().GetComponent<ChessManager>().MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp);
+                ChessManager.MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp);
 
                 // re does algorithm with opposite turn, with newly moved piece on board
                 int score = -negaMax(depth - 1, turn * -1, temp);
