@@ -20,7 +20,12 @@ public class ChessManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            ChessAI.negaMax(2, 1, board);
+            ChessAI.negaMax(3, -1, board, moveRecord);
+
+            foreach (string moveAI in ChessAI.bestMoveRecord)
+            {
+                Debug.Log(moveAI);
+            }
         }
     }
 
@@ -69,7 +74,8 @@ public class ChessManager : MonoBehaviour
             return;
         }
         
-        RecordMove(oldX, oldY, newX, newY, board, moveRecord);
+        //RecordMove(oldX, oldY, newX, newY, board, moveRecord);
+        Debug.Log(board[oldX, oldY].type);
 
         int pieceType = (int) board[oldX, oldY].type;
 
@@ -122,14 +128,14 @@ public class ChessManager : MonoBehaviour
             board[oldX, oldY] = null;
         }
 
-        if (isWhiteTurn)
-        {
-            Debug.Log("White:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
-        }
-        else
-        {
-            Debug.Log("Black:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
-        }
+        // if (isWhiteTurn)
+        // {
+        //     Debug.Log("White:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
+        // }
+        // else
+        // {
+        //     Debug.Log("Black:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
+        // }
 
         isWhiteTurn = !isWhiteTurn;
         CheckInsufficientMaterials(board);
@@ -148,13 +154,13 @@ public class ChessManager : MonoBehaviour
             {
                 if (board[i, j] == null)
                 {
-                    Debug.Log("CCM: x: " + i + ", y: " + j + " is an empty square.");
+                    //Debug.Log("CCM: x: " + i + ", y: " + j + " is an empty square.");
                     continue;
                 }
 
                 if (color == board[i, j].color)
                 {
-                    Debug.Log("CCM: x: " + i + ", y: " + j + " " + board[i, j].type + " is an ally.");
+                    //Debug.Log("CCM: x: " + i + ", y: " + j + " " + board[i, j].type + " is an ally.");
                     continue;
                 }
 
@@ -167,7 +173,7 @@ public class ChessManager : MonoBehaviour
                     {
                         textL += " " + hhh[0] + ":" + hhh[1];
                     }
-                    Debug.Log(textL);
+                    //Debug.Log(textL);
                     return;
                 }
                 else if (board[i, j].type == PieceType.King)
