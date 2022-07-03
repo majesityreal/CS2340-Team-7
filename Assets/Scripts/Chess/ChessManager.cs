@@ -22,10 +22,10 @@ public class ChessManager : MonoBehaviour
         {
             ChessAI.negaMax(3, -1, board, moveRecord);
 
-            foreach (string moveAI in ChessAI.bestMoveRecord)
-            {
-                Debug.Log(moveAI);
-            }
+            // foreach (string moveAI in ChessAI.bestMoveRecord)
+            // {
+            //     Debug.Log(moveAI);
+            // }
         }
     }
 
@@ -74,8 +74,8 @@ public class ChessManager : MonoBehaviour
             return;
         }
         
-        //RecordMove(oldX, oldY, newX, newY, board, moveRecord);
-        Debug.Log(board[oldX, oldY].type);
+        RecordMove(oldX, oldY, newX, newY, board, moveRecord);
+        Debug.Log("x:" + oldX + " y:" + oldY);
 
         int pieceType = (int) board[oldX, oldY].type;
 
@@ -128,14 +128,14 @@ public class ChessManager : MonoBehaviour
             board[oldX, oldY] = null;
         }
 
-        // if (isWhiteTurn)
-        // {
-        //     Debug.Log("White:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
-        // }
-        // else
-        // {
-        //     Debug.Log("Black:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
-        // }
+        if (isWhiteTurn)
+        {
+            Debug.Log("White:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
+        }
+        else
+        {
+            Debug.Log("Black:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
+        }
 
         isWhiteTurn = !isWhiteTurn;
         CheckInsufficientMaterials(board);
@@ -197,7 +197,7 @@ public class ChessManager : MonoBehaviour
 
     private static void CheckInsufficientMaterials(Piece[,] board)
     {
-        Debug.Log("Checking if insufficient materials");
+        //Debug.Log("Checking if insufficient materials");
 
         int countWhite = 0;
         int countBlack = 0;
@@ -216,7 +216,7 @@ public class ChessManager : MonoBehaviour
             // If pawn or rook are alive, don't end game.
             if (ty == 3 || ty == 5)
             {
-                Debug.Log("Pawn or Rook is alive, not insufficient.");
+                //Debug.Log("Pawn or Rook is alive, not insufficient.");
                 return;
             }
 
@@ -228,7 +228,7 @@ public class ChessManager : MonoBehaviour
                     countWhite++;
                     if (countWhite > 1)
                     {
-                        Debug.Log("Enough white pieces to play");
+                        //Debug.Log("Enough white pieces to play");
                         return;
                     }
                 }
@@ -237,7 +237,7 @@ public class ChessManager : MonoBehaviour
                     countBlack++;
                     if (countBlack > 1)
                     {
-                        Debug.Log("Enough black pieces to play");
+                        //Debug.Log("Enough black pieces to play");
                         return;
                     }
                 }
@@ -280,7 +280,7 @@ public class ChessManager : MonoBehaviour
             }
         }
         
-        Debug.Log("50 move rule123");
+        //Debug.Log("50 move rule123");
         Draw("50 move rule");
     }
 

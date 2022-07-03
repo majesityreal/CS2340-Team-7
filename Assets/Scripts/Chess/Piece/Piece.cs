@@ -48,7 +48,7 @@ public abstract class Piece
         }
         
         int count = 0;
-        Debug.Log("King Position: x:" + kingX + " y:" + kingY);
+        //Debug.Log("King Position: x:" + kingX + " y:" + kingY);
         while (count < moves.Count)
         {
             if (!CheckIfSafe(kingX, kingY, moves[count], copyBoard))
