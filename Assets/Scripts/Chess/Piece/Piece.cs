@@ -48,10 +48,12 @@ public abstract class Piece
         }
         
         int count = 0;
+        Debug.Log("King Position: x:" + kingX + " y:" + kingY);
         while (count < moves.Count)
         {
             if (!CheckIfSafe(kingX, kingY, moves[count], copyBoard))
             {
+                Debug.Log("x:" + moves[count][0] + " y:" + moves[count][1] + " is not safe.");
                 moves.RemoveAt(count);
                 continue;
             }
@@ -61,10 +63,23 @@ public abstract class Piece
         return moves;
     }
 
+    // Not Working
+    // Top Right
+    // Top
+    // Left
+    // Top Left
+
     protected bool CheckIfSafe(int kingX, int kingY, int[] move, Piece[,] board)
     {
         board[move[0], move[1]] = board[xCoord, yCoord];
         board[xCoord, yCoord] = null;
+
+        // If this piece is the king, then update the kingX and kingY.
+        if (type == PieceType.King)
+        {
+            kingX = move[0];
+            kingY = move[1];
+        }
 
         // Check Top
         for (int i = 1; kingY - i > -1; i++)
@@ -74,16 +89,19 @@ public abstract class Piece
                 continue;
             }
 
-            // If rook, check if it is enemy's queen or rook.
-            if ((int) board[kingX, kingY - i].type == 4 || (int) board[kingX, kingY - i].type == 5)
+            // If king, queen or rook, check if it's an enemy.
+            if (board[kingX, kingY - i].type == PieceType.King || board[kingX, kingY - i].type == PieceType.Queen || board[kingX, kingY - i].type == PieceType.Rook)
             {
                 if (color != board[kingX, kingY - i].color)
                 {
+                    Debug.Log("CheckTop: KQR is not enemy.");
                     return false;
                 }
             }
+            Debug.Log("CheckTop: It is not KQR");
             break;
         }
+        Debug.Log("Top is safe.");
 
         // Check Left
         for (int i = 1; kingX - i > -1; i++)
@@ -93,16 +111,19 @@ public abstract class Piece
                 continue;
             }
 
-            // If rook, check if it is enemy's queen or rook.
-            if ((int) board[kingX - i, kingY].type == 4 || (int) board[kingX - i, kingY].type == 5)
+            // If king, queen or rook, check if it's an enemy.
+            if (board[kingX - i, kingY].type == PieceType.King || board[kingX - i, kingY].type == PieceType.Queen || board[kingX - i, kingY].type == PieceType.Rook)
             {
                 if (color != board[kingX - i, kingY].color)
                 {
+                    Debug.Log("CheckLeft: KQR is not enemy.");
                     return false;
                 }
             }
+            Debug.Log("CheckLeft: It is not KQR.");
             break;
         }
+        Debug.Log("Left is safe.");
 
         // Check Right
         for (int i = 1; kingX + i < 8; i++)
@@ -112,16 +133,19 @@ public abstract class Piece
                 continue;
             }
 
-            // If rook, check if it is enemy's queen or rook.
-            if ((int) board[kingX + i, kingY].type == 4 || (int) board[kingX + i, kingY].type == 5)
+            // If king, queen or rook, check if it's an enemy.
+            if ((int) board[kingX + i, kingY].type == 1 || (int) board[kingX + i, kingY].type == 4 || (int) board[kingX + i, kingY].type == 5)
             {
                 if (color != board[kingX + i, kingY].color)
                 {
+                    Debug.Log("CheckRight: KQR is not enemy.");
                     return false;
                 }
             }
+            Debug.Log("CheckRight: It is not KQR.");
             break;
         }
+        Debug.Log("Right is safe.");
 
         // Check Down
         for (int i = 1; kingY + i < 8; i++)
@@ -131,16 +155,19 @@ public abstract class Piece
                 continue;
             }
 
-            // If queen or rook, check if it's an enemy.
-            if ((int) board[kingX, kingY + i].type == 4 || (int) board[kingX, kingY + i].type == 5)
+            // If king, queen or rook, check if it's an enemy.
+            if ((int) board[kingX, kingY + i].type == 1 || (int) board[kingX, kingY + i].type == 4 || (int) board[kingX, kingY + i].type == 5)
             {
                 if (color != board[kingX, kingY + i].color)
                 {
+                    Debug.Log("CheckDown: KQR is not enemy.");
                     return false;
                 }
             }
+            Debug.Log("CheckDown: It is not KQR.");
             break;
         }
+        Debug.Log("Down is safe.");
 
         // Check Top Left Diagonal
         for (int i = 1; kingX - i > -1 && kingY - i > -1; i++)
@@ -150,8 +177,8 @@ public abstract class Piece
                 continue;
             }
 
-            // If bishop or queen, check if it's an enemy
-            if ((int) board[kingX - i, kingY - i].type == 1 || (int) board[kingX - i, kingY - i].type == 4)
+            // If bishop, king or queen, check if it's an enemy
+            if ((int) board[kingX - i, kingY - i].type == 0 || (int) board[kingX - i, kingY - i].type == 1 || (int) board[kingX - i, kingY - i].type == 4)
             {
                 if (color != board[kingX - i, kingY - i].color)
                 {
@@ -169,8 +196,8 @@ public abstract class Piece
                 continue;
             }
 
-            // If bishop or queen, check if it's an enemy
-            if ((int) board[kingX + i, kingY - i].type == 1 || (int) board[kingX + i, kingY - i].type == 4)
+            // If bishop, king or queen, check if it's an enemy
+            if ((int) board[kingX + i, kingY - i].type == 0 || (int) board[kingX + i, kingY - i].type == 1 || (int) board[kingX + i, kingY - i].type == 4)
             {
                 if (color != board[kingX + i, kingY - i].color)
                 {
@@ -188,8 +215,8 @@ public abstract class Piece
                 continue;
             }
 
-            // If bishop or queen, check if it's an enemy
-            if ((int) board[kingX - i, kingY + i].type == 1 || (int) board[kingX - i, kingY + i].type == 4)
+            // If bishop, king or queen, check if it's an enemy
+            if ((int) board[kingX - i, kingY + i].type == 0 || (int) board[kingX - i, kingY + i].type == 1 || (int) board[kingX - i, kingY + i].type == 4)
             {
                 if (color != board[kingX - i, kingY + i].color)
                 {
@@ -207,8 +234,8 @@ public abstract class Piece
                 continue;
             }
 
-            // If bishop or queen, check if it's an enemy
-            if ((int) board[kingX + i, kingY + i].type == 1 || (int) board[kingX + i, kingY + i].type == 4)
+            // If bishop, king or queen, check if it's an enemy
+            if ((int) board[kingX + i, kingY + i].type == 0 || (int) board[kingX + i, kingY + i].type == 1 || (int) board[kingX + i, kingY + i].type == 4)
             {
                 if (color != board[kingX + i, kingY + i].color)
                 {

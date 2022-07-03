@@ -124,15 +124,16 @@ public class ChessManager : MonoBehaviour
         }
 
         isWhiteTurn = !isWhiteTurn;
-        CheckCheckmate(board[newX, newY].color);
         CheckInsufficientMaterials();
         Check50Move();
         CheckRepetition();
+        CheckCheckmate(board[newX, newY].color);
     }
 
     private void CheckCheckmate(int color)
     {
         //Debug.Log("Checking if Checkmate: " + color);
+        
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -145,14 +146,25 @@ public class ChessManager : MonoBehaviour
 
                 if (color == board[i, j].color)
                 {
-                    Debug.Log("CCM: x: " + i + ", y: " + j + " is ally.");
+                    Debug.Log("CCM: x: " + i + ", y: " + j + " is an ally.");
                     continue;
                 }
 
-                if (board[i, j].GetLegalMoves(board, moveRecord).Count != 0)
+                List<int[]> thisMoves = board[i, j].GetLegalMoves(board, moveRecord);
+
+                if (thisMoves.Count != 0)
                 {
-                    Debug.Log("CCM: x: " + i + ", y: " + j + " has legal moves. It is not checkmate.");
+                    string textL = "CCM: x: " + i + ", y: " + j + " has legal moves. It is not checkmate.";
+                    foreach (int[] hhh in thisMoves)
+                    {
+                        textL += " " + hhh[0] + ":" + hhh[1];
+                    }
+                    Debug.Log(textL);
                     return;
+                }
+                else if (board[i, j].type == PieceType.King)
+                {
+                    Draw("Stalemate");
                 }
             }
         }
@@ -171,7 +183,7 @@ public class ChessManager : MonoBehaviour
 
     private void CheckInsufficientMaterials()
     {
-        //Debug.Log("Checking if insufficient materials");
+        Debug.Log("Checking if insufficient materials");
 
         int countWhite = 0;
         int countBlack = 0;
@@ -190,7 +202,7 @@ public class ChessManager : MonoBehaviour
             // If pawn or rook are alive, don't end game.
             if (ty == 3 || ty == 5)
             {
-                //Debug.Log("Pawn or Rook is alive, not insufficient.");
+                Debug.Log("Pawn or Rook is alive, not insufficient.");
                 return;
             }
 
@@ -202,7 +214,7 @@ public class ChessManager : MonoBehaviour
                     countWhite++;
                     if (countWhite > 1)
                     {
-                        //Debug.Log("Enough white pieces to play");
+                        Debug.Log("Enough white pieces to play");
                         return;
                     }
                 }
@@ -211,7 +223,7 @@ public class ChessManager : MonoBehaviour
                     countBlack++;
                     if (countBlack > 1)
                     {
-                        //Debug.Log("Enough black pieces to play");
+                        Debug.Log("Enough black pieces to play");
                         return;
                     }
                 }
@@ -231,24 +243,6 @@ public class ChessManager : MonoBehaviour
             }
         }
 
-        if (countWhite == 0)
-        {
-            if (board[whiteKingPos[0], whiteKingPos[1]].GetLegalMoves(board, moveRecord).Count == 0)
-            {
-                Debug.Log("Stalemate123");
-                Draw("Stalemate");
-            }
-        }
-        else if (countBlack == 0)
-        {
-            if (board[blackKingPos[0], blackKingPos[1]].GetLegalMoves(board, moveRecord).Count == 0)
-            {
-                Debug.Log("Stalemate123");
-                Draw("Stalemate");
-            }
-        }
-
-        Debug.Log("Insufficient Materials 123");
         Draw("Insufficient Materials");
     }
 
