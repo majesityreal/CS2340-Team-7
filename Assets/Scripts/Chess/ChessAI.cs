@@ -5,6 +5,8 @@ using UnityEngine;
 public class ChessAI : MonoBehaviour
 {
 
+    public static Piece[,] bestMoveBoard;
+
     const int pawnValue = 100;
     const int knightValue = 300;
     const int bishopValue = 300;
@@ -104,6 +106,11 @@ public class ChessAI : MonoBehaviour
         // go through all the moves!
         for (int i = 0; i < 64; i++)
         {
+            if (board[i % 8, i / 8] == null)
+            {
+                continue;
+            }
+            Debug.Log("Continuing");
             // if not turn skip
             if (board[i % 8, i / 8].color != turn)
             {
@@ -116,7 +123,7 @@ public class ChessAI : MonoBehaviour
             {
                 // create temp array - THIS NEEDS TO CREATE A DEEP COPY
                 Piece[,] temp = new Piece[8,8];
-                board.CopyTo(temp, 0);
+                temp = board.Clone() as Piece[,];
                 /*                for (int i = 0; i < 64; i++)
                                 {
                                     temp[i % 8, i / 8] = board[i % 8, i / 8];
@@ -132,7 +139,8 @@ public class ChessAI : MonoBehaviour
                 if (score > max)
                 {
                     max = score;
-                    // TODO - STORE THE MOVE HERE STORE THE MOVE HERE STORE THE MOVE HERE
+                    // stores the move here
+                    bestMoveBoard = temp;
                 }
             }
         }
