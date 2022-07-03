@@ -124,6 +124,7 @@ public class ChessAI : MonoBehaviour
                 // create temp array - THIS NEEDS TO CREATE A DEEP COPY
                 Piece[,] temp = new Piece[8,8];
                 temp = board.Clone() as Piece[,];
+                List<string> copyRecord = new List<string> (ChessManager.moveRecord);
                 /*                for (int i = 0; i < 64; i++)
                                 {
                                     temp[i % 8, i / 8] = board[i % 8, i / 8];
@@ -132,7 +133,7 @@ public class ChessAI : MonoBehaviour
                 // making the move on the temp board
                 // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
                 Piece pos1 = temp[i % 8, i / 8];
-                ChessManager.MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp);
+                ChessManager.MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp, copyRecord);
 
                 // re does algorithm with opposite turn, with newly moved piece on board
                 int score = -negaMax(depth - 1, turn * -1, temp);

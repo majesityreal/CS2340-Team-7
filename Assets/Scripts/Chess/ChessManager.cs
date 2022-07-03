@@ -61,7 +61,7 @@ public class ChessManager : MonoBehaviour
         board[7, 7] = new Rook(1, 7, 7);
     }
 
-    public static void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)
+    public static void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board, List<string> moveRecord)
     {       
         if (board[newX, newY] != null && (int) board[newX, newY].type == 1)
         {
@@ -69,7 +69,7 @@ public class ChessManager : MonoBehaviour
             return;
         }
         
-        RecordMove(oldX, oldY, newX, newY);
+        RecordMove(oldX, oldY, newX, newY, board, moveRecord);
 
         int pieceType = (int) board[oldX, oldY].type;
 
@@ -299,94 +299,27 @@ public class ChessManager : MonoBehaviour
         return;
     }
 
-    public static List<int[]> GetMoves(int posX, int posY)
-    {
-        List<int[]> pieceMoves = board[posX, posY].GetLegalMoves(board, moveRecord);
-        int kingX = -1;
-        int kingY = -1;
-        Piece[,] copyBoard = new Piece[8, 8];
-        List<Piece> enemies = new List<Piece>();
-        
-        // Copy over all pieces
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (board[i, j] == null)
-                {
-                    continue;
-                }
-
-                if (board[posX, posY].color == board[i, j].color)
-                {
-                    if ((int) board[i, j].type == 1)
-                    {
-                        kingX = board[i, j].xCoord;
-                        kingY = board[i, j].yCoord;
-                    }
-                }
-                else
-                {
-                    enemies.Add(board[i, j]);
-                }
-
-                copyBoard[i, j] = board[i, j];
-            }
-        }
-
-        int count = 0;
-        while (count < pieceMoves.Count)
-        {
-            if (!CheckIfSafe(posX, posY, pieceMoves[count][0], pieceMoves[count][1], kingX, kingY, enemies, copyBoard, moveRecord))
-            {
-                pieceMoves.RemoveAt(count);
-                continue;
-            }
-            count++;
-        }
-
-        return pieceMoves;
-    }
-
-    private static bool CheckIfSafe(int posX, int posY, int testX, int testY, int kingX, int kingY, List<Piece> enemies, Piece[,] copyBoard, List<string> moveRecord)
-    {
-        MovePosition(posX, posY, testX, testY, copyBoard);
-
-        foreach (Piece enemy in enemies)
-        {
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (enemies[i].xCoord == kingX && enemies[i].yCoord == kingY)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
     // Records each move into a string: [Piece Type][oldX][oldY][newX][newY]
-    private static void RecordMove(int oldX, int oldY, int newX, int newY)
+    private static void RecordMove(int oldX, int oldY, int newX, int newY, Piece[,] board, List<string> moveRecord)
     {
         string record = "";
-        switch ((int) board[oldX, oldY].type)
+        switch (board[oldX, oldY].type)
         {
-            case 0:
-                record += "";
+            case PieceType.Bishop:
+                record += "B";
                 break;
-            case 1:
+            case PieceType.King:
                 record += "K";
                 break;
-            case 2:
+            case PieceType.Knight:
                 record += "N";
                 break;
-            case 3:
+            case PieceType.Pawn:
                 break;
-            case 4:
+            case PieceType.Queen:
                 record += "Q";
                 break;
-            case 5:
+            case PieceType.Rook:
                 record += "R";
                 break;
         };
