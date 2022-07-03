@@ -249,7 +249,7 @@ public class GameStage : MonoBehaviour
     {
         foreach (int[] index in HighLightIndex)
         {
-            Debug.Log("You Can Move To " + index[0].ToString() + index[1].ToString());
+            //Debug.Log("You Can Move To " + index[0].ToString() + index[1].ToString());
             HighLightBlock[index[0], index[1]] = Instantiate(possibleBlock, new Vector3(index[0] - 4, 4 - index[1], transform.position.z), Quaternion.identity);
             HighLightBlock[index[0], index[1]].transform.parent = PossibleMoves.transform;
 

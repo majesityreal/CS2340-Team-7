@@ -124,13 +124,13 @@ public class ChessManager : MonoBehaviour
         }
 
         isWhiteTurn = !isWhiteTurn;
-        CheckInsufficientMaterials();
-        Check50Move();
-        CheckRepetition();
-        CheckCheckmate(board[newX, newY].color);
+        CheckInsufficientMaterials(board);
+        Check50Move(board);
+        CheckRepetition(board);
+        CheckCheckmate(board[newX, newY].color, board);
     }
 
-    private void CheckCheckmate(int color)
+    private void CheckCheckmate(int color, Piece[,] board)
     {
         //Debug.Log("Checking if Checkmate: " + color);
         
@@ -140,13 +140,13 @@ public class ChessManager : MonoBehaviour
             {
                 if (board[i, j] == null)
                 {
-                    Debug.Log("CCM: x: " + i + ", y: " + j + " is null.");
+                    Debug.Log("CCM: x: " + i + ", y: " + j + " is an empty square.");
                     continue;
                 }
 
                 if (color == board[i, j].color)
                 {
-                    Debug.Log("CCM: x: " + i + ", y: " + j + " is an ally.");
+                    Debug.Log("CCM: x: " + i + ", y: " + j + " " + board[i, j].type + " is an ally.");
                     continue;
                 }
 
@@ -154,7 +154,7 @@ public class ChessManager : MonoBehaviour
 
                 if (thisMoves.Count != 0)
                 {
-                    string textL = "CCM: x: " + i + ", y: " + j + " has legal moves. It is not checkmate.";
+                    string textL = "CCM: x: " + i + ", y: " + j + " " + board[i, j].type + " has legal moves. It is not checkmate.";
                     foreach (int[] hhh in thisMoves)
                     {
                         textL += " " + hhh[0] + ":" + hhh[1];
@@ -181,7 +181,7 @@ public class ChessManager : MonoBehaviour
         }
     }
 
-    private void CheckInsufficientMaterials()
+    private void CheckInsufficientMaterials(Piece[,] board)
     {
         Debug.Log("Checking if insufficient materials");
 
@@ -246,7 +246,7 @@ public class ChessManager : MonoBehaviour
         Draw("Insufficient Materials");
     }
 
-    private void Check50Move()
+    private void Check50Move(Piece[,] board)
     {
         //Debug.Log("Checking if 50 move rule");
         if (moveRecord.Count < 50)
@@ -270,7 +270,7 @@ public class ChessManager : MonoBehaviour
         Draw("50 move rule");
     }
 
-    private void CheckRepetition()
+    private void CheckRepetition(Piece[,] board)
     {
         if (moveRecord.Count < 5)
         {
