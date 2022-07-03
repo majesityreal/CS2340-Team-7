@@ -148,6 +148,6 @@ public class Queen : Piece
             }
         }
 
-        return possibleMoves;
+        return ReturnValidMoves(possibleMoves, board);
     }
 }

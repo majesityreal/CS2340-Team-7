@@ -409,6 +409,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 449733105}
+    - target: {fileID: 3692712990063689098, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: backToMenuSingleton
+      objectReference: {fileID: 0}
     - target: {fileID: 5111632687855327963, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1025,6 +1029,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb7538c1cc9b1ab4d97ed87206fdce5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPhysicsRelated: 0
+  gameStarted: 0
   pauseMenu: {fileID: 1397848815}
 --- !u!1 &518457167
 GameObject:

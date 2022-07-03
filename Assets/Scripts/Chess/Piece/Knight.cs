@@ -140,6 +140,6 @@ public class Knight : Piece
             }
         }
 
-        return possibleMoves;
+        return ReturnValidMoves(possibleMoves, board);
     }
 }

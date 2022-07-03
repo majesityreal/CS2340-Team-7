@@ -10,6 +10,9 @@ public class Audio: MonoBehaviour
     public AudioSource FlipCard2;
     public AudioSource PokerChip;
 
+    void Start() {
+        AudioListener.volume = PlayerPrefs.GetFloat("volume");
+    }
     public void PlayShuffle() {
         Shuffle.Play();
     }
