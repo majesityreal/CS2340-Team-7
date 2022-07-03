@@ -5,7 +5,7 @@ using UnityEngine;
 public class ChessAI : MonoBehaviour
 {
 
-    public static Piece[,] bestMoveBoard;
+    public static Piece[,] bestMoveBoard; // board that has the best move
 
     const int pawnValue = 100;
     const int knightValue = 300;
