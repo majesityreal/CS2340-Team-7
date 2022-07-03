@@ -26,6 +26,8 @@ public class ChessManager : MonoBehaviour
             // {
             //     Debug.Log(moveAI);
             // }
+            Debug.LogWarning("Finished NO ERERROS");
+            Debug.Log(ChessAI.bestMoveRecord.Count);
         }
     }
 
@@ -73,6 +75,12 @@ public class ChessManager : MonoBehaviour
             Debug.Log("Game End");
             return;
         }
+
+/*        if (board[oldX, oldY] == null)
+        {
+            Debug.LogWarning("Error, checking a null square!");
+            return;
+        }*/
         
         RecordMove(oldX, oldY, newX, newY, board, moveRecord);
         Debug.Log("x:" + oldX + " y:" + oldY);
@@ -306,7 +314,7 @@ public class ChessManager : MonoBehaviour
     }
 
     // Records each move into a string: [Piece Type][oldX][oldY][newX][newY]
-    private static void RecordMove(int oldX, int oldY, int newX, int newY, Piece[,] board, List<string> moveRecord)
+    public static void RecordMove(int oldX, int oldY, int newX, int newY, Piece[,] board, List<string> moveRecord)
     {
         string record = "";
         switch (board[oldX, oldY].type)

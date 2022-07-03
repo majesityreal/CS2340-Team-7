@@ -180,9 +180,52 @@ public class ChessAI : MonoBehaviour
             {
                 Debug.Log("Iteration " + (i + j) + " x: " + i + " y: " + j);
                 if (board[i, j] == null || turn != board[i, j].color)
-                {
-                    continue;
-                }
+                continue;
+            }
+
+
+            // if not turn skip
+            if (board[i % 8, i / 8].color != turn)
+            {
+                continue;
+            }
+
+            Piece[,] temp = new Piece[8, 8];
+            
+
+            for (int j = 0; j < 64; j++)
+            {
+                temp[j % 8, j / 8] = board[j % 8, j / 8];
+            }
+
+
+            List<string> simulatedRecord = new List<string>(copyRecord);
+
+
+            // the list of legal moves
+            List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board, copyRecord);
+
+            if (moves.Count == 0)
+            {
+                Debug.Log("Continued after empty moves");
+                continue;
+            }
+
+
+            foreach (int[] move in moves)
+            {
+                // ChessManager.RecordMove(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
+
+                // Piece piece = temp[i % 8, i / 8];
+                // temp[i % 8, i / 8] = null;
+                // temp[move[0], move[1]] = piece;
+
+                // // re does algorithm with opposite turn, with newly moved piece on board
+                // int score = -negaMax(depth - 1, turn * -1, temp, simulatedRecord);
+                // if (score > max)
+                // {
+                //     continue;
+                // }
 
                 Debug.Log("x: " + i + " y: " + j + " is not empty and can move this turn");
                 List<int[]> moves = board[i, j].GetLegalMoves(board, moveRecord);
