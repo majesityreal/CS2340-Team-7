@@ -111,31 +111,35 @@ public class ChessAI : MonoBehaviour
             {
                 continue;
             }
-            Debug.Log("Continuing");
             // if not turn skip
             if (board[i % 8, i / 8].color != turn)
             {
                 continue;
             }
+            Piece[,] temp = new Piece[8, 8];
+/*            temp = board.Clone() as Piece[,];
+*/          for (int j = 0; j < 64; j++)
+            {
+                temp[j % 8, j / 8] = board[j % 8, j / 8];
+            }
+            List<string> simulatedRecord = new List<string>(copyRecord);
 
             // the list of legal moves
             List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board, copyRecord);
+            if (moves.Count == 0)
+            {
+                Debug.Log("Continued after empty moves");
+                continue;
+            }
             foreach (int[] move in moves)
             {
-                // create temp array - THIS NEEDS TO CREATE A DEEP COPY
-                Piece[,] temp = new Piece[8,8];
-                temp = board.Clone() as Piece[,];
-                List<string> simulatedRecord = new List<string> (copyRecord);
-                /*                for (int i = 0; i < 64; i++)
-                                {
-                                    temp[i % 8, i / 8] = board[i % 8, i / 8];
-                                }*/
+                ChessManager.RecordMove(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
 
-                // making the move on the temp board
-                // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
-                Piece pos1 = temp[i % 8, i / 8];
-                ChessManager.MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp, simulatedRecord);
-
+                Piece piece = temp[i % 8, i / 8];
+                temp[i % 8, i / 8] = null;
+                temp[move[0], move[1]] = piece;
+/*                ChessManager.MovePosition(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
+*/
                 // re does algorithm with opposite turn, with newly moved piece on board
                 int score = -negaMax(depth - 1, turn * -1, temp, simulatedRecord);
                 if (score > max)
