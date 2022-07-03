@@ -16,6 +16,14 @@ public class ChessManager : MonoBehaviour
         InitializeGame();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ChessAI.negaMax(2, 1, board);
+        }
+    }
+
     public void InitializeGame()
     {
         isWhiteTurn = true;
@@ -53,7 +61,7 @@ public class ChessManager : MonoBehaviour
         board[7, 7] = new Rook(1, 7, 7);
     }
 
-    public void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)
+    public static void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)
     {       
         if (board[newX, newY] != null && (int) board[newX, newY].type == 1)
         {
@@ -130,7 +138,7 @@ public class ChessManager : MonoBehaviour
         CheckCheckmate(board[newX, newY].color, board);
     }
 
-    private void CheckCheckmate(int color, Piece[,] board)
+    private static void CheckCheckmate(int color, Piece[,] board)
     {
         //Debug.Log("Checking if Checkmate: " + color);
         
@@ -181,7 +189,7 @@ public class ChessManager : MonoBehaviour
         }
     }
 
-    private void CheckInsufficientMaterials(Piece[,] board)
+    private static void CheckInsufficientMaterials(Piece[,] board)
     {
         Debug.Log("Checking if insufficient materials");
 
@@ -246,7 +254,7 @@ public class ChessManager : MonoBehaviour
         Draw("Insufficient Materials");
     }
 
-    private void Check50Move(Piece[,] board)
+    private static void Check50Move(Piece[,] board)
     {
         //Debug.Log("Checking if 50 move rule");
         if (moveRecord.Count < 50)
@@ -270,7 +278,7 @@ public class ChessManager : MonoBehaviour
         Draw("50 move rule");
     }
 
-    private void CheckRepetition(Piece[,] board)
+    private static void CheckRepetition(Piece[,] board)
     {
         if (moveRecord.Count < 5)
         {
@@ -291,9 +299,75 @@ public class ChessManager : MonoBehaviour
         return;
     }
 
+    public static List<int[]> GetMoves(int posX, int posY)
+    {
+        List<int[]> pieceMoves = board[posX, posY].GetLegalMoves(board, moveRecord);
+        int kingX = -1;
+        int kingY = -1;
+        Piece[,] copyBoard = new Piece[8, 8];
+        List<Piece> enemies = new List<Piece>();
+        
+        // Copy over all pieces
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (board[i, j] == null)
+                {
+                    continue;
+                }
+
+                if (board[posX, posY].color == board[i, j].color)
+                {
+                    if ((int) board[i, j].type == 1)
+                    {
+                        kingX = board[i, j].xCoord;
+                        kingY = board[i, j].yCoord;
+                    }
+                }
+                else
+                {
+                    enemies.Add(board[i, j]);
+                }
+
+                copyBoard[i, j] = board[i, j];
+            }
+        }
+
+        int count = 0;
+        while (count < pieceMoves.Count)
+        {
+            if (!CheckIfSafe(posX, posY, pieceMoves[count][0], pieceMoves[count][1], kingX, kingY, enemies, copyBoard, moveRecord))
+            {
+                pieceMoves.RemoveAt(count);
+                continue;
+            }
+            count++;
+        }
+
+        return pieceMoves;
+    }
+
+    private static bool CheckIfSafe(int posX, int posY, int testX, int testY, int kingX, int kingY, List<Piece> enemies, Piece[,] copyBoard, List<string> moveRecord)
+    {
+        MovePosition(posX, posY, testX, testY, copyBoard);
+
+        foreach (Piece enemy in enemies)
+        {
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if (enemies[i].xCoord == kingX && enemies[i].yCoord == kingY)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     // Records each move into a string: [Piece Type][oldX][oldY][newX][newY]
-    private void RecordMove(int oldX, int oldY, int newX, int newY)
+    private static void RecordMove(int oldX, int oldY, int newX, int newY)
     {
         string record = "";
         switch ((int) board[oldX, oldY].type)
@@ -325,7 +399,7 @@ public class ChessManager : MonoBehaviour
         moveRecord.Add(record);
     }
 
-    private void Draw(string cause)
+    private static void Draw(string cause)
     {
         // TODO: Show Draw(Tie) Screen
         Debug.Log("It is a tie \n" + cause);

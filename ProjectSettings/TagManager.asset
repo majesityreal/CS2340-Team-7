@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Button
   - Tutorial
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -51,4 +52,13 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 3753387923
+    locked: 0
+  - name: Background
+    uniqueID: 999812393
+    locked: 0
+  - name: Entity
+    uniqueID: 1940886403
+    locked: 0
+  - name: Weapon
+    uniqueID: 2382437147
     locked: 0
