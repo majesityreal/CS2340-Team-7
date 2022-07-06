@@ -79,6 +79,6 @@ public class Rook : Piece
             }
         }
 
-        return possibleMoves;
+        return ReturnValidMoves(possibleMoves, board);
     }
 }

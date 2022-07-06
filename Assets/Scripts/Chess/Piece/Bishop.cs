@@ -80,6 +80,6 @@ public class Bishop : Piece
             }
         }
 
-        return possibleMoves;
+        return ReturnValidMoves(possibleMoves, board);
     }
 }
