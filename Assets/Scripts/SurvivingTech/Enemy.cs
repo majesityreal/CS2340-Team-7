@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            targetPlayer.GetComponent<PlayerController>().addXP(xp_amount);
+            //targetPlayer.GetComponent<PlayerController>().addXP(xp_amount);
             // spawn crystal for xp?
             Destroy(gameObject);
         }
