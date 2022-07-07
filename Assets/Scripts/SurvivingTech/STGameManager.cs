@@ -56,6 +56,8 @@ public class STGameManager : MonoBehaviour
     void StopWave(GameObject wave)
     {
         wave.SetActive(false);
+        // note that stopping a wave doesn't mean that the wave is over, it just means that it is not spawning anymore
+        // so enemies that are spawned from the wave that aren't killed yet will remain in play
     }
     public void StartGame()
     {
