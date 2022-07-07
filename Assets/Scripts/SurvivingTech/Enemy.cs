@@ -26,6 +26,14 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (targetLocation.position.x < transform.position.x)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
         Vector3 direction = (targetLocation.position - transform.position).normalized;
         rgbEnemy.velocity = direction * speed;
     }
