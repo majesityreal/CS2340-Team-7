@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+
+    // this can also be used to spawn chests/jars that drop healing or other passive items
     [SerializeField] GameObject enemy;
     [SerializeField] Vector2 spawnArea;
     [SerializeField] float spawnInterval; // seconds

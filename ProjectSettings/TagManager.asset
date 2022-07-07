@@ -56,6 +56,9 @@ TagManager:
   - name: Background
     uniqueID: 999812393
     locked: 0
+  - name: PickUpable
+    uniqueID: 2914082415
+    locked: 0
   - name: Entity
     uniqueID: 1940886403
     locked: 0

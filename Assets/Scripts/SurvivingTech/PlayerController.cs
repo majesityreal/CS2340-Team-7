@@ -12,6 +12,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float damageReduction = 0.0f; // percentage of damage taken mitagated by armor, 1.0f is invincible
     [SerializeField] int lives = 1;
     [SerializeField] HPBarStatus HPBar;
+    [SerializeField] LevelBarStatus XPBar;
+    [SerializeField] int level = 1;
+    [SerializeField] int xp = 0;
+    [SerializeField] int xpScalePerLevel = 100;
+    int xpToNextLevel = 100;
     Vector3 initialScaleOfSprite;
     float lastHorizontalVector;
     float lastVerticalVector;
@@ -22,11 +27,16 @@ public class PlayerController : MonoBehaviour
         rgb = GetComponent<Rigidbody2D>();
         movementVect = new Vector3();
         initialScaleOfSprite = transform.GetChild(0).localScale;
+
+
     }
 
     void Start() {
         lastHorizontalVector = 0f;
         lastVerticalVector = 0f;
+        xpToNextLevel = xpScalePerLevel * level;
+        XPBar.XPIndicator(xp, xpToNextLevel);
+        XPBar.setLevel(level, xpToNextLevel-xp);
     }
 
     // Update is called once per frame
@@ -58,6 +68,8 @@ public class PlayerController : MonoBehaviour
         movementVect = Vector3.ClampMagnitude(movementVect, 1.0f) * playerSpeed;
         //movementVect *= playerSpeed;
         rgb.velocity = movementVect;
+        XPBar.XPIndicator(xp, xpToNextLevel);
+        XPBar.setLevel(level, xpToNextLevel-xp);
         
     }
 
@@ -91,6 +103,24 @@ public class PlayerController : MonoBehaviour
         }
         HPBar.HPIndicator(currentHitpoints, maxHitpoints);
     }
+
+    public void addXP(int xpToAdd)
+    {
+        xp += xpToAdd;
+        CheckIfLevelUp();
+    }
+
+    public void CheckIfLevelUp()
+    {
+        if (xp >= xpToNextLevel)
+        {
+            level++;
+            xp = 0;
+            xpToNextLevel = level * xpScalePerLevel;
+            Debug.Log("Level up!");
+        }
+    }
+    
     public float getLastHorizontalVector()
     {
         return lastHorizontalVector;

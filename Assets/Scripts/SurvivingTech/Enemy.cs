@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float speed = 1;
     [SerializeField] float health = 50;
     [SerializeField] float damage = 5;
+    [SerializeField] int xp_amount = 10;
 
     Rigidbody2D rgbEnemy;
 
@@ -50,6 +51,7 @@ public class Enemy : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
+            //targetPlayer.GetComponent<PlayerController>().addXP(xp_amount);
             // spawn crystal for xp?
             Destroy(gameObject);
         }

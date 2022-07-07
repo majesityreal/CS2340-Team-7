@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 5023965829494365005}
   - component: {fileID: 5023965829494365002}
   - component: {fileID: 5023965829494365007}
+  - component: {fileID: -6900584464507315835}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -138,6 +139,10 @@ MonoBehaviour:
   damageReduction: 0
   lives: 1
   HPBar: {fileID: 5023965829817396133}
+  XPBar: {fileID: 0}
+  level: 1
+  xp: 0
+  xpScalePerLevel: 100
 --- !u!50 &5023965829494365002
 Rigidbody2D:
   serializedVersion: 4
@@ -185,6 +190,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-6900584464507315835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5023965829494365003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e5f7d3a8df156f4287f530fb8c3c37e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5023965829515158002
 GameObject:
   m_ObjectHideFlags: 0
