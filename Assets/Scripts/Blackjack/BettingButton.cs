@@ -28,13 +28,14 @@ public class BettingButton : MonoBehaviour
     public GameObject betDisplay;
     public Slider betAmountSlider;
     public GameManager gameManager;
-
+    private Audio sound1;
 
     // Start is called before the first frame update
     void Start()
     {
         // Initialize the betting stage.
         initBetStage();
+        sound1 = FindObjectOfType<Audio>();
     }
 
     // Update is called once per frame
@@ -99,6 +100,7 @@ public class BettingButton : MonoBehaviour
     {
         // Apply the change to the player balance. And Hide the UI.
         hideUI(gameObject);
+        sound1.PlayShuffle();
         //Debug.Log("Comfirm Bet, total Bet: " + CurrBet.ToString());
         //Debug.Log("Total Money: " + PlayerMoney.ToString());
     }
@@ -115,6 +117,7 @@ public class BettingButton : MonoBehaviour
         {
             CurrBet += amount;
         }
+        sound1.PlayPokerChip();
         betAmountSlider.value = CurrBet;
         betDisplay.GetComponent<TextMeshProUGUI>().SetText("Bet: $" + CurrBet.ToString());
     }
