@@ -67,4 +67,8 @@ public class STGameManager : MonoBehaviour
         isGameOver = true;
         Time.timeScale = 0;
     }
+    public String GetTime()
+    {
+        return time.ToString("hh':'mm':'ss");
+    }
 }
