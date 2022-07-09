@@ -153,6 +153,11 @@ public class PlayerController : MonoBehaviour
         return scaleDamageWithLevel;
     }
 
+    public float getMaxHitpoints()
+    {
+        return maxHitpoints;
+    }
+
     public float getLastHorizontalVector()
     {
         return lastHorizontalVector;

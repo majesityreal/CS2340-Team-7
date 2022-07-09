@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class HealingItem : MonoBehaviour, IPickupItem
 {
-    [SerializeField] float healAmount = 10;
+    [SerializeField] float healPercent = 0.2f;
     public void OnPickUp(PlayerController player) {
-        player.Heal(healAmount);
+        player.Heal(healPercent*player.getMaxHitpoints());
     }
     
 
