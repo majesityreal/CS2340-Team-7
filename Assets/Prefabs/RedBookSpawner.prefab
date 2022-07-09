@@ -48,3 +48,8 @@ MonoBehaviour:
   spawnArea: {x: 12, y: 8}
   spawnInterval: 1
   targetPlayer: {fileID: 0}
+  speed: 1
+  health: 5
+  damage: 5
+  scaleWithWaveNumber: 1
+  scalingDifficultyMultiplierPerWave: 0.5

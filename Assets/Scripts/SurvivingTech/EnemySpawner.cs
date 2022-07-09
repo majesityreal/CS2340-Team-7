@@ -13,20 +13,19 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float speed = 1; // not scaled
     [SerializeField] float health = 50; // scaled
     [SerializeField] float damage = 5; // scaled
-    [SerializeField] bool scaleWithWaveNumber = true;
-    [SerializeField] float scalingDifficultyMultiplierPerWave = 0.5f; // 1f = no scaling, 2f = twice as hard, 0.5f = half as hard
     //[SerializeField] int xp_amount = 10;
     float timer;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (scaleWithWaveNumber)
+        if (transform.parent.parent.GetComponent<STGameManager>().GetScaleWithWaveNumber())
         {
-            health = health * scalingDifficultyMultiplierPerWave * transform.parent.parent.GetComponent<STGameManager>().GetCurrentWave();
-            damage = damage * scalingDifficultyMultiplierPerWave * transform.parent.parent.GetComponent<STGameManager>().GetCurrentWave();
-            Debug.Log("Enemy health: " + health);
-            Debug.Log("Enemy damage: " + damage);
+            int currentWave = transform.parent.parent.GetComponent<STGameManager>().GetCurrentWave();
+            float waveScale = transform.parent.parent.GetComponent<STGameManager>().GetScaleDiff();
+            float formula = (currentWave * waveScale);
+            health = health * formula;
+            damage = damage * formula;
         }
     }
 
