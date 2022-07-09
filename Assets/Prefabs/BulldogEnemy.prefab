@@ -52,7 +52,6 @@ MonoBehaviour:
   speed: 2
   health: 1
   damage: 5
-  xp_amount: 10
 --- !u!212 &4963424189755715058
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -164,5 +163,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5f7d3a8df156f4287f530fb8c3c37e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drop: {fileID: 3010506182167846166, guid: 16a9f50c2d947454eb8629ae529eb788, type: 3}
+  drop: {fileID: 3010506182167846166, guid: ceb77d042ce5516429971fe3568aa837, type: 3}
   dropChance: 1

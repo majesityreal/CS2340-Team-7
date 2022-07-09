@@ -130,8 +130,9 @@ public class PlayerController : MonoBehaviour
             if (scaleHealthWithLevel)
             {
                 maxHitpoints += healthScaleInc;
-                HPBar.HPIndicator(currentHitpoints, maxHitpoints);
             }
+            currentHitpoints = maxHitpoints;
+            HPBar.HPIndicator(currentHitpoints, maxHitpoints);
             Debug.Log("Level up!");
         }
     }
