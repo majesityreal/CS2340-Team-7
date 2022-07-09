@@ -10,12 +10,24 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] Vector2 spawnArea;
     [SerializeField] float spawnInterval; // seconds
     [SerializeField] GameObject targetPlayer;
+    [SerializeField] float speed = 1; // not scaled
+    [SerializeField] float health = 50; // scaled
+    [SerializeField] float damage = 5; // scaled
+    [SerializeField] bool scaleWithWaveNumber = true;
+    [SerializeField] float scalingDifficultyMultiplierPerWave = 0.5f; // 1f = no scaling, 2f = twice as hard, 0.5f = half as hard
+    //[SerializeField] int xp_amount = 10;
     float timer;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (scaleWithWaveNumber)
+        {
+            health = health * scalingDifficultyMultiplierPerWave * transform.parent.parent.GetComponent<STGameManager>().GetCurrentWave();
+            damage = damage * scalingDifficultyMultiplierPerWave * transform.parent.parent.GetComponent<STGameManager>().GetCurrentWave();
+            Debug.Log("Enemy health: " + health);
+            Debug.Log("Enemy damage: " + damage);
+        }
     }
 
     // Update is called once per frame
@@ -35,6 +47,10 @@ public class EnemySpawner : MonoBehaviour
         GameObject newEnemy = Instantiate(enemy);
         newEnemy.transform.position = spawnPosition;
         newEnemy.GetComponent<Enemy>().setTarget(targetPlayer);
+        newEnemy.GetComponent<Enemy>().setSpeed(speed);
+        newEnemy.GetComponent<Enemy>().setHealth(health);
+        newEnemy.GetComponent<Enemy>().setDamage(damage);
+
         // for cleaning up, but leave this commented because i have an idea for handling waves
         // newEnemy.transform.parent = transform;
     }
@@ -53,4 +69,5 @@ public class EnemySpawner : MonoBehaviour
         spawnPosition.z = 0;
         return spawnPosition;
     }
+
 }

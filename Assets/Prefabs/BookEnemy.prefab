@@ -50,8 +50,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPlayer: {fileID: 0}
   speed: 2
-  health: 1
-  damage: 1
+  health: 5
+  damage: 5
   xp_amount: 10
 --- !u!212 &4963424189755715058
 SpriteRenderer:

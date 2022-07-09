@@ -6,10 +6,11 @@ public class Enemy : MonoBehaviour
 {
     Transform targetLocation;
     [SerializeField] GameObject targetPlayer;
+    // let the spawner handle these values and account for wave scaling
     [SerializeField] float speed = 1;
     [SerializeField] float health = 50;
     [SerializeField] float damage = 5;
-    [SerializeField] int xp_amount = 10;
+    //[SerializeField] int xp_amount = 10;
 
     Rigidbody2D rgbEnemy;
 
@@ -63,5 +64,19 @@ public class Enemy : MonoBehaviour
             // spawn crystal for xp?
             Destroy(gameObject);
         }
+    }
+
+    //setters
+    public void setSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+    public void setHealth(float health)
+    {
+        this.health = health;
+    }
+    public void setDamage(float damage)
+    {
+        this.damage = damage;
     }
 }

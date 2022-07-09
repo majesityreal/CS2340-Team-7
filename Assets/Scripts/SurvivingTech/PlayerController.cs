@@ -121,6 +121,11 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+    public int getLevel()
+    {
+        return level;
+    }
+
     public float getLastHorizontalVector()
     {
         return lastHorizontalVector;

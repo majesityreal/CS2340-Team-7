@@ -39,7 +39,7 @@ public class STGameManager : MonoBehaviour
             }
             totalSeconds += Time.deltaTime;
             time = TimeSpan.FromSeconds(totalSeconds);
-            Debug.Log(time.ToString("hh':'mm':'ss"));
+            //Debug.Log(time.ToString("hh':'mm':'ss"));
             // final wave will keep spawning until 10 minutes have passed
             if (currentWave == waves.Length - 1 && totalSeconds > totalTimeBattle)
             {
@@ -72,5 +72,10 @@ public class STGameManager : MonoBehaviour
     public String GetTime()
     {
         return time.ToString("hh':'mm':'ss");
+    }
+
+    public int GetCurrentWave()
+    {
+        return currentWave + 1;
     }
 }

@@ -11,6 +11,9 @@ public class cryingTearsWeapon : MonoBehaviour
     // Start is called before the first frame update
     int dir_x = -1;
     int dir_y = 0;
+    // to account for "scaling," the player will need to "upgrade" these by leveling up and selecting them weapons
+    [SerializeField] float speed = 7;
+    [SerializeField] float damage = 5;
     void Awake()
     {
         player = GetComponentInParent<PlayerController>();
@@ -79,8 +82,20 @@ public class cryingTearsWeapon : MonoBehaviour
     {
         GameObject tear = Instantiate(projectile, transform.position, Quaternion.identity);
         tear.GetComponent<cryTear>().SetDirection(dir_x, dir_y);
+        tear.GetComponent<cryTear>().setDamage(damage);
+        tear.GetComponent<cryTear>().setSpeed(speed);
+        // Debug.Log(tear.GetComponent<cryTear>().getSpeed());
 
         // change damage and speed here
 
+    }
+    
+    public void setDamage(float damage)
+    {
+        this.damage = damage;
+    }
+    public void setSpeed(float speed)
+    {
+        this.speed = speed;
     }
 }
