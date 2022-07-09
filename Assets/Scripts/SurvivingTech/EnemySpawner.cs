@@ -19,13 +19,13 @@ public class EnemySpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (transform.parent.parent.GetComponent<STGameManager>().GetScaleWithWaveNumber())
+        if (transform.parent.GetComponentInParent<STGameManager>().getScaleWithWaveNumber())
         {
-            int currentWave = transform.parent.parent.GetComponent<STGameManager>().GetCurrentWave();
-            float waveScale = transform.parent.parent.GetComponent<STGameManager>().GetScaleDiff();
+            int currentWave = transform.parent.GetComponentInParent<STGameManager>().getCurrentWave();
+            float waveScale = transform.parent.GetComponentInParent<STGameManager>().getScaleDiff();
             float formula = (currentWave * waveScale);
-            health = health * formula;
-            damage = damage * formula;
+            health = health + health * formula;
+            damage = damage + damage * formula;
         }
     }
 

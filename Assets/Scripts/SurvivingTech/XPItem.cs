@@ -6,7 +6,7 @@ public class XPItem : MonoBehaviour, IPickupItem
 {
     [SerializeField] int xpAmount = 10;
     public void OnPickUp(PlayerController player) {
-        player.addXP(xpAmount * player.getLevel()); // to scale xp gained by level
+        player.addXP(xpAmount);
     }
     
 

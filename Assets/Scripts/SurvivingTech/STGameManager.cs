@@ -16,7 +16,7 @@ public class STGameManager : MonoBehaviour
     [SerializeField] bool isGameOver = false;
 
     [SerializeField] bool scaleWithWaveNumber = true; // scale all enemies' health and damage with wave number and multiplier
-    [SerializeField] float scalingDifficultyMultiplierPerWave = 0.5f; // 1f = no scaling, 2f = twice as hard, 0.5f = half as hard...
+    [SerializeField] float scalingDifficultyMultiplierPerWave = 0.5f; // 1f = no scaling, 2f = twice as hard, 0.5f = half as hard... linear
     // formula to calculate difficulty: health = health * scalingDifficultyMultiplierPerWave * waveNumber
     // Start is called before the first frame update
     void Start()
@@ -73,28 +73,28 @@ public class STGameManager : MonoBehaviour
         isGameOver = true;
         Time.timeScale = 0;
     }
-    public String GetTime()
+    public String getTime()
     {
         return time.ToString("hh':'mm':'ss");
     }
 
-    public int GetCurrentWave()
+    public int getCurrentWave()
     {
-        return currentWave + 1;
+        return currentWave;
     }
-    public int GetTotalWaves()
+    public int getTotalWaves()
     {
         return waves.Length;
     }
-    public float GetTimeBetweenWaves()
+    public float getTimeBetweenWaves()
     {
         return timeBetweenWaves;
     }
-    public float GetScaleDiff()
+    public float getScaleDiff()
     {
         return scalingDifficultyMultiplierPerWave;
     }
-    public bool GetScaleWithWaveNumber()
+    public bool getScaleWithWaveNumber()
     {
         return scaleWithWaveNumber;
     }

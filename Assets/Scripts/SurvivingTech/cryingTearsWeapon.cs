@@ -82,6 +82,10 @@ public class cryingTearsWeapon : MonoBehaviour
     {
         GameObject tear = Instantiate(projectile, transform.position, Quaternion.identity);
         tear.GetComponent<cryTear>().SetDirection(dir_x, dir_y);
+        if (GetComponentInParent<PlayerController>().getDamageScaleWithLevel())
+        {
+            tear.GetComponent<cryTear>().setDamage(damage * GetComponentInParent<PlayerController>().getdamageScale() * GetComponentInParent<PlayerController>().getLevel());
+        }
         tear.GetComponent<cryTear>().setDamage(damage);
         tear.GetComponent<cryTear>().setSpeed(speed);
         // Debug.Log(tear.GetComponent<cryTear>().getSpeed());
