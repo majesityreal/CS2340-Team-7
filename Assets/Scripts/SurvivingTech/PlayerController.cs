@@ -21,6 +21,16 @@ public class PlayerController : MonoBehaviour
     float lastHorizontalVector;
     float lastVerticalVector;
 
+    // if false, have powerups that increases flat health/damage, and increases health/damage per level by percentage
+
+    [SerializeField] bool scaleHealthWithLevel = true; // scaling of player health and damage
+    [SerializeField] float healthScaleInc = 50f; // linear
+    [SerializeField] bool scaleDamageWithLevel = true; // scaling of player health and damage
+    [SerializeField] float damageScale = 1f; // linear if 1, exponential if > 1
+
+    // percentage increase from powerups only
+
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -117,10 +127,38 @@ public class PlayerController : MonoBehaviour
             level++;
             xp = 0;
             xpToNextLevel = level * xpScalePerLevel;
+            if (scaleHealthWithLevel)
+            {
+                maxHitpoints += healthScaleInc;
+            }
+            currentHitpoints = maxHitpoints;
+            HPBar.HPIndicator(currentHitpoints, maxHitpoints);
             Debug.Log("Level up!");
         }
     }
     
+    public int getLevel()
+    {
+        return level;
+    }
+    public float getdamageScale()
+    {
+        return damageScale;
+    }
+    public bool getHealthScaleWithLevel()
+    {
+        return scaleHealthWithLevel;
+    }
+    public bool getDamageScaleWithLevel()
+    {
+        return scaleDamageWithLevel;
+    }
+
+    public float getMaxHitpoints()
+    {
+        return maxHitpoints;
+    }
+
     public float getLastHorizontalVector()
     {
         return lastHorizontalVector;
