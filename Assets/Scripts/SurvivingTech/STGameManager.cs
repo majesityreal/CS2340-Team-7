@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 
 public class STGameManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class STGameManager : MonoBehaviour
     TimeSpan time;
     [SerializeField] bool isGameStarted = false;
     [SerializeField] bool isGameOver = false;
+    [SerializeField] TextMeshProUGUI timerText;
 
     [SerializeField] bool scaleWithWaveNumber = true; // scale all enemies' health and damage with wave number and multiplier
     [SerializeField] float scalingDifficultyMultiplierPerWave = 0.5f; // 1f = no scaling, 2f = twice as hard, 0.5f = half as hard... linear
@@ -44,6 +46,7 @@ public class STGameManager : MonoBehaviour
             totalSeconds += Time.deltaTime;
             time = TimeSpan.FromSeconds(totalSeconds);
             //Debug.Log(time.ToString("hh':'mm':'ss"));
+            timerText.text = time.ToString("mm':'ss");
             // final wave will keep spawning until 10 minutes have passed
             if (currentWave == waves.Length - 1 && totalSeconds > totalTimeBattle)
             {
