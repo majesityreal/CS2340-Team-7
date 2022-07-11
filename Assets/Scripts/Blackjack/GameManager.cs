@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Stop hitting");
             return;
         }
-
+        sound.PlayFlipCard();
         playerHand.AddToHand(DealCard());
         Debug.Log("Hit: Player: " + playerHand.GetScore() + " Dealer: " + dealerHand.GetScore());
 
@@ -176,7 +176,7 @@ public class GameManager : MonoBehaviour
         // Stand count 0 : All hand finished.
         // Stand count 1 : One Hand Remain.
         // Stand count 2 : Two Hand Remain.
-
+        
         StandCount--;
 
         if (StandCount == 0)
@@ -185,6 +185,7 @@ public class GameManager : MonoBehaviour
             // Used for flipping the dealer's first card
             while (dealerHand.GetSize() < 11 && dealerHand.GetScore() < 17)
             {
+                sound.PlayFlipCard2();
                 dealerHand.AddToHand(DealCard());
             }
         }
@@ -294,6 +295,7 @@ public class GameManager : MonoBehaviour
     // removes and returns a Card from the deck
     public Card DealCard()
     {
+        
         Card temp = deck[0];
         deck.RemoveAt(0);
         return temp;
@@ -310,7 +312,7 @@ public class GameManager : MonoBehaviour
         {
             deck.Clear();
         }
-        //sound.PlayShuffle();
+        
         // initializing a deck List
         for (int i = 0; i < 4; i++)
         {
