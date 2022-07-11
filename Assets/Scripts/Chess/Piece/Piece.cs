@@ -9,8 +9,7 @@ public enum PieceType
     Knight,
     Pawn,
     Queen,
-    Rook,
-    Empty
+    Rook
 }
 
 public abstract class Piece
@@ -100,16 +99,22 @@ public abstract class Piece
         {
             if (board[kingX, kingY - i] != null) // Is not empty square
             {
-                if (color == board[kingX, kingY - i].color) // Is ally. Stop.
+                if (color != board[kingX, kingY - i].color) // Is ally. Stop.
                 {
-                    break;
+                    if (i == 1) 
+                    {
+                        if (board[kingX, kingY - i].type == PieceType.King)
+                        {
+                            return false;
+                        }
+                    }
+                    if (board[kingX, kingY - i].type == PieceType.Queen 
+                    || board[kingX, kingY - i].type == PieceType.Rook)
+                    {
+                        return false;
+                    }
                 }
-                if (board[kingX, kingY - i].type == PieceType.King 
-                || board[kingX, kingY - i].type == PieceType.Queen 
-                || board[kingX, kingY - i].type == PieceType.Rook)
-                {
-                    return false;
-                }
+                break;
             }
         }
 
@@ -117,16 +122,21 @@ public abstract class Piece
         {
             if (board[kingX - i, kingY] != null)
             {
-                if (color == board[kingX - i, kingY].color)
+                if (color != board[kingX - i, kingY].color)
                 {
-                    break;
+                    if (i == 1) {
+                        if (board[kingX - i, kingY].type == PieceType.King)
+                        {
+                            return false;
+                        }
+                    }
+                    if (board[kingX - i, kingY].type == PieceType.Queen 
+                    || board[kingX - i, kingY].type == PieceType.Rook)
+                    {
+                        return false;
+                    }
                 }
-                if (board[kingX - i, kingY].type == PieceType.King 
-                || board[kingX - i, kingY].type == PieceType.Queen 
-                || board[kingX - i, kingY].type == PieceType.Rook)
-                {
-                    return false;
-                }
+                break;
             }
         }
 
@@ -134,16 +144,22 @@ public abstract class Piece
         {
             if (board[kingX + i, kingY] != null)
             { 
-                if (color == board[kingX + i, kingY].color)
+                if (color != board[kingX + i, kingY].color)
                 {
-                    break;
+                    if (i == 1) 
+                    {
+                        if (board[kingX + i, kingY].type == PieceType.King)
+                        {
+                            return false;
+                        }
+                    }
+                    if (board[kingX + i, kingY].type == PieceType.Queen 
+                    || board[kingX + i, kingY].type == PieceType.Rook)
+                    {
+                        return false;
+                    }
                 }
-                if (board[kingX + i, kingY].type == PieceType.King 
-                || board[kingX + i, kingY].type == PieceType.Queen 
-                || board[kingX + i, kingY].type == PieceType.Rook)
-                {
-                    return false;
-                }
+                break;
             }
         }
 
@@ -151,16 +167,22 @@ public abstract class Piece
         {
             if (board[kingX, kingY + i] != null)
             {
-                if (color == board[kingX, kingY + i].color)
+                if (color != board[kingX, kingY + i].color)
                 {
-                    break;
+                    if (i == 1) 
+                    {
+                        if (board[kingX, kingY + i].type == PieceType.King)
+                        {
+                            return false;
+                        }
+                    }
+                    if (board[kingX, kingY + i].type == PieceType.Queen 
+                    || board[kingX, kingY + i].type == PieceType.Rook)
+                    {
+                        return false;
+                    }
                 }
-                if (board[kingX, kingY + i].type == PieceType.King 
-                || board[kingX, kingY + i].type == PieceType.Queen 
-                || board[kingX, kingY + i].type == PieceType.Rook)
-                {
-                    return false;
-                }
+                break;
             }
         }
 
@@ -168,17 +190,23 @@ public abstract class Piece
         {
             if (board[kingX - i, kingY - i] != null)
             {
-                if (color == board[kingX - i, kingY - i].color)
+                if (color != board[kingX - i, kingY - i].color)
                 {
-                    break;
+                    if (i == 1)
+                    {
+                        if (board[kingX - i, kingY - i].type == PieceType.King
+                        || board[kingX - i, kingY - i].type == PieceType.Pawn)
+                        {
+                            return false;
+                        }
+                    }
+                    if (board[kingX - i, kingY - i].type == PieceType.Queen 
+                    || board[kingX - i, kingY - i].type == PieceType.Bishop)
+                    {
+                        return false;
+                    }
                 }
-                if (board[kingX - i, kingY - i].type == PieceType.King 
-                || board[kingX - i, kingY - i].type == PieceType.Queen 
-                || board[kingX - i, kingY - i].type == PieceType.Bishop
-                || board[kingX - i, kingY - i].type == PieceType.Pawn)
-                {
-                    return false;
-                }
+                break;
             }
         }
 
@@ -186,17 +214,23 @@ public abstract class Piece
         {
             if (board[kingX + i, kingY - i] != null)
             {
-                if (color == board[kingX + i, kingY - i].color)
+                if (color != board[kingX + i, kingY - i].color)
                 {
-                    break;
+                    if (i == 1)
+                    {
+                        if (board[kingX + i, kingY - i].type == PieceType.King
+                        || board[kingX + i, kingY - i].type == PieceType.Pawn)
+                        {
+                            return false;
+                        }
+                    }
+                    if (board[kingX + i, kingY - i].type == PieceType.Queen 
+                    || board[kingX + i, kingY - i].type == PieceType.Bishop)
+                    {
+                        return false;
+                    }
                 }
-                if (board[kingX + i, kingY - i].type == PieceType.King 
-                || board[kingX + i, kingY - i].type == PieceType.Queen 
-                || board[kingX + i, kingY - i].type == PieceType.Bishop
-                || board[kingX + i, kingY - i].type == PieceType.Pawn)
-                {
-                    return false;
-                }
+                break;
             }
         }
 
@@ -204,17 +238,23 @@ public abstract class Piece
         {
             if (board[kingX - i, kingY + i] != null)
             {
-                if (color == board[kingX - i, kingY + i].color)
+                if (color != board[kingX - i, kingY + i].color)
                 {
-                    break;
+                    if (i == 1) 
+                    {
+                        if (board[kingX - i, kingY + i].type == PieceType.King
+                        || board[kingX - i, kingY + i].type == PieceType.Pawn)
+                        {
+                            return false;
+                        }
+                    }
+                    if (board[kingX - i, kingY + i].type == PieceType.Queen 
+                    || board[kingX - i, kingY + i].type == PieceType.Bishop)
+                    {
+                        return false;
+                    }
                 }
-                if (board[kingX - i, kingY + i].type == PieceType.King 
-                || board[kingX - i, kingY + i].type == PieceType.Queen 
-                || board[kingX - i, kingY + i].type == PieceType.Bishop
-                || board[kingX - i, kingY + i].type == PieceType.Pawn)
-                {
-                    return false;
-                }
+                break;
             }
         }
 
@@ -222,17 +262,23 @@ public abstract class Piece
         {
             if (board[kingX + i, kingY + i] != null)
             {
-                if (color == board[kingX + i, kingY + i].color)
+                if (color != board[kingX + i, kingY + i].color)
                 {
-                    break;
+                    if (i == 1)
+                    {
+                        if (board[kingX + i, kingY + i].type == PieceType.King
+                        || board[kingX + i, kingY + i].type == PieceType.Pawn)
+                        {
+                            return false;
+                        }
+                    }
+                    if (board[kingX + i, kingY + i].type == PieceType.Queen 
+                    || board[kingX + i, kingY + i].type == PieceType.Bishop)
+                    {
+                        return false;
+                    }
                 }
-                if (board[kingX + i, kingY + i].type == PieceType.King 
-                || board[kingX + i, kingY + i].type == PieceType.Queen 
-                || board[kingX + i, kingY + i].type == PieceType.Bishop
-                || board[kingX + i, kingY + i].type == PieceType.Pawn)
-                {
-                    return false;
-                }
+                break;
             }
         }
 

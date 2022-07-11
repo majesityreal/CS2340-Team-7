@@ -8,7 +8,6 @@ public class ChessManager : MonoBehaviour
 {
     public static Piece[,] board;
     public static List<string> moveRecord;
-    public static bool isWhiteTurn;
 
     void Start()
     {
@@ -32,7 +31,6 @@ public class ChessManager : MonoBehaviour
 
     public static void InitializeGame()
     {
-        isWhiteTurn = true;
         moveRecord = new List<string>();
 
         // Clears 2D array
@@ -129,16 +127,6 @@ public class ChessManager : MonoBehaviour
             board[oldX, oldY] = null;
         }
 
-        if (isWhiteTurn)
-        {
-            Debug.Log("White:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
-        }
-        else
-        {
-            Debug.Log("Black:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
-        }
-
-        isWhiteTurn = !isWhiteTurn;
         CheckInsufficientMaterials(board);
         Check50Move(board);
         CheckRepetition(board);
