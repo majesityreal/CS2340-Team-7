@@ -3190,8 +3190,8 @@ MonoBehaviour:
 
 
     Stalemate occurs when the player, who
-    has to make the move, has no possible move, and his King is not in check.Draw
-    agreed by the players'
+    has to make the move, has no possible move, and his King is not in check. Draw
+    is agreed by the players.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
