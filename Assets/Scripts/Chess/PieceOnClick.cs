@@ -40,7 +40,6 @@ public class PieceOnClick : MonoBehaviour
                     //GameStage.HighLightIndex.Add(GetIndex() - 8);
 
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
-                    Debug.Log("You Select " + gameObject.name.ToString());
                 }
                 else
                 {
@@ -74,7 +73,6 @@ public class PieceOnClick : MonoBehaviour
                         PlayerInput.CurrSelected.GetComponent<PieceOnClick>().SetPos(GetXPos(), GetYPos());
                         PlayerInput.CurrSelected.transform.position = new Vector3(GetXPos() - 4, 4 - GetYPos());
                         PlayerInput.PlayerColor *= -1;
-                        Debug.Log("Move Success!");
                     }
                     else
                     {

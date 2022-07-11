@@ -25,6 +25,12 @@ public class Pawn : Piece
         }
         
         // Single Move
+        if (yCoord + move >= 8 || yCoord + move < 0 || xCoord > 7 || xCoord < 0)
+        {
+            Debug.Log(yCoord + move);
+            Debug.Log(xCoord + move);
+            Debug.LogError("THE PAWN CANT MOVE HERE");
+        }
         if (board[xCoord, yCoord + move] == null)
         {
             possibleMoves.Add(new int[2] {xCoord, yCoord + move});
@@ -35,7 +41,7 @@ public class Pawn : Piece
         {
             if (board[xCoord, yCoord + move] == null && board[xCoord, yCoord + move * 2] == null)
             {
-                possibleMoves.Add(new int[2] {xCoord, yCoord + move * 2});
+                possibleMoves.Add(new int[2] {xCoord, yCoord + (move * 2)});
             }
         }
 

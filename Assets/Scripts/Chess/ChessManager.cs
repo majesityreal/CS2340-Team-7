@@ -18,13 +18,15 @@ public class ChessManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            ChessAI.negaMax(3, -1, board, moveRecord);
+            ChessAI.negaMaxStarter(3, -1, board, moveRecord);
 
             foreach (string moveAI in ChessAI.bestMoveRecord)
-            {
-                Debug.Log(moveAI);
-            }
-            Debug.LogWarning("Finished NO ERERROS");
+                /*            foreach (string moveAI in ChessAI.bestMoveRecord)
+                            {
+                                Debug.Log(moveAI);
+                            }
+                            }*/
+                Debug.LogWarning("Finished NO ERERROS");
             //Debug.Log(ChessAI.bestMoveRecord.Count);
         }
     }
@@ -76,9 +78,9 @@ public class ChessManager : MonoBehaviour
         RecordMove(oldX, oldY, newX, newY, board, moveRecord);
         Debug.Log("x:" + oldX + " y:" + oldY);
 
-        int pieceType = (int) board[oldX, oldY].type;
+        PieceType pieceType = board[oldX, oldY].type;
 
-        if (pieceType == 1) // When King is moved
+        if (pieceType == PieceType.King) // When King is moved
         {
             board[oldX, oldY].xCoord = newX;
             board[oldX, oldY].yCoord = newY;
@@ -98,7 +100,7 @@ public class ChessManager : MonoBehaviour
                 board[0, newY] = null;
             }
         } 
-        else if (pieceType == 3) // When Pawn is moved
+        else if (pieceType == PieceType.Pawn) // When Pawn is moved
         {
             // En Passant
             if (newX != oldX && board[newX, newY] == null) // When capturing move, but square is empty
@@ -107,15 +109,21 @@ public class ChessManager : MonoBehaviour
             }
 
             // Moves the piece to the destination and removes the old pointer index
+            board[newX, newY] = board[oldX, oldY];
             board[oldX, oldY].xCoord = newX;
             board[oldX, oldY].yCoord = newY;
-            board[newX, newY] = board[oldX, oldY];
+            if (newY == 7)
+            {
+                Debug.LogWarning("New Y is 7! ");
+                ChessAI.printBoard(board);
+            }
             board[oldX, oldY] = null;
 
             // Promotion
             // TODO: Ask player for piece type. Setted it to Queen for right now.
             if ((newY == 0 && board[newX, newY].color == 1) || (newY == 7 && board[newX, newY].color == -1))
             {
+                Debug.LogWarning("Pawn is being promoted to a QUEEN");
                 board[newX, newY] = new Queen(board[newX, newY].color, newX, newY);
             }
         } 

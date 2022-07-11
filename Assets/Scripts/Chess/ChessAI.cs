@@ -90,9 +90,12 @@ public class ChessAI : MonoBehaviour
 
     // BREADTH FIRST SEARCH
 
-    public static int negaMax(int depth, int turn, Piece[,] board, List<string> copyRecord)
+    public static int negaMax(int depth, int max, int turn, Piece[,] board, List<string> copyRecord)
     {
-        Debug.Log("Depth: " + depth);
+        if (depth < 0)
+        {
+            Debug.LogError("Depth is under 0!!!!");
+        }
         if (depth == 0)
         {
             // this function returns a positive value based on whose turn it is
@@ -100,8 +103,12 @@ public class ChessAI : MonoBehaviour
             Debug.Log("Reached end of board with eval: " + val);
             return val;
         }
+        else
+        {
+            Debug.Log("Depth: " + depth);
+        }
 
-        int max = int.MinValue;
+
 
         // go through all the moves!
         for (int i = 0; i < 64; i++)
@@ -110,7 +117,7 @@ public class ChessAI : MonoBehaviour
             {
                 continue;
             }
-            Debug.Log("Continuing");
+
             // if not turn skip
             if (board[i % 8, i / 8].color != turn)
             {
@@ -122,6 +129,7 @@ public class ChessAI : MonoBehaviour
 
             foreach (int[] move in moves)
             {
+                // creating deep copy of board
                 Piece[,] temp = new Piece[8,8];
                 for (int x = 0; x < 8; x++)
                 {
@@ -131,19 +139,32 @@ public class ChessAI : MonoBehaviour
                         {
                             continue;
                         }
-
                         temp[x, y] = board[x, y];
                     }
                 }
-                List<string> simulatedRecord = new List<string> (copyRecord);
+
+
+                // deep copy of record
+                List<string> simulatedRecord = new List<string>();
+                foreach (string s in copyRecord)
+                {
+                    simulatedRecord.Add(s);
+                }
 
                 // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
-                Debug.Log("x: " + move[0] + " y:" + move[1]);
+                Debug.Log("i: " + i);
                 Piece pos1 = temp[i % 8, i / 8];
-                ChessManager.MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp, simulatedRecord);
+                // before log
+                Debug.Log("before Piece: " + temp[i % 8, i / 8].type + "x: " + (i % 8) + " y:" + (i / 8));
+                ChessManager.MovePosition(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
+                // after log
+                Debug.Log("after Piece: " + temp[move[0], move[1]].type + "x: " + (move[0]) + " y:" + (move[1]));
+
+                printBoard(temp);
+
 
                 // re does algorithm with opposite turn, with newly moved piece on board
-                int score = -negaMax(depth - 1, turn * -1, temp, simulatedRecord);
+                int score = -negaMax(depth - 1, max, turn * -1, temp, simulatedRecord);
                 if (score > max)
                 {
                     max = score;
@@ -155,6 +176,79 @@ public class ChessAI : MonoBehaviour
         }
 
         return max;
+    }
+
+    public static void negaMaxStarter(int depth, int turn, Piece[,] board, List<string> copyRecord)
+    {
+        int max = int.MinValue;
+        int amount = negaMax(depth, max, turn, board, copyRecord);
+    }
+
+    public static void printBoard(Piece[,] board)
+    {
+        string s = "";
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (board[j,i] == null)
+                {
+                    s += "-";
+                    continue;
+                }
+                if (board[j,i].color == 1)
+                {
+                    switch (board[j, i].type)
+                    {
+                        case PieceType.Pawn:
+                            s += "P";
+                            break;
+                        case PieceType.Rook:
+                            s += "R";
+                            break;
+                        case PieceType.King:
+                            s += "K";
+                            break;
+                        case PieceType.Queen:
+                            s += "Q";
+                            break;
+                        case PieceType.Bishop:
+                            s += "B";
+                            break;
+                        case PieceType.Knight:
+                            s += "N";
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (board[j, i].type)
+                    {
+                        case PieceType.Pawn:
+                            s += "p";
+                            break;
+                        case PieceType.Rook:
+                            s += "r";
+                            break;
+                        case PieceType.King:
+                            s += "k";
+                            break;
+                        case PieceType.Queen:
+                            s += "q";
+                            break;
+                        case PieceType.Bishop:
+                            s += "b";
+                            break;
+                        case PieceType.Knight:
+                            s += "n";
+                            break;
+                    }
+                }
+               
+            }
+            s += "\n";
+        }
+        Debug.Log(s);
     }
 
     // public static void negaMax(int depth, int turn, Piece[,] board, List<string> moveRecord)
