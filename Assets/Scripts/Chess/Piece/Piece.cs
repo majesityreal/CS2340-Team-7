@@ -2,6 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PieceType
+{
+    Bishop,
+    King,
+    Knight,
+    Pawn,
+    Queen,
+    Rook,
+    Empty
+}
+
 public abstract class Piece
 {
     public PieceType type;
@@ -21,34 +32,9 @@ public abstract class Piece
 
     protected List<int[]> ReturnValidMoves(List<int[]> moves, Piece[,] board)
     {
-        Piece[,] copyBoard = new Piece[8, 8];
-        int kingX = -1;
-        int kingY = -1;
-
-        // Copy over all pieces
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (board[i, j] == null)
-                {
-                    continue;
-                }
-
-                if (color == board[i, j].color)
-                {
-                    if (board[i, j].type == PieceType.King)
-                    {
-                        kingX = board[i, j].xCoord;
-                        kingY = board[i, j].yCoord;
-                    }
-                }
-                copyBoard[i, j] = board[i, j];
-            }
-        }
+        (Piece[,] copyBoard, int kingX, int kingY) = GetDeepCopy(board);
         
         int count = 0;
-        //Debug.Log("King Position: x:" + kingX + " y:" + kingY);
         while (count < moves.Count)
         {
             if (!CheckIfSafe(kingX, kingY, moves[count], copyBoard))
@@ -66,6 +52,36 @@ public abstract class Piece
         return moves;
     }
 
+    protected (Piece[,], int, int) GetDeepCopy(Piece[,] board)
+    {
+        Piece[,] copyBoard = new Piece[8, 8];
+        int kingX = -1;
+        int kingY = -1;
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                if (board[x, y] == null)
+                {
+                    continue;
+                }
+
+                if (color == board[x, y].color)
+                {
+                    if (board[x, y].type == PieceType.King)
+                    {
+                        kingX = board[x, y].xCoord;
+                        kingY = board[x, y].yCoord;
+                    }
+                }
+                copyBoard[x, y] = board[x, y];
+            }
+        }
+
+        return (copyBoard, kingX, kingY);
+    }
+
     protected bool CheckIfSafe(int kingX, int kingY, int[] move, Piece[,] board)
     {
         Piece temp = board[xCoord, yCoord];
@@ -80,186 +96,144 @@ public abstract class Piece
             Debug.Log("This piece is King changing to x:" + kingX + " y:" + kingY);
         }
 
-        PieceType thisType = PieceType.Empty;
-        for (int i = 1; i < 8; i++) // Check Up
+        for (int i = 1; kingY - i > -1; i++) // Check Up
         {
-            if (kingY - i < 0) // Stop when out of bound
+            if (board[kingX, kingY - i] != null) // Is not empty square
             {
-                break;
-            }
-
-            if (board[kingX, kingY - i] != null) // When its not an empty square
-            {
-                if (color == board[kingX, kingY - i].color) // If it's an ally, don't look anymore
+                if (color == board[kingX, kingY - i].color) // Is ally. Stop.
                 {
                     break;
                 }
-                thisType = board[kingX, kingY - i].type; // If enemy, get it's PieceType
-            }
-            
-            if (thisType == PieceType.King || thisType == PieceType.Queen || thisType == PieceType.Rook) // If one of these, move is not safe.
-            {
-                return false;
+                if (board[kingX, kingY - i].type == PieceType.King 
+                || board[kingX, kingY - i].type == PieceType.Queen 
+                || board[kingX, kingY - i].type == PieceType.Rook)
+                {
+                    return false;
+                }
             }
         }
 
-        thisType = PieceType.Empty;
-        for (int i = 1; i < 8; i++) // Check Left
+        for (int i = 1; kingX - i > -1; i++) // Check Left
         {
-            if (kingX - i < 0)
-            {
-                break;
-            }
-
             if (board[kingX - i, kingY] != null)
             {
                 if (color == board[kingX - i, kingY].color)
                 {
                     break;
                 }
-                thisType = board[kingX - i, kingY].type;
-            }
-
-            if (thisType == PieceType.King || thisType == PieceType.Queen || thisType == PieceType.Rook)
-            {
-                return false;
+                if (board[kingX - i, kingY].type == PieceType.King 
+                || board[kingX - i, kingY].type == PieceType.Queen 
+                || board[kingX - i, kingY].type == PieceType.Rook)
+                {
+                    return false;
+                }
             }
         }
 
-        thisType = PieceType.Empty;
-        for (int i = 1; i < 8; i++) // Check Right
+        for (int i = 1; kingX + i < 8; i++) // Check Right
         {
-            if (kingX + i > 7)
-            {
-                break;
-            }
-
             if (board[kingX + i, kingY] != null)
             { 
                 if (color == board[kingX + i, kingY].color)
                 {
                     break;
                 }
-                thisType = board[kingX + i, kingY].type;
-            }
-
-            if (thisType == PieceType.King || thisType == PieceType.Queen || thisType == PieceType.Rook)
-            {
-                return false;
+                if (board[kingX + i, kingY].type == PieceType.King 
+                || board[kingX + i, kingY].type == PieceType.Queen 
+                || board[kingX + i, kingY].type == PieceType.Rook)
+                {
+                    return false;
+                }
             }
         }
 
-        thisType = PieceType.Empty;
-        for (int i = 1; i < 8; i++)
+        for (int i = 1; kingY + i < 8; i++) // Check Down
         {
-            if (kingY + i > 7)
-            {
-                break;
-            }
-
-            if (board[kingX, kingY + i] != null) // Down
+            if (board[kingX, kingY + i] != null)
             {
                 if (color == board[kingX, kingY + i].color)
                 {
                     break;
                 }
-                thisType = board[kingX, kingY + i].type;
-            }
-
-            if (thisType == PieceType.King || thisType == PieceType.Queen || thisType == PieceType.Rook)
-            {
-                return false;
-            }
-        }
-
-        // thisType = PieceType.Empty;
-        // for (int i = i; i < 8; i++) // Top Left
-        // {
-        //     if (kingX )
-        // }
-
-        // thisType = PieceType.Empty;
-
-
-        // thisType = PieceType.Empty;
-
-
-        // thisType = PieceType.Empty;
-
-        // Check Top Left Diagonal
-        for (int i = 1; kingX - i > -1 && kingY - i > -1; i++)
-        {
-            if (board[kingX - i, kingY - i] == null)
-            {
-                continue;
-            }
-
-            // If bishop, king or queen, check if it's an enemy
-            if (board[kingX - i, kingY - i].type == PieceType.Bishop || board[kingX - i, kingY - i].type == PieceType.King || board[kingX - i, kingY - i].type == PieceType.Queen)
-            {
-                if (color != board[kingX - i, kingY - i].color)
+                if (board[kingX, kingY + i].type == PieceType.King 
+                || board[kingX, kingY + i].type == PieceType.Queen 
+                || board[kingX, kingY + i].type == PieceType.Rook)
                 {
                     return false;
                 }
             }
-            break;
         }
 
-        // Check Top Right Diagonal
-        for (int i = 1; kingX + i < 8 && kingY - i > -1; i++)
+        for (int i = 1; kingX - i > -1 && kingY - i > -1; i++) // Check Top Left Diagonal
         {
-            if (board[kingX + i, kingY - i] == null)
+            if (board[kingX - i, kingY - i] != null)
             {
-                continue;
-            }
-
-            // If bishop, king or queen, check if it's an enemy
-            if (board[kingX + i, kingY - i].type == PieceType.Bishop || board[kingX + i, kingY - i].type == PieceType.King || board[kingX + i, kingY - i].type == PieceType.Queen)
-            {
-                if (color != board[kingX + i, kingY - i].color)
+                if (color == board[kingX - i, kingY - i].color)
+                {
+                    break;
+                }
+                if (board[kingX - i, kingY - i].type == PieceType.King 
+                || board[kingX - i, kingY - i].type == PieceType.Queen 
+                || board[kingX - i, kingY - i].type == PieceType.Bishop
+                || board[kingX - i, kingY - i].type == PieceType.Pawn)
                 {
                     return false;
                 }
             }
-            break;
         }
 
-        // Bottom Left Diagonal
-        for (int i = 1; kingX - i > -1 && kingY + i < 8; i++)
+        for (int i = 1; kingX + i < 8 && kingY - i > -1; i++) // Check Top Right Diagonal
         {
-            if (board[kingX - i, kingY + i] == null)
+            if (board[kingX + i, kingY - i] != null)
             {
-                continue;
-            }
-
-            // If bishop, king or queen, check if it's an enemy
-            if (board[kingX - i, kingY + i].type == PieceType.Bishop || board[kingX - i, kingY + i].type == PieceType.King || board[kingX - i, kingY + i].type == PieceType.Queen)
-            {
-                if (color != board[kingX - i, kingY + i].color)
+                if (color == board[kingX + i, kingY - i].color)
+                {
+                    break;
+                }
+                if (board[kingX + i, kingY - i].type == PieceType.King 
+                || board[kingX + i, kingY - i].type == PieceType.Queen 
+                || board[kingX + i, kingY - i].type == PieceType.Bishop
+                || board[kingX + i, kingY - i].type == PieceType.Pawn)
                 {
                     return false;
                 }
             }
-            break;
         }
 
-        // Bottom Right Diagonal
-        for (int i = 1; kingX + i < 8 && kingY + i < 8; i++)
+        for (int i = 1; kingX - i > -1 && kingY + i < 8; i++) // Bottom Left Diagonal
         {
-            if (board[kingX + i, kingY + i] == null)
+            if (board[kingX - i, kingY + i] != null)
             {
-                continue;
-            }
-
-            // If bishop, king or queen, check if it's an enemy
-            if (board[kingX + i, kingY + i].type == PieceType.Bishop || board[kingX + i, kingY + i].type == PieceType.King || board[kingX + i, kingY + i].type == PieceType.Queen)
-            {
-                if (color != board[kingX + i, kingY + i].color)
+                if (color == board[kingX - i, kingY + i].color)
+                {
+                    break;
+                }
+                if (board[kingX - i, kingY + i].type == PieceType.King 
+                || board[kingX - i, kingY + i].type == PieceType.Queen 
+                || board[kingX - i, kingY + i].type == PieceType.Bishop
+                || board[kingX - i, kingY + i].type == PieceType.Pawn)
                 {
                     return false;
                 }
             }
-            break;
+        }
+
+        for (int i = 1; kingX + i < 8 && kingY + i < 8; i++) // Bottom Right Diagonal
+        {
+            if (board[kingX + i, kingY + i] != null)
+            {
+                if (color == board[kingX + i, kingY + i].color)
+                {
+                    break;
+                }
+                if (board[kingX + i, kingY + i].type == PieceType.King 
+                || board[kingX + i, kingY + i].type == PieceType.Queen 
+                || board[kingX + i, kingY + i].type == PieceType.Bishop
+                || board[kingX + i, kingY + i].type == PieceType.Pawn)
+                {
+                    return false;
+                }
+            }
         }
 
         // 8 Knight Attack Positions
@@ -385,15 +359,4 @@ public abstract class Piece
 
         return true;
     }
-}
-
-public enum PieceType
-{
-    Bishop,
-    King,
-    Knight,
-    Pawn,
-    Queen,
-    Rook,
-    Empty
 }

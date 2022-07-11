@@ -73,6 +73,7 @@ public class PieceOnClick : MonoBehaviour
                         //PlayerInput.IsPlayerTurn = false;
                         PlayerInput.CurrSelected.GetComponent<PieceOnClick>().SetPos(GetXPos(), GetYPos());
                         PlayerInput.CurrSelected.transform.position = new Vector3(GetXPos() - 4, 4 - GetYPos());
+                        PlayerInput.PlayerColor *= -1;
                         Debug.Log("Move Success!");
                     }
                     else

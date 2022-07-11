@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ChessAI : MonoBehaviour
 {
-
     public static Piece[,] bestMoveBoard; // board that has the best move
     public static List<string> bestMoveRecord; // record that has the moves
 
@@ -91,179 +90,184 @@ public class ChessAI : MonoBehaviour
 
     // BREADTH FIRST SEARCH
 
-    // public static int negaMax(int depth, int turn, Piece[,] board, List<string> copyRecord)
-    // {
-    //     Debug.Log("Depth: " + depth);
-    //     if (depth == 0)
-    //     {
-    //         // this function returns a positive value based on whose turn it is
-    //         int val = EvaluateBoard(turn, board);
-    //         Debug.Log("Reached end of board with eval: " + val);
-    //         return val;
-    //     }
-
-    //     int max = int.MinValue;
-
-    //     // go through all the moves!
-    //     for (int i = 0; i < 64; i++)
-    //     {
-    //         if (board[i % 8, i / 8] == null)
-    //         {
-    //             continue;
-    //         }
-    //         Debug.Log("Continuing");
-    //         // if not turn skip
-    //         if (board[i % 8, i / 8].color != turn)
-    //         {
-    //             continue;
-    //         }
-
-    //         // the list of legal moves
-    //         List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board, copyRecord);
-    //         Piece[,] temp = new Piece[8,8];
-    //         temp = board.Clone() as Piece[,];
-    //         List<string> simulatedRecord = new List<string> (copyRecord);
-
-    //         foreach (int[] move in moves)
-    //         {
-    //             // create temp array - THIS NEEDS TO CREATE A DEEP COPY
-    //             /*                for (int i = 0; i < 64; i++)
-    //                             {
-    //                                 temp[i % 8, i / 8] = board[i % 8, i / 8];
-    //                             }*/
-
-    //             // making the move on the temp board
-    //             // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
-    //             Debug.Log("x: " + move[0] + " y:" + move[1]);
-    //             Piece pos1 = temp[i % 8, i / 8];
-    //             ChessManager.MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp, simulatedRecord);
-
-    //             // re does algorithm with opposite turn, with newly moved piece on board
-    //             int score = -negaMax(depth - 1, turn * -1, temp, simulatedRecord);
-    //             if (score > max)
-    //             {
-    //                 max = score;
-    //                 // stores the move here
-    //                 bestMoveBoard = temp;
-    //                 bestMoveRecord = simulatedRecord;
-    //             }
-    //         }
-    //     }
-
-    //     return max;
-    // }
-
-    public static void negaMax(int depth, int turn, Piece[,] board, List<string> moveRecord)
+    public static int negaMax(int depth, int turn, Piece[,] board, List<string> copyRecord)
     {
-        int[] dummy = new int[] {-1, -1, -1, -1};
-        Piece[,] copyBoard = board.Clone() as Piece[,];
-        List<string> copyRecord = new List<string> (moveRecord);
-        int bestScore = rNegaMax(depth, turn, copyBoard, copyRecord, ref dummy);
-        
-        Debug.Log(bestScore + "" + dummy[0] + dummy[1] + dummy[2] + dummy[3]);
-        ChessManager.MovePosition(dummy[0], dummy[1], dummy[2], dummy[3], board, moveRecord);
-    }
-
-    private static int rNegaMax(int depth, int turn, Piece[,] board, List<string> moveRecord, ref int[] dummy)
-    {
-        Debug.Log("Called rNegaMax" + depth);
+        Debug.Log("Depth: " + depth);
         if (depth == 0)
         {
-            return EvaluateBoard(turn, board);
+            // this function returns a positive value based on whose turn it is
+            int val = EvaluateBoard(turn, board);
+            Debug.Log("Reached end of board with eval: " + val);
+            return val;
         }
 
-        int maxScore = int.MinValue;
+        int max = int.MinValue;
 
-        for (int i = 0; i < 8; i++)
+        // go through all the moves!
+        for (int i = 0; i < 64; i++)
         {
-            for (int j = 0; j < 8; j++)
+            if (board[i % 8, i / 8] == null)
             {
-                Debug.Log("Iteration " + (i + j) + " x: " + i + " y: " + j);
-                if (board[i, j] == null || turn != board[i, j].color)
                 continue;
             }
-
-
+            Debug.Log("Continuing");
             // if not turn skip
             if (board[i % 8, i / 8].color != turn)
             {
                 continue;
             }
 
-            Piece[,] temp = new Piece[8, 8];
-            
-
-            for (int j = 0; j < 64; j++)
-            {
-                temp[j % 8, j / 8] = board[j % 8, j / 8];
-            }
-
-
-            List<string> simulatedRecord = new List<string>(copyRecord);
-
-
             // the list of legal moves
             List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board, copyRecord);
 
-            if (moves.Count == 0)
-            {
-                Debug.Log("Continued after empty moves");
-                continue;
-            }
-
-
             foreach (int[] move in moves)
             {
-                // ChessManager.RecordMove(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
-
-                // Piece piece = temp[i % 8, i / 8];
-                // temp[i % 8, i / 8] = null;
-                // temp[move[0], move[1]] = piece;
-
-                // // re does algorithm with opposite turn, with newly moved piece on board
-                // int score = -negaMax(depth - 1, turn * -1, temp, simulatedRecord);
-                // if (score > max)
-                // {
-                //     continue;
-                // }
-
-                Debug.Log("x: " + i + " y: " + j + " is not empty and can move this turn");
-                List<int[]> moves = board[i, j].GetLegalMoves(board, moveRecord);
-                if (moves.Count == 0)
+                Piece[,] temp = new Piece[8,8];
+                for (int x = 0; x < 8; x++)
                 {
-                    Debug.Log("x: " + i + " y: " + j + " has no legal moves");
-                    continue;
+                    for (int y = 0; y < 8; y++)
+                    {
+                        if (board[x, y] == null)
+                        {
+                            continue;
+                        }
+
+                        temp[x, y] = board[x, y];
+                    }
                 }
+                List<string> simulatedRecord = new List<string> (copyRecord);
 
-                foreach (int[] move in moves)
+                // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
+                Debug.Log("x: " + move[0] + " y:" + move[1]);
+                Piece pos1 = temp[i % 8, i / 8];
+                ChessManager.MovePosition(pos1.xCoord, pos1.yCoord, move[0], move[1], temp, simulatedRecord);
+
+                // re does algorithm with opposite turn, with newly moved piece on board
+                int score = -negaMax(depth - 1, turn * -1, temp, simulatedRecord);
+                if (score > max)
                 {
-                    Piece[,] copyBoard = board.Clone() as Piece[,];
-                    List<string> copyRecord = new List<string> (moveRecord);
-                    ChessManager.MovePosition(i, j, move[0], move[1], copyBoard, copyRecord);
-                    int score = -1 * rNegaMax(depth - 1, -1 * turn, copyBoard, copyRecord, ref dummy);
-                    
-                    Debug.Log("Score: " + score + " Max Score: " + maxScore);
-
-                    if (score > maxScore)
-                    {
-                        maxScore = score;
-                        dummy[0] = i;
-                        dummy[1] = j;
-                    }
-
-                    // It will update the dummy to get the previous move of the best move
-                    if (i == dummy[0] && j == dummy[1])
-                    {
-                        dummy[2] = move[0];
-                        dummy[3] = move[1];
-                        Debug.Log("" + dummy[0] + dummy[1] + dummy[2] + dummy[3]);
-                    }
+                    max = score;
+                    // stores the move here
+                    bestMoveBoard = temp;
+                    bestMoveRecord = simulatedRecord;
                 }
             }
         }
 
-        return maxScore;
+        return max;
     }
+
+    // public static void negaMax(int depth, int turn, Piece[,] board, List<string> moveRecord)
+    // {
+    //     int[] dummy = new int[] {-1, -1, -1, -1};
+    //     Piece[,] copyBoard = board.Clone() as Piece[,];
+    //     List<string> copyRecord = new List<string> (moveRecord);
+    //     int bestScore = rNegaMax(depth, turn, copyBoard, copyRecord, ref dummy);
+        
+    //     Debug.Log(bestScore + "" + dummy[0] + dummy[1] + dummy[2] + dummy[3]);
+    //     ChessManager.MovePosition(dummy[0], dummy[1], dummy[2], dummy[3], board, moveRecord);
+    // }
+
+    // private static int rNegaMax(int depth, int turn, Piece[,] board, List<string> moveRecord, ref int[] dummy)
+    // {
+    //     Debug.Log("Called rNegaMax" + depth);
+    //     if (depth == 0)
+    //     {
+    //         return EvaluateBoard(turn, board);
+    //     }
+
+    //     int maxScore = int.MinValue;
+
+    //     for (int i = 0; i < 8; i++)
+    //     {
+    //         for (int j = 0; j < 8; j++)
+    //         {
+    //             Debug.Log("Iteration " + (i + j) + " x: " + i + " y: " + j);
+    //             if (board[i, j] == null || turn != board[i, j].color)
+    //             continue;
+    //         }
+
+
+    //         // if not turn skip
+    //         if (board[i % 8, i / 8].color != turn)
+    //         {
+    //             continue;
+    //         }
+
+    //         Piece[,] temp = new Piece[8, 8];
+            
+
+    //         for (int j = 0; j < 64; j++)
+    //         {
+    //             temp[j % 8, j / 8] = board[j % 8, j / 8];
+    //         }
+
+
+    //         List<string> simulatedRecord = new List<string>(copyRecord);
+
+
+    //         the list of legal moves
+    //         List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board, copyRecord);
+
+    //         if (moves.Count == 0)
+    //         {
+    //             Debug.Log("Continued after empty moves");
+    //             continue;
+    //         }
+
+
+    //         foreach (int[] move in moves)
+    //         {
+    //             ChessManager.RecordMove(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
+
+    //             Piece piece = temp[i % 8, i / 8];
+    //             temp[i % 8, i / 8] = null;
+    //             temp[move[0], move[1]] = piece;
+
+    //             // re does algorithm with opposite turn, with newly moved piece on board
+    //             int score = -negaMax(depth - 1, turn * -1, temp, simulatedRecord);
+    //             if (score > max)
+    //             {
+    //                 continue;
+    //             }
+
+    //             Debug.Log("x: " + i + " y: " + j + " is not empty and can move this turn");
+    //             List<int[]> moves = board[i, j].GetLegalMoves(board, moveRecord);
+    //             if (moves.Count == 0)
+    //             {
+    //                 Debug.Log("x: " + i + " y: " + j + " has no legal moves");
+    //                 continue;
+    //             }
+
+    //             foreach (int[] move in moves)
+    //             {
+    //                 Piece[,] copyBoard = board.Clone() as Piece[,];
+    //                 List<string> copyRecord = new List<string> (moveRecord);
+    //                 ChessManager.MovePosition(i, j, move[0], move[1], copyBoard, copyRecord);
+    //                 int score = -1 * rNegaMax(depth - 1, -1 * turn, copyBoard, copyRecord, ref dummy);
+                    
+    //                 Debug.Log("Score: " + score + " Max Score: " + maxScore);
+
+    //                 if (score > maxScore)
+    //                 {
+    //                     maxScore = score;
+    //                     dummy[0] = i;
+    //                     dummy[1] = j;
+    //                 }
+
+    //                 // It will update the dummy to get the previous move of the best move
+    //                 if (i == dummy[0] && j == dummy[1])
+    //                 {
+    //                     dummy[2] = move[0];
+    //                     dummy[3] = move[1];
+    //                     Debug.Log("" + dummy[0] + dummy[1] + dummy[2] + dummy[3]);
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     return maxScore;
+    // }
 
     public static int EvaluateBoard(int turn, Piece[,] board)
     {

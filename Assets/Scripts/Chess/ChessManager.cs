@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class ChessManager : MonoBehaviour
 {
-    // [xCoord, yCoord]
     public static Piece[,] board;
     public static List<string> moveRecord;
     public static bool isWhiteTurn;
@@ -22,16 +21,16 @@ public class ChessManager : MonoBehaviour
         {
             ChessAI.negaMax(3, -1, board, moveRecord);
 
-            // foreach (string moveAI in ChessAI.bestMoveRecord)
-            // {
-            //     Debug.Log(moveAI);
-            // }
+            foreach (string moveAI in ChessAI.bestMoveRecord)
+            {
+                Debug.Log(moveAI);
+            }
             Debug.LogWarning("Finished NO ERERROS");
-            Debug.Log(ChessAI.bestMoveRecord.Count);
+            //Debug.Log(ChessAI.bestMoveRecord.Count);
         }
     }
 
-    public void InitializeGame()
+    public static void InitializeGame()
     {
         isWhiteTurn = true;
         moveRecord = new List<string>();
@@ -75,12 +74,6 @@ public class ChessManager : MonoBehaviour
             Debug.Log("Game End");
             return;
         }
-
-/*        if (board[oldX, oldY] == null)
-        {
-            Debug.LogWarning("Error, checking a null square!");
-            return;
-        }*/
         
         RecordMove(oldX, oldY, newX, newY, board, moveRecord);
         Debug.Log("x:" + oldX + " y:" + oldY);
@@ -154,21 +147,12 @@ public class ChessManager : MonoBehaviour
 
     private static void CheckCheckmate(int color, Piece[,] board)
     {
-        //Debug.Log("Checking if Checkmate: " + color);
-        
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                if (board[i, j] == null)
+                if (board[i, j] == null || color == board[i, j].color)
                 {
-                    //Debug.Log("CCM: x: " + i + ", y: " + j + " is an empty square.");
-                    continue;
-                }
-
-                if (color == board[i, j].color)
-                {
-                    //Debug.Log("CCM: x: " + i + ", y: " + j + " " + board[i, j].type + " is an ally.");
                     continue;
                 }
 
@@ -176,17 +160,7 @@ public class ChessManager : MonoBehaviour
 
                 if (thisMoves.Count != 0)
                 {
-                    string textL = "CCM: x: " + i + ", y: " + j + " " + board[i, j].type + " has legal moves. It is not checkmate.";
-                    foreach (int[] hhh in thisMoves)
-                    {
-                        textL += " " + hhh[0] + ":" + hhh[1];
-                    }
-                    //Debug.Log(textL);
                     return;
-                }
-                else if (board[i, j].type == PieceType.King)
-                {
-                    Draw("Stalemate");
                 }
             }
         }
@@ -205,12 +179,8 @@ public class ChessManager : MonoBehaviour
 
     private static void CheckInsufficientMaterials(Piece[,] board)
     {
-        //Debug.Log("Checking if insufficient materials");
-
         int countWhite = 0;
         int countBlack = 0;
-        int[] whiteKingPos = new int[2];
-        int[] blackKingPos = new int[2];
 
         foreach (Piece piece in board)
         {
@@ -219,24 +189,19 @@ public class ChessManager : MonoBehaviour
                 continue;
             }
 
-            int ty = (int) piece.type;
-
-            // If pawn or rook are alive, don't end game.
-            if (ty == 3 || ty == 5)
+            if (piece.type == PieceType.Pawn || piece.type == PieceType.Rook)
             {
-                //Debug.Log("Pawn or Rook is alive, not insufficient.");
                 return;
             }
 
             // Count everything except king
-            if (ty != 1)
+            if (piece.type != PieceType.King)
             {
                 if (piece.color == 1)
                 {
                     countWhite++;
                     if (countWhite > 1)
                     {
-                        //Debug.Log("Enough white pieces to play");
                         return;
                     }
                 }
@@ -245,22 +210,8 @@ public class ChessManager : MonoBehaviour
                     countBlack++;
                     if (countBlack > 1)
                     {
-                        //Debug.Log("Enough black pieces to play");
                         return;
                     }
-                }
-            }
-            else
-            {
-                if (piece.color == 1)
-                {
-                    whiteKingPos[0] = piece.xCoord;
-                    whiteKingPos[1] = piece.yCoord;
-                }
-                else
-                {
-                    blackKingPos[0] = piece.xCoord;
-                    blackKingPos[1] = piece.yCoord;
                 }
             }
         }
@@ -270,13 +221,12 @@ public class ChessManager : MonoBehaviour
 
     private static void Check50Move(Piece[,] board)
     {
-        //Debug.Log("Checking if 50 move rule");
         if (moveRecord.Count < 50)
         {
             return;
         }
         
-        for (int i = 0; i < 50; i++)
+        for (int i = 1; i < 51; i++)
         {
             if (moveRecord[moveRecord.Count - i].Length == 4)
             {
@@ -288,7 +238,6 @@ public class ChessManager : MonoBehaviour
             }
         }
         
-        //Debug.Log("50 move rule123");
         Draw("50 move rule");
     }
 
@@ -299,15 +248,11 @@ public class ChessManager : MonoBehaviour
             return;
         }
 
-        // Check if last and the 5th last are the same.
-        // If so, check if the starting position of the last and ending position of the 3rd are the same.
-        if (moveRecord[moveRecord.Count - 1] == moveRecord[moveRecord.Count - 5])
+        // Check if there were 3 repeated moves by the player.
+        if (moveRecord[moveRecord.Count - 1] == moveRecord[moveRecord.Count - 3] 
+        && moveRecord[moveRecord.Count - 1] == moveRecord[moveRecord.Count - 5])
         {
-            if (moveRecord[moveRecord.Count - 1].Substring(moveRecord[moveRecord.Count - 1].Length - 4, moveRecord[moveRecord.Count - 1].Length - 2) 
-            == moveRecord[moveRecord.Count - 3].Substring(moveRecord[moveRecord.Count - 3].Length - 2))
-            {
-                Draw("Repetition");
-            }
+            Draw("Repetition");
         }
 
         return;
