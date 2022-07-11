@@ -11,19 +11,9 @@ public class Pawn : Piece
     public override List<int[]> GetLegalMoves(Piece[,] board, List<string> moveRecord)
     {
         List<int[]> possibleMoves = new List<int[]>();
-        int move = 0;
 
-        if (color == 1)
-        {
-            // If White, Pawn goes up
-            move = -1;
-        }
-        else
-        {
-            // If Black, Pawn goes down
-            move = 1;
-        }
-        
+        int move = -color;
+
         // Single Move
         if (yCoord + move >= 8 || yCoord + move < 0 || xCoord > 7 || xCoord < 0)
         {

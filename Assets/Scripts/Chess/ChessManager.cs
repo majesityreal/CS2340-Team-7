@@ -105,6 +105,7 @@ public class ChessManager : MonoBehaviour
             // En Passant
             if (newX != oldX && board[newX, newY] == null) // When capturing move, but square is empty
             {
+                Debug.LogWarning("This happened");
                 board[newX, oldY] = null;
             }
 
