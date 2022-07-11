@@ -103,9 +103,14 @@ public class Pawn : Piece
             int lastMoveX = lastMove[2] - '0';
             int lastMoveY = lastMove[3] - '0';
             
-            if (lastMoveX == xCoord + 1 || lastMoveX == xCoord - 1)
-            {
-                specialMove.Add(new int[2] {lastMoveX, yCoord - color});
+            if (yCoord == lastMoveY) {
+                if (lastMoveX == xCoord + 1 || lastMoveX == xCoord - 1)
+                {
+                    if (prevY - lastMoveY == 2 || prevY - lastMoveY == -2)
+                    {
+                        specialMove.Add(new int[2] {lastMoveX, yCoord - color});
+                    }
+                }
             }
         }
 
