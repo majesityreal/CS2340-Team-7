@@ -105,14 +105,7 @@ public class Pawn : Piece
             
             if (lastMoveX == xCoord + 1 || lastMoveX == xCoord - 1)
             {
-                if (prevY - lastMoveY == 2) // White Pawn double moved
-                {
-                    specialMove.Add(new int[2] {lastMoveX, lastMoveY - 1});
-                }
-                else if (lastMoveY - prevY == 2) // Black Pawn double moved
-                {
-                    specialMove.Add(new int[2] {lastMoveX, lastMoveY + 1});
-                }
+                specialMove.Add(new int[2] {lastMoveX, yCoord - color});
             }
         }
 
