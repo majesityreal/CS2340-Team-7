@@ -12,9 +12,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float damageReduction = 0.0f; // percentage of damage taken mitagated by armor, 1.0f is invincible
     [SerializeField] int lives = 1;
     [SerializeField] HPBarStatus HPBar;
+    [SerializeField] LevelBarStatus XPBar;
+    [SerializeField] int level = 1;
+    [SerializeField] int xp = 0;
+    [SerializeField] int xpScalePerLevel = 100;
+    int xpToNextLevel = 100;
     Vector3 initialScaleOfSprite;
     float lastHorizontalVector;
     float lastVerticalVector;
+
+    // if false, have powerups that increases flat health/damage, and increases health/damage per level by percentage
+
+    [SerializeField] bool scaleHealthWithLevel = true; // scaling of player health and damage
+    [SerializeField] float healthScaleInc = 50f; // linear
+    [SerializeField] bool scaleDamageWithLevel = true; // scaling of player health and damage
+    [SerializeField] float damageScale = 1f; // linear if 1, exponential if > 1
+
+    // percentage increase from powerups only
+
 
     // Start is called before the first frame update
     void Awake()
@@ -22,11 +37,16 @@ public class PlayerController : MonoBehaviour
         rgb = GetComponent<Rigidbody2D>();
         movementVect = new Vector3();
         initialScaleOfSprite = transform.GetChild(0).localScale;
+
+
     }
 
     void Start() {
         lastHorizontalVector = 0f;
         lastVerticalVector = 0f;
+        xpToNextLevel = xpScalePerLevel * level;
+        XPBar.XPIndicator(xp, xpToNextLevel);
+        XPBar.setLevel(level, xpToNextLevel-xp);
     }
 
     // Update is called once per frame
@@ -58,6 +78,8 @@ public class PlayerController : MonoBehaviour
         movementVect = Vector3.ClampMagnitude(movementVect, 1.0f) * playerSpeed;
         //movementVect *= playerSpeed;
         rgb.velocity = movementVect;
+        XPBar.XPIndicator(xp, xpToNextLevel);
+        XPBar.setLevel(level, xpToNextLevel-xp);
         
     }
 
@@ -91,6 +113,52 @@ public class PlayerController : MonoBehaviour
         }
         HPBar.HPIndicator(currentHitpoints, maxHitpoints);
     }
+
+    public void addXP(int xpToAdd)
+    {
+        xp += xpToAdd;
+        CheckIfLevelUp();
+    }
+
+    public void CheckIfLevelUp()
+    {
+        if (xp >= xpToNextLevel)
+        {
+            level++;
+            xp = 0;
+            xpToNextLevel = level * xpScalePerLevel;
+            if (scaleHealthWithLevel)
+            {
+                maxHitpoints += healthScaleInc;
+            }
+            currentHitpoints = maxHitpoints;
+            HPBar.HPIndicator(currentHitpoints, maxHitpoints);
+            Debug.Log("Level up!");
+        }
+    }
+    
+    public int getLevel()
+    {
+        return level;
+    }
+    public float getdamageScale()
+    {
+        return damageScale;
+    }
+    public bool getHealthScaleWithLevel()
+    {
+        return scaleHealthWithLevel;
+    }
+    public bool getDamageScaleWithLevel()
+    {
+        return scaleDamageWithLevel;
+    }
+
+    public float getMaxHitpoints()
+    {
+        return maxHitpoints;
+    }
+
     public float getLastHorizontalVector()
     {
         return lastHorizontalVector;

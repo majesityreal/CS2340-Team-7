@@ -73,4 +73,20 @@ public class cryTear : MonoBehaviour
 
     }
     
+    public void setDamage(float damage)
+    {
+        this.damage = damage;
+    }
+    public void setSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+    public float getDamage()
+    {
+        return damage;
+    }
+    public float getSpeed()
+    {
+        return speed;
+    }
 }
