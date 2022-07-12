@@ -15,6 +15,7 @@ using UnityEngine.SceneManagement;
 public class TSMainMenu : MonoBehaviour
 {
 
+    public GameObject Panel;
 
 
      void Update()
@@ -24,39 +25,47 @@ public class TSMainMenu : MonoBehaviour
 
     public void Play()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        hidePanel();
+        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         // PlayerPrefs.SetInt("loaded", 1);
         // SceneManager.LoadScene("Play");
     }
+    
 
         public void PowerUp()
     {
         //Application.PowerUp();
-        PlayerPrefs.SetInt("loaded", 1);
-        SceneManager.LoadScene("PowerUp");
+        // PlayerPrefs.SetInt("loaded", 1);
+        // SceneManager.LoadScene("PowerUp");
+        hidePanel();
+
     }
 
-        public void Collection()
-    {
-        PlayerPrefs.SetInt("loaded", 1);
-        SceneManager.LoadScene("Collection");
-    }
-    
-        public void Credits()
-    {
-        PlayerPrefs.SetInt("loaded", 1);
-        SceneManager.LoadScene("Credits");
-    }
 
-        public void Archievements()
-    {
-        PlayerPrefs.SetInt("loaded", 1);
-        SceneManager.LoadScene("Acrhievements");
-    }
         public void Quit()
     {
-        PlayerPrefs.SetInt("loaded", 1);
-        SceneManager.LoadScene("Quit");
+        // PlayerPrefs.SetInt("loaded", 1);
+        // SceneManager.LoadScene("Quit");
+        hidePanel();
+    }
+
+    public void hidePanel()
+    {
+        // for (int i = 0; i < Panel.transform.childCount; i++)
+        {
+            // Panel.transform.GetChild(i).gameObject.SetActive(false);
+            Panel.gameObject.SetActive(false);
+        }
+    }
+
+    public void showPanel()
+    {
+
+        // for (int i = 0; i < Panel.transform.childCount; i++)
+        {
+           // Panel.transform.GetChild(i).gameObject.SetActive(true);
+           Panel.gameObject.SetActive(true);
+        }
     }
 
 }
