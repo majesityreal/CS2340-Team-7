@@ -46,7 +46,9 @@ public class TSMainMenu : MonoBehaviour
     {
         // PlayerPrefs.SetInt("loaded", 1);
         // SceneManager.LoadScene("Quit");
-        hidePanel();
+        //hidePanel();
+        //DestroyImmediate(gameObject);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void hidePanel()
