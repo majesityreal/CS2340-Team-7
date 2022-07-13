@@ -4,6 +4,12 @@ using UnityEngine;
 using System;
 using TMPro;
 
+/**
+ *  Author:         Kevin Kwan
+ *  Last Updated:   2022.07.12
+ *  Version:        1.4
+ */
+
 public class STGameManager : MonoBehaviour
 {
     [SerializeField] GameObject[] waves;
@@ -21,6 +27,8 @@ public class STGameManager : MonoBehaviour
     [SerializeField] float scalingDifficultyMultiplierPerWave = 0.5f; // 1f = no scaling, 2f = twice as hard, 0.5f = half as hard... linear
     // formula to calculate difficulty: health = health * scalingDifficultyMultiplierPerWave * waveNumber
     // Start is called before the first frame update
+    [SerializeField] GameObject WinScreen;
+    [SerializeField] GameObject Player;
     void Start()
     {
         if (isGameStarted) {
@@ -48,9 +56,10 @@ public class STGameManager : MonoBehaviour
             //Debug.Log(time.ToString("hh':'mm':'ss"));
             timerText.text = time.ToString("mm':'ss");
             // final wave will keep spawning until 10 minutes have passed
-            if (currentWave == waves.Length - 1 && totalSeconds > totalTimeBattle)
+            if (totalSeconds > totalTimeBattle)
             {
                 StopWave(waves[currentWave]);
+                WinScreen.SetActive(true);
                 GameOver();
             }
         }
@@ -68,6 +77,7 @@ public class STGameManager : MonoBehaviour
     }
     public void StartGame()
     {
+        Player.SetActive(true);
         isGameStarted = true;
         Time.timeScale = 1;
     }

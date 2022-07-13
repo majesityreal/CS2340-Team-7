@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ *  Author:         Kevin Kwan
+ *  Last Updated:   2022.07.12
+ *  Version:        1.4
+ */
+
 public class PlayerController : MonoBehaviour
 {
     Rigidbody2D rgb;
@@ -27,6 +33,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float healthScaleInc = 50f; // linear
     [SerializeField] bool scaleDamageWithLevel = true; // scaling of player health and damage
     [SerializeField] float damageScale = 1f; // linear if 1, exponential if > 1
+    [SerializeField] GameObject LoseScreen;
+    [SerializeField] STGameManager gameManager;
 
     // percentage increase from powerups only
 
@@ -91,14 +99,16 @@ public class PlayerController : MonoBehaviour
             lives--;
             if (lives > 0)
             {
-                Debug.Log("Extra life used!");
+                //Debug.Log("Extra life used!");
                 currentHitpoints = maxHitpoints;
             }
             else
             {
                 //Destroy(gameObject);
-                Debug.Log("Player has died!");
-                Time.timeScale = 0; // use this for pause too
+                //Debug.Log("Player has died!");
+                LoseScreen.SetActive(true);
+                gameManager.GameOver();
+                //Time.timeScale = 0; // use this for pause too
             }
         }
         HPBar.HPIndicator(currentHitpoints, maxHitpoints);
