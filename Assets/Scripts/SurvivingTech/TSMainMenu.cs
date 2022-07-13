@@ -17,6 +17,7 @@ public class TSMainMenu : MonoBehaviour
 {
 
     [SerializeField] GameObject StartMenu;
+    [SerializeField] GameObject GameManager;
 
 
      void Start()
@@ -27,6 +28,7 @@ public class TSMainMenu : MonoBehaviour
     public void Play()
     {
         hideStart();
+        GameManager.SetActive(true);
     }
 
 

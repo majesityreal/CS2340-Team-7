@@ -2943,6 +2943,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartMenu: {fileID: 0}
+  GameManager: {fileID: 0}
 --- !u!1 &832782815
 GameObject:
   m_ObjectHideFlags: 0
@@ -3223,7 +3224,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7783251, y: 1}
+    m_SensorSize: {x: 1.7782102, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -3433,6 +3434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartMenu: {fileID: 0}
+  GameManager: {fileID: 0}
 --- !u!1001 &913746336
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5180,7 +5182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1456578051
 Transform:
   m_ObjectHideFlags: 0
@@ -7202,6 +7204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartMenu: {fileID: 437752247}
+  GameManager: {fileID: 1456578050}
 --- !u!1001 &200557155546069902
 PrefabInstance:
   m_ObjectHideFlags: 0

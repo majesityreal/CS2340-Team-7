@@ -16,13 +16,16 @@ public class Enemy : MonoBehaviour
     [SerializeField] float speed = 1;
     [SerializeField] float health = 50;
     [SerializeField] float damage = 5;
+    [SerializeField] bool flip = true;
     //[SerializeField] int xp_amount = 10;
+    Vector3 initialScaleOfSprite;
 
     Rigidbody2D rgbEnemy;
 
     void Awake()
     {
         rgbEnemy = GetComponent<Rigidbody2D>();
+        initialScaleOfSprite = transform.localScale;
     }
 
     public void setTarget(GameObject target)
@@ -35,11 +38,14 @@ public class Enemy : MonoBehaviour
     {
         if (targetLocation.position.x < transform.position.x)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            if (flip)
+            {
+                transform.localScale = new Vector3(-initialScaleOfSprite.x, initialScaleOfSprite.y, initialScaleOfSprite.z); 
+            }
         }
         else
         {
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(initialScaleOfSprite.x, initialScaleOfSprite.y, initialScaleOfSprite.z);
         }
         Vector3 direction = (targetLocation.position - transform.position).normalized;
         rgbEnemy.velocity = direction * speed;
