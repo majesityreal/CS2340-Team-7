@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /**
- *  Author:         Jing Liu
- *  Date:           2022.07.10
- *  Version:        1.0
+ *  Authors:        Jing Liu
+ *                  Kevin Kwan
+ *  Date:           2022.07.12
+ *  Version:        1.1
 
  *  
  *  Script for Surviving Tech Start Menu
@@ -15,59 +16,37 @@ using UnityEngine.SceneManagement;
 public class TSMainMenu : MonoBehaviour
 {
 
-    public GameObject Panel;
+    [SerializeField] GameObject StartMenu;
 
 
-     void Update()
+     void Start()
     {
-        
+        Time.timeScale = 0;
     }
 
     public void Play()
     {
-        hidePanel();
-        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        // PlayerPrefs.SetInt("loaded", 1);
-        // SceneManager.LoadScene("Play");
-    }
-    
-
-        public void PowerUp()
-    {
-        //Application.PowerUp();
-        // PlayerPrefs.SetInt("loaded", 1);
-        // SceneManager.LoadScene("PowerUp");
-        hidePanel();
-
+        hideStart();
     }
 
 
-        public void Quit()
+    public void Quit()
     {
-        // PlayerPrefs.SetInt("loaded", 1);
-        // SceneManager.LoadScene("Quit");
-        //hidePanel();
-        //DestroyImmediate(gameObject);
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void hidePanel()
+    public void hideStart()
     {
-        // for (int i = 0; i < Panel.transform.childCount; i++)
-        {
-            // Panel.transform.GetChild(i).gameObject.SetActive(false);
-            Panel.gameObject.SetActive(false);
-        }
+        StartMenu.gameObject.SetActive(false);
     }
 
     public void showPanel()
     {
+        StartMenu.gameObject.SetActive(true);
+    }
 
-        // for (int i = 0; i < Panel.transform.childCount; i++)
-        {
-           // Panel.transform.GetChild(i).gameObject.SetActive(true);
-           Panel.gameObject.SetActive(true);
-        }
+    public void reload() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 }
