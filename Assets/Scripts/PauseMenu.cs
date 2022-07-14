@@ -48,6 +48,7 @@ public class PauseMenu : MonoBehaviour
     public void unpause()
     {
         pauseMenu.SetActive(false);
+        PlayerInput.IsGamePaused = false;
         isPaused = false;
         if (isPhysicsRelated && gameStarted)
         {
@@ -58,6 +59,10 @@ public class PauseMenu : MonoBehaviour
     public void pause()
     {
         pauseMenu.SetActive(true);
+        if (!PlayerInput.IsGamePaused)
+        {
+            PlayerInput.IsGamePaused = true;
+        }
         isPaused = true;
         if (isPhysicsRelated && gameStarted)
         {
