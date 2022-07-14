@@ -54,8 +54,11 @@ public class axeWeaponWeapon : MonoBehaviour
         if (GetComponentInParent<PlayerController>().getDamageScaleWithLevel())
         {
             tear.GetComponent<axeWeapon>().setDamage(damage * GetComponentInParent<PlayerController>().getdamageScale() * GetComponentInParent<PlayerController>().getLevel());
+            //Debug.Log(damage * GetComponentInParent<PlayerController>().getdamageScale() * GetComponentInParent<PlayerController>().getLevel());
+            quantity = GetComponentInParent<PlayerController>().getLevel();
+        } else {
+            tear.GetComponent<axeWeapon>().setDamage(damage);
         }
-        tear.GetComponent<axeWeapon>().setDamage(damage);
         tear.GetComponent<axeWeapon>().setSpeed(speed);
         tear.GetComponent<axeWeapon>().setGravity(gravity);
         // Debug.Log(tear.GetComponent<cryTear>().getSpeed());

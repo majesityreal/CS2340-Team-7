@@ -10,6 +10,9 @@ using UnityEngine;
 public class cryingTearsWeapon : MonoBehaviour
 {
     [SerializeField] float attackDelay;
+    [SerializeField] float minAttackDelay = 0.1f;
+    private float initialAttackDelay;
+    [SerializeField] float attackDelayDecrease = 0.05f;
     float timer;
     PlayerController player;
     [SerializeField] GameObject projectile;
@@ -21,6 +24,7 @@ public class cryingTearsWeapon : MonoBehaviour
     [SerializeField] float damage = 5;
     void Awake()
     {
+        initialAttackDelay = attackDelay;
         player = GetComponentInParent<PlayerController>();
     }
 
@@ -90,8 +94,14 @@ public class cryingTearsWeapon : MonoBehaviour
         if (GetComponentInParent<PlayerController>().getDamageScaleWithLevel())
         {
             tear.GetComponent<cryTear>().setDamage(damage * GetComponentInParent<PlayerController>().getdamageScale() * GetComponentInParent<PlayerController>().getLevel());
-        }
+            attackDelay = initialAttackDelay - attackDelayDecrease * (GetComponentInParent<PlayerController>().getLevel()-1);
+            if (attackDelay < minAttackDelay)
+            {
+                attackDelay = minAttackDelay;
+            }
+        } else {
         tear.GetComponent<cryTear>().setDamage(damage);
+        }
         tear.GetComponent<cryTear>().setSpeed(speed);
         // Debug.Log(tear.GetComponent<cryTear>().getSpeed());
 
