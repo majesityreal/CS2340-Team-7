@@ -18,7 +18,7 @@ public class PlayerInput : MonoBehaviour
     public static GameObject CurrSelected;
     public static int PlayerColor = 1;// White1 Black-1
     public static bool IsPlayerTurn = true;
-    public static bool IsGameEnd = false;
+    public static bool IsGamePaused = false;
     //Game Object
     public GameObject ResultStage;
     // Start is called before the first frame update
