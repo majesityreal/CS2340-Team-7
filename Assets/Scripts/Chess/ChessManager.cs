@@ -59,6 +59,8 @@ public class ChessManager : MonoBehaviour
         board[5, 7] = new Bishop(1, 5, 7);
         board[6, 7] = new Knight(1, 6, 7);
         board[7, 7] = new Rook(1, 7, 7);
+
+        PlayerInput.IsGameEnd = false;
     }
 
     public static void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)

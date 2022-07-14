@@ -55,6 +55,7 @@ public class ResultStageScript : MonoBehaviour
         {
             transform.GetChild(i).gameObject.SetActive(true);
         }
+        PlayerInput.IsGameEnd = true;
     }
 
     public void HideResult()
