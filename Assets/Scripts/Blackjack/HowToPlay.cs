@@ -63,6 +63,7 @@ public class HowToPlay : MonoBehaviour
         // }
     }
 
+
     public void increment()
     {   uiElements[currentUIElement].SetActive(false);
         currentUIElement++;
@@ -102,7 +103,10 @@ public class HowToPlay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (!PlayerInput.IsGamePaused)
+        {
+            PlayerInput.IsGamePaused = true;
+        }
     }
 
     // list of objects
@@ -113,6 +117,7 @@ public class HowToPlay : MonoBehaviour
     public void closeWindow()
     {
         gameObject.SetActive(false);
+        PlayerInput.IsGamePaused = false;
     }
 
     public void openWindow()

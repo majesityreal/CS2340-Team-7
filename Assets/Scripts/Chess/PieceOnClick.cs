@@ -25,7 +25,7 @@ public class PieceOnClick : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        if (PlayerInput.IsPlayerTurn)
+        if (PlayerInput.IsPlayerTurn && !PlayerInput.IsGamePaused)
         {
             if (PlayerInput.CurrSelected == null)
             {

@@ -10,10 +10,15 @@ public class ChessManager : MonoBehaviour
     public static Piece[,] board;
     public static List<string> moveRecord;
     public static bool isWhiteTurn;
+    private static GameObject resultStage;
 
     void Start()
     {
         InitializeGame();
+        if (resultStage == null)
+        {
+            resultStage = GameObject.Find("ResultStage");
+        }
     }
 
     private void Update()
@@ -59,6 +64,8 @@ public class ChessManager : MonoBehaviour
         board[5, 7] = new Bishop(1, 5, 7);
         board[6, 7] = new Knight(1, 6, 7);
         board[7, 7] = new Rook(1, 7, 7);
+
+        PlayerInput.IsGamePaused = false;
     }
 
     public static void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)
@@ -180,11 +187,15 @@ public class ChessManager : MonoBehaviour
         if (color == 1)
         {
             // TODO: White Win
+            ResultStageScript.IsWhiteWin = true;
+            resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("White Win");
         }
         else
         {
             // TODO: Black Win
+            ResultStageScript.IsWhiteWin = false;
+            resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("Black Win");
         }
     }
