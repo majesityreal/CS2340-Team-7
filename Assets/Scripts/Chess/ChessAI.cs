@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ChessAI : MonoBehaviour
 {
-    public static Piece[,] bestMoveBoard; // board that has the best move
+    public static char[,] bestMoveBoard; // board that has the best move
     public static List<string> bestMoveRecord; // record that has the moves
 
     const int pawnValue = 100;
@@ -90,7 +90,7 @@ public class ChessAI : MonoBehaviour
 
     // BREADTH FIRST SEARCH
 
-    public static int negaMax(int depth, int max, int turn, Piece[,] board, List<string> copyRecord)
+    public static int negaMax(int depth, int max, int turn, char[,] board, List<string> copyRecord)
     {
         if (depth < 0)
         {
@@ -113,7 +113,7 @@ public class ChessAI : MonoBehaviour
         // go through all the moves!
         for (int i = 0; i < 64; i++)
         {
-            if (board[i % 8, i / 8] == null)
+            if (board[i % 8, i / 8] == '-')
             {
                 continue;
             }
@@ -130,7 +130,7 @@ public class ChessAI : MonoBehaviour
             foreach (int[] move in moves)
             {
                 // creating deep copy of board
-                Piece[,] temp = new Piece[8,8];
+                char[,] temp = new char[8,8];
                 for (int x = 0; x < 8; x++)
                 {
                     for (int y = 0; y < 8; y++)
@@ -153,7 +153,7 @@ public class ChessAI : MonoBehaviour
 
                 // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
                 Debug.Log("i: " + i);
-                Piece pos1 = temp[i % 8, i / 8];
+                char pos1 = temp[i % 8, i / 8];
                 // before log
                 Debug.Log("before Piece: " + temp[i % 8, i / 8].type + "x: " + (i % 8) + " y:" + (i / 8));
                 ChessManager.MovePosition(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
@@ -178,13 +178,13 @@ public class ChessAI : MonoBehaviour
         return max;
     }
 
-    public static void negaMaxStarter(int depth, int turn, Piece[,] board, List<string> copyRecord)
+    public static void negaMaxStarter(int depth, int turn, char[,] board, List<string> copyRecord)
     {
         int max = int.MinValue;
         int amount = negaMax(depth, max, turn, board, copyRecord);
     }
 
-    public static void printBoard(Piece[,] board)
+    public static void printBoard(char[,] board)
     {
         string s = "";
         for (int i = 0; i < 8; i++)
@@ -363,7 +363,7 @@ public class ChessAI : MonoBehaviour
     //     return maxScore;
     // }
 
-    public static int EvaluateBoard(int turn, Piece[,] board)
+    public static int EvaluateBoard(int turn, char[,] board)
     {
         // material section - starts at 3900 for both
         int whiteMaterial = CountMaterial(1, board);
@@ -384,7 +384,7 @@ public class ChessAI : MonoBehaviour
         return (totalMaterial + totalPosition) * turn;
     }
 
-    static int EvaluatePositionWhite(Piece[,] board)
+    static int EvaluatePositionWhite(char[,] board)
     {
         int value = 0;
 
@@ -423,7 +423,7 @@ public class ChessAI : MonoBehaviour
         return value;
     }
 
-    static int EvaluatePositionBlack(Piece[,] board)
+    static int EvaluatePositionBlack(char[,] board)
     {
         int value = 0;
 
@@ -463,7 +463,7 @@ public class ChessAI : MonoBehaviour
     }
 
     // returns value of all the material of the pieces still in play. Accounts for pawn loss in knight and rook value
-    static int CountMaterial(int color, Piece[,] board)
+    static int CountMaterial(int color, char[,] board)
     {
         int material = 0;
         int pawnCount = 0;

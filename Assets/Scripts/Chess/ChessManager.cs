@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ChessManager : MonoBehaviour
 {
-    public static Piece[,] board;
+    public static char[,] board;
     public static List<string> moveRecord;
 
     void Start()
@@ -31,45 +31,26 @@ public class ChessManager : MonoBehaviour
         }
     }
 
-    public static void InitializeGame()
+    public void InitializeGame()
     {
         moveRecord = new List<string>();
 
-        // Clears 2D array
-        board = new Piece[8, 8];
-
-        // Black pieces [new Piece(Color, X, Y)]
-        board[0, 0] = new Rook(-1, 0, 0);
-        board[1, 0] = new Knight(-1, 1, 0);
-        board[2, 0] = new Bishop(-1, 2, 0);
-        board[3, 0] = new Queen(-1, 3, 0);
-        board[4, 0] = new King(-1, 4, 0);
-        board[5, 0] = new Bishop(-1, 5, 0);
-        board[6, 0] = new Knight(-1, 6, 0);
-        board[7, 0] = new Rook(-1, 7, 0);
-        for (int i = 0; i < 8; i++)
+        board = new char[8, 8] 
         {
-            board[i, 1] = new Pawn(-1, i, 1);
-        }
-
-        // White pieces [new Piece(Color, X, Y)]
-        for (int j = 0; j < 8; j++)
-        {
-            board[j, 6] = new Pawn(1, j, 6);
-        }
-        board[0, 7] = new Rook(1, 0, 7);
-        board[1, 7] = new Knight(1, 1, 7);
-        board[2, 7] = new Bishop(1, 2, 7);
-        board[3, 7] = new Queen(1, 3, 7);
-        board[4, 7] = new King(1, 4, 7);
-        board[5, 7] = new Bishop(1, 5, 7);
-        board[6, 7] = new Knight(1, 6, 7);
-        board[7, 7] = new Rook(1, 7, 7);
+            {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+            {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'}, 
+            {'-', '-', '-', '-', '-', '-', '-', '-'}, 
+            {'-', '-', '-', '-', '-', '-', '-', '-'}, 
+            {'-', '-', '-', '-', '-', '-', '-', '-'}, 
+            {'-', '-', '-', '-', '-', '-', '-', '-'}, 
+            {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'}, 
+            {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+        };
     }
 
-    public static void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board, List<string> moveRecord)
+    public static void MovePosition(int oldX, int oldY, int newX, int newY, char[,] board, List<string> moveRecord)
     {       
-        if (board[newX, newY] != null && (int) board[newX, newY].type == 1)
+        if (board[newX, newY].type == 'K' || board[newX, newY].type == 'k')
         {
             Debug.Log("Game End");
             return;
