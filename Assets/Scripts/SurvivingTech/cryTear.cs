@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ *  Author:         Kevin Kwan
+ *  Last Updated:   2022.07.06
+ *  Version:        1.0
+ */
+ 
 public class cryTear : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -73,4 +79,20 @@ public class cryTear : MonoBehaviour
 
     }
     
+    public void setDamage(float damage)
+    {
+        this.damage = damage;
+    }
+    public void setSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+    public float getDamage()
+    {
+        return damage;
+    }
+    public float getSpeed()
+    {
+        return speed;
+    }
 }

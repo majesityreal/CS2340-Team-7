@@ -8,10 +8,15 @@ public class ChessManager : MonoBehaviour
 {
     public static char[,] board;
     public static List<string> moveRecord;
+    private static GameObject resultStage;
 
     void Start()
     {
         InitializeGame();
+        if (resultStage == null)
+        {
+            resultStage = GameObject.Find("ResultStage");
+        }
     }
 
     private void Update()
@@ -146,11 +151,15 @@ public class ChessManager : MonoBehaviour
         if (color == 1)
         {
             // TODO: White Win
+            ResultStageScript.IsWhiteWin = true;
+            resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("White Win");
         }
         else
         {
             // TODO: Black Win
+            ResultStageScript.IsWhiteWin = false;
+            resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("Black Win");
         }
     }

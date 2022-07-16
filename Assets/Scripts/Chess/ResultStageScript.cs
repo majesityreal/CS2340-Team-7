@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ResultStageScript : MonoBehaviour
 {
-    public static bool IsPlayerWin = false;
+    public static bool IsWhiteWin = false;
     public TextMeshProUGUI resultText;
     public TextMeshProUGUI playAgainText;
     public TextMeshProUGUI quitText;
@@ -40,21 +40,22 @@ public class ResultStageScript : MonoBehaviour
 
     public void ShowResult()
     {
-        if (IsPlayerWin)
+        if (IsWhiteWin)
         {
-            resultText.SetText("You Win!");
-            Debug.Log("You Win!");
+            resultText.SetText("White Win!");
+            Debug.Log("White Win!");
         } 
         else
         {
-            resultText.SetText("You Lose...");
-            Debug.Log("You Lose!");
+            resultText.SetText("Black Win!");
+            Debug.Log("Black Win!");
         }
 
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(true);
         }
+        PlayerInput.IsGamePaused = true;
     }
 
     public void HideResult()

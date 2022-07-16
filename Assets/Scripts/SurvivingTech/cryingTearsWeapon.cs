@@ -2,17 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ *  Author:         Kevin Kwan
+ *  Last Updated:   2022.07.06
+ *  Version:        1.0
+ */
 public class cryingTearsWeapon : MonoBehaviour
 {
     [SerializeField] float attackDelay;
+    [SerializeField] float minAttackDelay = 0.1f;
+    private float initialAttackDelay;
+    [SerializeField] float attackDelayDecrease = 0.05f;
     float timer;
     PlayerController player;
     [SerializeField] GameObject projectile;
     // Start is called before the first frame update
     int dir_x = -1;
     int dir_y = 0;
+    // to account for "scaling," the player will need to "upgrade" these by leveling up and selecting them weapons
+    [SerializeField] float speed = 7;
+    [SerializeField] float damage = 5;
     void Awake()
     {
+        initialAttackDelay = attackDelay;
         player = GetComponentInParent<PlayerController>();
     }
 
@@ -79,8 +91,30 @@ public class cryingTearsWeapon : MonoBehaviour
     {
         GameObject tear = Instantiate(projectile, transform.position, Quaternion.identity);
         tear.GetComponent<cryTear>().SetDirection(dir_x, dir_y);
+        if (GetComponentInParent<PlayerController>().getDamageScaleWithLevel())
+        {
+            tear.GetComponent<cryTear>().setDamage(damage * GetComponentInParent<PlayerController>().getdamageScale() * GetComponentInParent<PlayerController>().getLevel());
+            attackDelay = initialAttackDelay - attackDelayDecrease * (GetComponentInParent<PlayerController>().getLevel()-1);
+            if (attackDelay < minAttackDelay)
+            {
+                attackDelay = minAttackDelay;
+            }
+        } else {
+        tear.GetComponent<cryTear>().setDamage(damage);
+        }
+        tear.GetComponent<cryTear>().setSpeed(speed);
+        // Debug.Log(tear.GetComponent<cryTear>().getSpeed());
 
         // change damage and speed here
 
+    }
+    
+    public void setDamage(float damage)
+    {
+        this.damage = damage;
+    }
+    public void setSpeed(float speed)
+    {
+        this.speed = speed;
     }
 }
