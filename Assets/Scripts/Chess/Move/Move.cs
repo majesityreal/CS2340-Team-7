@@ -154,6 +154,18 @@ public class Move
     // public const long H1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000001;
 
 
+    private readonly int[] DeBruijnTable64 = {
+        0, 58, 1, 59, 47, 53, 2, 60, 
+        39, 48, 27, 54, 33, 42, 3, 61,
+        51, 37, 40, 49, 18, 28, 20, 55, 
+        30, 34, 11, 43, 14, 22, 4, 62,
+        57, 46, 52, 38, 26, 32, 41, 50, 
+        36, 17, 19, 29, 10, 13, 21, 56,
+        45, 25, 31, 35, 16, 9, 12, 44, 
+        24, 15, 8, 23, 7, 6, 5, 63
+    };
+
+
     public void ConvertBoardToBinary(char[,] board) 
     {
         br = 0UL;
@@ -242,14 +254,13 @@ public class Move
 
     private ulong GetRookMoves(ulong position, char type, int x, int y)
     {
-        ulong possibleMoves = 0UL;
         ulong rankMask = Ranks[y];
         ulong fileMask = Files[x];
         ulong allies = GetAllies(type);
 
         // Hyperbola Quintessence (o^(o-2r))
         // Horizontal Attacks
-        possibleMoves |= (((bitboard & rankMask) - position - position) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(position) - Reverse(position))) & ~allies;
+        ulong possibleMoves = (((bitboard & rankMask) - position - position) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(position) - Reverse(position))) & ~allies;
         // Vertical Attacks
         possibleMoves |= (((bitboard & fileMask) - position - position) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(position) - Reverse(position))) & ~allies;
 
@@ -258,11 +269,10 @@ public class Move
 
     private ulong GetKnightMoves(ulong position, char type)
     {
-        ulong possibleMoves = 0UL;
         ulong allies = GetAllies(type);
 
         // Up Up Left
-        possibleMoves |= (position << 17) & ~allies & ~File_H;
+        ulong possibleMoves = (position << 17) & ~allies & ~File_H;
 
         // Up Up Right
         possibleMoves |= (position << 15) & ~allies & ~File_A;
@@ -290,14 +300,13 @@ public class Move
 
     private ulong GetBishopMoves(ulong position, char type, int x, int y)
     {
-        ulong possibleMoves = 0UL;
         ulong diagonalMask = GetDiagonalMask(x, y);
         ulong antiDiagonalMask = GetAntiDiagonalMask(x, y);
         ulong allies = GetAllies(type);
 
         // Hyperbola Quintessence (o^(o-2r))
         // Diagonal Attacks
-        possibleMoves |= (((bitboard & diagonalMask) - position - position) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(position) - Reverse(position))) & ~allies;
+        ulong possibleMoves = (((bitboard & diagonalMask) - position - position) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(position) - Reverse(position))) & ~allies;
         // Anti-Diagonal Attacks
         possibleMoves |= (((bitboard & antiDiagonalMask) - position - position) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(position) - Reverse(position))) & ~allies;
 
@@ -588,6 +597,7 @@ public class Move
 
     private ulong Reverse(ulong binary)
     {
+        // Reverse bits by swapping positions. Total 30 operations.
         binary = (binary & 0b_11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000) >> 32 
                 |(binary & 0b_00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111) << 32;
 
@@ -607,6 +617,93 @@ public class Move
                 |(binary & 0b_01010101_01010101_01010101_01010101_01010101_01010101_01010101_01010101) << 1;
 
         return binary;
+    }
+
+    private ulong DirectCheck(char type)
+    {
+        int kingX = 0;
+        int kingY = 0;
+
+        if (type < 'a') // White
+        {
+            (kingX, kingY) = GetCoords(wk);
+
+            // Pawn Checks
+            if (((wk << 7) & bp) != 0UL)
+            {
+                return (wk << 7);
+            }
+
+            if (((wk << 9) & bp) != 0UL)
+            {
+                return (wk << 9);
+            }
+
+            // Knight Check
+            ulong knights = GetKnightMoves(wk, 'K') & bn;
+            if (knights != 0UL)
+            {
+                return knights;
+            }
+
+            // Sliders Check
+            ulong sliders = GetQueenMoves(wk, 'Q', kingX, kingY) & (bb | bq | br);
+            if (sliders != 0UL)
+            {
+                return sliders;
+            }
+        }
+        else
+        {
+            (kingX, kingY) = GetCoords(bk);
+            // Pawn Checks
+            if (((bk >> 7) & wp) != 0UL)
+            {
+                return (bk >> 7);
+            }
+
+            if (((bk >> 9) & wp) != 0UL)
+            {
+                return (bk >> 9);
+            }
+
+            // Knight Check
+            ulong knights = GetKnightMoves(bk, 'k') & wn;
+            if (knights != 0UL)
+            {
+                return knights;
+            }
+
+            // Bishop/Rook/Queen Check
+            ulong sliders = GetQueenMoves(bk, 'q', kingX, kingY) & (wb | wr | wq);
+            if (sliders != 0UL)
+            {
+                return sliders;
+            } 
+        }
+        
+        Debug.LogWarning("Invalid type given to DirectCheck() method.");
+        return 0UL;
+    }
+
+    /*
+    De Bruijn Bit Position Algorithm
+    Authors: Eric Cole, Mark Dickinson
+    An algorithm that finds the log base 2 of an 64 bit integer in O(log(n)) operations
+    Uses the DeBrujnTable64 lookup table.
+    */
+    private (int, int) GetCoords(ulong position)
+    {
+        position |= position >> 1;
+        position |= position >> 2;
+        position |= position >> 4;
+        position |= position >> 8;
+        position |= position >> 16;
+        position |= position >> 32;
+
+        int index = 63 - DeBruijnTable64[(position * 0b_00000011_11110110_11101010_11110010_11001101_00100111_00010100_01100001) >> 58];
+
+        return (index / 8, index % 8);
     }
 }
 
