@@ -229,23 +229,28 @@ public class Move
         blacks = br | bn | bb | bq | bk | bp;
     } 
 
+    public void MakeMove(ulong position, char type, ulong movePos)
+    {
+        
+    }
+
     public ulong GetMoves(int x, int y, char type, List<string> record) 
     {
         ulong position = 1UL << (y * 8 + x);
         switch (type)
         {
             case 'r': case 'R':
-                return GetRookMoves(position, type, x, y);
+                return PreventCheck(position, type, x, y, GetRookMoves(position, type, x, y));
             case 'n': case 'N':
-                return GetKnightMoves(position, type);
+                return PreventCheck(position, type, x, y, GetKnightMoves(position, type));
             case 'b': case 'B':
-                return GetBishopMoves(position, type, x, y);
+                return PreventCheck(position, type, x, y, GetBishopMoves(position, type, x, y));
             case 'q': case 'Q':
-                return GetQueenMoves(position, type, x, y);
+                return PreventCheck(position, type, x, y, GetQueenMoves(position, type, x, y));
             case 'k': case 'K':
-                return GetKingMoves(position, type, record);
+                return PreventCheck(position, type, x, y, GetKingMoves(position, type, record));
             case 'p': case 'P':
-                return GetPawnMoves(position, type, record);
+                return PreventCheck(position, type, x, y, GetPawnMoves(position, type, record));
         }
 
         Debug.LogWarning("Wrong piece type has been given to GetMoves().");
@@ -619,71 +624,300 @@ public class Move
         return binary;
     }
 
-    private ulong DirectCheck(char type)
+    private ulong PreventCheck(ulong position, char type, int x, int y, ulong possibleMoves)
     {
         int kingX = 0;
         int kingY = 0;
+        ulong directCheck = ulong.MaxValue;
+        bitboard &= ~position;
 
         if (type < 'a') // White
         {
-            (kingX, kingY) = GetCoords(wk);
+            ulong allies = whites & ~position;
 
             // Pawn Checks
-            if (((wk << 7) & bp) != 0UL)
+            if (((wk >> 7) & bp) != 0UL)
             {
-                return (wk << 7);
+                directCheck = (wk >> 7);
             }
 
-            if (((wk << 9) & bp) != 0UL)
+            if (((wk >> 9) & bp) != 0UL)
             {
-                return (wk << 9);
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = (wk >> 9);
             }
 
             // Knight Check
-            ulong knights = GetKnightMoves(wk, 'K') & bn;
-            if (knights != 0UL)
+            ulong knights = GetKnightMoves(wk, 'K');
+            if ((knights & bn) != 0UL)
             {
-                return knights;
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = knights;
             }
 
-            // Sliders Check
-            ulong sliders = GetQueenMoves(wk, 'Q', kingX, kingY) & (bb | bq | br);
-            if (sliders != 0UL)
+
+            // Vertical Checks
+            (kingX, kingY) = GetCoords(wk);
+            ulong fileMask = Files[x];
+            ulong ups = (bitboard & fileMask) ^ ((bitboard & fileMask) - position - position) & ~allies;
+            if ((ups & (br | bq)) != 0UL)
             {
-                return sliders;
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = ups;
+            }
+
+            ulong downs = (bitboard & fileMask) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(position) - Reverse(position)) & ~allies;
+            if ((downs & (br | bq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = ups;
+            }
+            
+
+            // Horizontal Checks
+            ulong rankMask = Ranks[y];
+            ulong lefts = (bitboard & rankMask) ^ ((bitboard & rankMask) - position - position) & ~allies;
+            if ((lefts & (br | bq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = lefts;
+            }
+
+            ulong rights = (bitboard & rankMask) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(position) - Reverse(position)) & ~allies;
+            if ((rights & (br | bq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = rights;
+            }
+            
+            
+            // Diagonal Checks
+            ulong diagonalMask = GetDiagonalMask(x, y);
+            ulong upDiag = (bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - position - position) & ~allies;
+            if ((upDiag & (bb | bq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = upDiag;
+            }
+            
+            ulong downDiag = (bitboard & diagonalMask) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(position) - Reverse(position)) & ~allies;
+            if ((downDiag & (bb | bq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = downDiag;
+            }
+            
+
+            // Anti-Diagonal Checks
+            ulong antiDiagonalMask = GetAntiDiagonalMask(x, y);
+            ulong upAnti = (bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - position - position) & ~allies;
+            if ((upAnti & (bb | bq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = upAnti;
+            }
+
+            ulong downAnti = (bitboard & antiDiagonalMask) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(position) - Reverse(position)) & ~allies;
+            if ((downAnti & (bb | bq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+                directCheck = downAnti;
             }
         }
         else
         {
-            (kingX, kingY) = GetCoords(bk);
+            ulong allies = blacks & ~position;
+
             // Pawn Checks
             if (((bk >> 7) & wp) != 0UL)
             {
-                return (bk >> 7);
+                directCheck = (bk >> 7);
             }
 
             if (((bk >> 9) & wp) != 0UL)
             {
-                return (bk >> 9);
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = (bk >> 9);
             }
 
             // Knight Check
-            ulong knights = GetKnightMoves(bk, 'k') & wn;
-            if (knights != 0UL)
+            ulong knights = GetKnightMoves(bk, 'k');
+            if ((knights & wn) != 0UL)
             {
-                return knights;
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = knights;
             }
 
-            // Bishop/Rook/Queen Check
-            ulong sliders = GetQueenMoves(bk, 'q', kingX, kingY) & (wb | wr | wq);
-            if (sliders != 0UL)
+
+            // Vertical Checks
+            (kingX, kingY) = GetCoords(bk);
+            ulong fileMask = Files[x];
+            ulong ups = (bitboard & fileMask) ^ ((bitboard & fileMask) - position - position) & ~allies;
+            if ((ups & (wr | wq)) != 0UL)
             {
-                return sliders;
-            } 
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = ups;
+            }
+
+            ulong downs = (bitboard & fileMask) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(position) - Reverse(position)) & ~allies;
+            if ((downs & (wr | wq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = ups;
+            }
+            
+
+            // Horizontal Checks
+            ulong rankMask = Ranks[y];
+            ulong lefts = (bitboard & rankMask) ^ ((bitboard & rankMask) - position - position) & ~allies;
+            if ((lefts & (wr | wq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = lefts;
+            }
+
+            ulong rights = (bitboard & rankMask) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(position) - Reverse(position)) & ~allies;
+            if ((rights & (wr | wq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = rights;
+            }
+            
+            
+            // Diagonal Checks
+            ulong diagonalMask = GetDiagonalMask(x, y);
+            ulong upDiag = (bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - position - position) & ~allies;
+            if ((upDiag & (wb | wq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = upDiag;
+            }
+            
+            ulong downDiag = (bitboard & diagonalMask) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(position) - Reverse(position)) & ~allies;
+            if ((downDiag & (wb | wq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = downDiag;
+            }
+            
+
+            // Anti-Diagonal Checks
+            ulong antiDiagonalMask = GetAntiDiagonalMask(x, y);
+            ulong upAnti = (bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - position - position) & ~allies;
+            if ((upAnti & (wb | wq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+
+                directCheck = upAnti;
+            }
+
+            ulong downAnti = (bitboard & antiDiagonalMask) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(position) - Reverse(position)) & ~allies;
+            if ((downAnti & (wb | wq)) != 0UL)
+            {
+                if (directCheck != ulong.MaxValue)
+                {
+                    bitboard |= position;
+                    return 0UL;
+                }
+                directCheck = downAnti;
+            }
         }
         
-        Debug.LogWarning("Invalid type given to DirectCheck() method.");
-        return 0UL;
+        bitboard |= position;
+        return directCheck & possibleMoves;
     }
 
     /*
@@ -706,14 +940,3 @@ public class Move
         return (index / 8, index % 8);
     }
 }
-
-/*
-Move is used to get the moves of a certain piece in chess.
-More specifically, the legal moves that are checked by 
-    1) Getting the ally King's position.
-    2) Simulates the move ona a copied board.
-    3) Checking all 8 directions and 8 Knight positions 
-
-Also used in negaMax algorithm.
-    For each piece on the board, simulate all the moves.
-*/ 
