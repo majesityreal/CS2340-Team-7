@@ -42,7 +42,19 @@ public class ChessManager : MonoBehaviour
 
         board = new char[8, 8] 
         {
-            {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+            {'r', 'p', '-', '-', '-', '-', 'P', 'R'},
+            {'n', 'p', '-', '-', '-', '-', 'P', 'N'}, 
+            {'b', 'p', '-', '-', '-', '-', 'P', 'B'}, 
+            {'q', 'p', '-', '-', '-', '-', 'P', 'Q'}, 
+            {'k', 'p', '-', '-', '-', '-', 'P', 'K'}, 
+            {'b', 'p', '-', '-', '-', '-', 'P', 'B'}, 
+            {'n', 'p', '-', '-', '-', '-', 'P', 'N'}, 
+            {'r', 'p', '-', '-', '-', '-', 'P', 'R'}
+        };
+    }
+
+    /*
+    {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
             {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'}, 
             {'-', '-', '-', '-', '-', '-', '-', '-'}, 
             {'-', '-', '-', '-', '-', '-', '-', '-'}, 
@@ -50,8 +62,8 @@ public class ChessManager : MonoBehaviour
             {'-', '-', '-', '-', '-', '-', '-', '-'}, 
             {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'}, 
             {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-        };
-    }
+
+    */
 
     public static void MovePosition(int oldX, int oldY, int newX, int newY, char[,] board, List<string> moveRecord)
     {       

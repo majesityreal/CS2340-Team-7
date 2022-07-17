@@ -151,7 +151,8 @@ public class Move
 
     public static ulong GetMoves(int x, int y, char type, List<string> record) // Returns ulong of legal move positions
     {
-        ulong position = 1UL << (y * 8 + x);
+        ulong position = 1UL << (- 8 * y - x + 63);
+        Debug.Log("Position of " + type + " is " + x + " " + y + " " + position);
         switch (type)
         {
             case 'r': case 'R':
@@ -175,12 +176,17 @@ public class Move
     {
         List<int> moveList = new List<int>();
         ulong moves = GetMoves(x, y, type, record);
+        Debug.Log("This is GetMovesList x, y, type:" + x + y + type);
 
-        while (moves != 0UL)
+        int threshold = 64;
+        Debug.Log("Moves is 0" + (moves == 0UL));
+        while (moves != 0UL && threshold > 0)
         {
             (int moveX, int moveY) = GetCoords(moves);
-            moves &= ~(1UL << (moveY * 8 + moveX));
+            Debug.Log("X: " + moveX + " Y: " + moveY);
+            moves &= ~(1UL << (-8 * moveY - moveX + 63));
             moveList.Add(moveY * 8 + moveX);
+            threshold--;
         }
 
         return moveList;

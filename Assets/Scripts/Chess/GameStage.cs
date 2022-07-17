@@ -46,8 +46,8 @@ public class GameStage : MonoBehaviour
     public GameObject possibleBlock;
 
     public static GameObject[,] SpriteBoard = new GameObject[8, 8];
-    public static List<int[]> HighLightIndex = null;
-    public static List<int[]> CurrPossibleMove = null;
+    public static List<int> HighLightIndex = null;
+    public static List<int> CurrPossibleMove = null;
     public static GameObject[,] HighLightBlock = new GameObject[8, 8];
 
     // Start is called before the first frame update
@@ -220,11 +220,11 @@ public class GameStage : MonoBehaviour
 
     public void ShowPossibleMoves()
     {
-        foreach (int[] index in HighLightIndex)
+        foreach (int index in HighLightIndex)
         {
             //Debug.Log("You Can Move To " + index[0].ToString() + index[1].ToString());
-            HighLightBlock[index[0], index[1]] = Instantiate(possibleBlock, new Vector3(index[0] - 4, 4 - index[1], transform.position.z), Quaternion.identity);
-            HighLightBlock[index[0], index[1]].transform.parent = PossibleMoves.transform;
+            HighLightBlock[index % 8, index / 8] = Instantiate(possibleBlock, new Vector3(index % 8 - 4, 4 - index / 8, transform.position.z), Quaternion.identity);
+            HighLightBlock[index % 8, index/ 8].transform.parent = PossibleMoves.transform;
 
         }
         HighLightIndex = null;
