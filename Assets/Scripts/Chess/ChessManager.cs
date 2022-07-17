@@ -25,13 +25,13 @@ public class ChessManager : MonoBehaviour
         {
             ChessAI.negaMaxStarter(3, -1, board, moveRecord);
 
-            foreach (string moveAI in ChessAI.bestMoveRecord)
-                /*            foreach (string moveAI in ChessAI.bestMoveRecord)
-                            {
-                                Debug.Log(moveAI);
-                            }
-                            }*/
-                Debug.LogWarning("Finished NO ERERROS");
+            // foreach (string moveAI in ChessAI.bestMoveRecord)
+            //     /*            foreach (string moveAI in ChessAI.bestMoveRecord)
+            //                 {
+            //                     Debug.Log(moveAI);
+            //                 }
+            //                 }*/
+            //     Debug.LogWarning("Finished NO ERERROS");
             //Debug.Log(ChessAI.bestMoveRecord.Count);
         }
     }

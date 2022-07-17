@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ChessAI : MonoBehaviour
 {
-    public static char[,] bestMoveBoard; // board that has the best move
-    public static List<string> bestMoveRecord; // record that has the moves
-
     const int pawnValue = 100;
     const int knightValue = 300;
     const int bishopValue = 300;
@@ -90,8 +88,10 @@ public class ChessAI : MonoBehaviour
 
     // BREADTH FIRST SEARCH
 
-    public static int negaMax(int depth, int max, int turn, char[,] board, List<string> copyRecord)
+    public static int negaMax(int depth, int max, int turn, char[,] board, List<string> record)
     {
+        Move.ConvertBoardToBinary(board);
+
         if (depth < 0)
         {
             Debug.LogError("Depth is under 0!!!!");
@@ -108,70 +108,62 @@ public class ChessAI : MonoBehaviour
             Debug.Log("Depth: " + depth);
         }
 
-
-
         // go through all the moves!
-        for (int i = 0; i < 64; i++)
+        for (int y = 0; y < 8; y++)
         {
-            if (board[i % 8, i / 8] == '-')
+            for (int x = 0; x < 8; x++)
             {
-                continue;
-            }
-
-            // if not turn skip
-            if (turn == 1)
-            {
-                if (board[i % 8, i ])
-                continue;
-            }
-
-            // the list of legal moves
-            List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board, copyRecord);
-
-            foreach (int[] move in moves)
-            {
-                // creating deep copy of board
-                char[,] temp = new char[8,8];
-                for (int x = 0; x < 8; x++)
+                if (board[x, y] == '-')
                 {
-                    for (int y = 0; y < 8; y++)
+                    continue;
+                }
+
+                // if not turn skip
+                if (turn == 1 && board[x, y] > 'a')
+                {
+                    continue;
+                }
+                else if (turn == -1 && board[x, y] < 'a')
+                {
+                    continue;
+                }
+
+                // the list of legal moves
+                List<int> moves = Move.GetMovesList(x, y, board[x, y], record);
+
+                foreach (int move in moves)
+                {
+                    // deep copy of board
+                    char[,] temp = new char[8,8];
+                    for (int i = 0; i < 8; i++)
                     {
-                        if (board[x, y] == null)
+                        for (int j = 0; j < 8; j++)
                         {
-                            continue;
+                            temp[i, j] = board[i, j];
                         }
-                        temp[x, y] = board[x, y];
                     }
-                }
 
+                    // deep copy of record
+                    List<string> simulatedRecord = record.ToList();
 
-                // deep copy of record
-                List<string> simulatedRecord = new List<string>();
-                foreach (string s in copyRecord)
-                {
-                    simulatedRecord.Add(s);
-                }
+                    char pos1 = temp[x, y];
+                    // // before log
+                    // Debug.Log("before Piece: " + temp[i % 8, i / 8] + "x: " + (i % 8) + " y:" + (i / 8));
+                    ChessManager.MovePosition(x, y, move / 8, move % 8, temp, simulatedRecord);
+                    // // after log
+                    // Debug.Log("after Piece: " + temp[move[0], move[1]] + "x: " + (move[0]) + " y:" + (move[1]));
 
-                // TODO ---- ALSO UPDATE THE PIECE ITSELFFFF!!! YES
-                Debug.Log("i: " + i);
-                char pos1 = temp[i % 8, i / 8];
-                // before log
-                Debug.Log("before Piece: " + temp[i % 8, i / 8] + "x: " + (i % 8) + " y:" + (i / 8));
-                ChessManager.MovePosition(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
-                // after log
-                Debug.Log("after Piece: " + temp[move[0], move[1]] + "x: " + (move[0]) + " y:" + (move[1]));
+                    printBoard(temp);
 
-                printBoard(temp);
-
-
-                // re does algorithm with opposite turn, with newly moved piece on board
-                int score = -negaMax(depth - 1, max, turn * -1, temp, simulatedRecord);
-                if (score > max)
-                {
-                    max = score;
-                    // stores the move here
-                    bestMoveBoard = temp;
-                    bestMoveRecord = simulatedRecord;
+                    // re does algorithm with opposite turn, with newly moved piece on board
+                    int score = -negaMax(depth - 1, max, turn * -1, temp, simulatedRecord);
+                    if (score > max)
+                    {
+                        max = score;
+                        // stores the move here
+                        // bestMoveBoard = temp;
+                        // bestMoveRecord = simulatedRecord;
+                    }
                 }
             }
         }
@@ -198,118 +190,6 @@ public class ChessAI : MonoBehaviour
         }
         Debug.Log(s);
     }
-
-    // public static void negaMax(int depth, int turn, Piece[,] board, List<string> moveRecord)
-    // {
-    //     int[] dummy = new int[] {-1, -1, -1, -1};
-    //     Piece[,] copyBoard = board.Clone() as Piece[,];
-    //     List<string> copyRecord = new List<string> (moveRecord);
-    //     int bestScore = rNegaMax(depth, turn, copyBoard, copyRecord, ref dummy);
-        
-    //     Debug.Log(bestScore + "" + dummy[0] + dummy[1] + dummy[2] + dummy[3]);
-    //     ChessManager.MovePosition(dummy[0], dummy[1], dummy[2], dummy[3], board, moveRecord);
-    // }
-
-    // private static int rNegaMax(int depth, int turn, Piece[,] board, List<string> moveRecord, ref int[] dummy)
-    // {
-    //     Debug.Log("Called rNegaMax" + depth);
-    //     if (depth == 0)
-    //     {
-    //         return EvaluateBoard(turn, board);
-    //     }
-
-    //     int maxScore = int.MinValue;
-
-    //     for (int i = 0; i < 8; i++)
-    //     {
-    //         for (int j = 0; j < 8; j++)
-    //         {
-    //             Debug.Log("Iteration " + (i + j) + " x: " + i + " y: " + j);
-    //             if (board[i, j] == null || turn != board[i, j].color)
-    //             continue;
-    //         }
-
-
-    //         // if not turn skip
-    //         if (board[i % 8, i / 8].color != turn)
-    //         {
-    //             continue;
-    //         }
-
-    //         Piece[,] temp = new Piece[8, 8];
-            
-
-    //         for (int j = 0; j < 64; j++)
-    //         {
-    //             temp[j % 8, j / 8] = board[j % 8, j / 8];
-    //         }
-
-
-    //         List<string> simulatedRecord = new List<string>(copyRecord);
-
-
-    //         the list of legal moves
-    //         List<int[]> moves = board[i % 8, i / 8].GetLegalMoves(board, copyRecord);
-
-    //         if (moves.Count == 0)
-    //         {
-    //             Debug.Log("Continued after empty moves");
-    //             continue;
-    //         }
-
-
-    //         foreach (int[] move in moves)
-    //         {
-    //             ChessManager.RecordMove(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
-
-    //             Piece piece = temp[i % 8, i / 8];
-    //             temp[i % 8, i / 8] = null;
-    //             temp[move[0], move[1]] = piece;
-
-    //             // re does algorithm with opposite turn, with newly moved piece on board
-    //             int score = -negaMax(depth - 1, turn * -1, temp, simulatedRecord);
-    //             if (score > max)
-    //             {
-    //                 continue;
-    //             }
-
-    //             Debug.Log("x: " + i + " y: " + j + " is not empty and can move this turn");
-    //             List<int[]> moves = board[i, j].GetLegalMoves(board, moveRecord);
-    //             if (moves.Count == 0)
-    //             {
-    //                 Debug.Log("x: " + i + " y: " + j + " has no legal moves");
-    //                 continue;
-    //             }
-
-    //             foreach (int[] move in moves)
-    //             {
-    //                 Piece[,] copyBoard = board.Clone() as Piece[,];
-    //                 List<string> copyRecord = new List<string> (moveRecord);
-    //                 ChessManager.MovePosition(i, j, move[0], move[1], copyBoard, copyRecord);
-    //                 int score = -1 * rNegaMax(depth - 1, -1 * turn, copyBoard, copyRecord, ref dummy);
-                    
-    //                 Debug.Log("Score: " + score + " Max Score: " + maxScore);
-
-    //                 if (score > maxScore)
-    //                 {
-    //                     maxScore = score;
-    //                     dummy[0] = i;
-    //                     dummy[1] = j;
-    //                 }
-
-    //                 // It will update the dummy to get the previous move of the best move
-    //                 if (i == dummy[0] && j == dummy[1])
-    //                 {
-    //                     dummy[2] = move[0];
-    //                     dummy[3] = move[1];
-    //                     Debug.Log("" + dummy[0] + dummy[1] + dummy[2] + dummy[3]);
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return maxScore;
-    // }
 
     public static int EvaluateBoard(int turn, char[,] board)
     {
@@ -338,32 +218,28 @@ public class ChessAI : MonoBehaviour
 
         for (int i = 0; i < 64; i++)
         {
-            if (board[i % 8, i / 8] == null)
-            {
-                continue;
-            }
-            if (board[i % 8, i / 8].color != 1)
+            if (board[i % 8, i / 8] == '-' || board[i % 8, i / 8] > 'a')
             {
                 continue;
             }
 
-            if (board[i % 8, i / 8] is Pawn)
+            if (board[i % 8, i / 8] == 'P')
             {
                 value += pawnSquareValues[i];
             }
-            else if (board[i % 8, i / 8] is Knight)
+            else if (board[i % 8, i / 8] == 'N')
             {
                 value += knightSquareValues[i];
             }
-            else if (board[i % 8, i / 8] is Bishop)
+            else if (board[i % 8, i / 8] == 'B')
             {
                 value += bishopSquareValues[i];
             }
-            else if (board[i % 8, i / 8] is Rook)
+            else if (board[i % 8, i / 8] == 'R')
             {
                 value += rookSquareValues[i];
             }
-            else if (board[i % 8, i / 8] is Queen)
+            else if (board[i % 8, i / 8] == 'Q')
             {
                 value += queenSquareValues[i];
             }
@@ -377,32 +253,28 @@ public class ChessAI : MonoBehaviour
 
         for (int i = 0; i < 64; i++)
         {
-            if (board[i % 8, i / 8] == null)
-            {
-                continue;
-            }
-            if (board[i % 8, i / 8].color != -1)
+            if (board[i % 8, i / 8] == '-' || board[i % 8, i / 8] < 'a')
             {
                 continue;
             }
 
-            if (board[i % 8, i / 8] is Pawn)
+            if (board[i % 8, i / 8] == 'p')
             {
                 value += pawnSquareValues[63 - i];
             }
-            else if (board[i % 8, i / 8] is Knight)
+            else if (board[i % 8, i / 8] == 'n')
             {
                 value += knightSquareValues[63 - i];
             }
-            else if (board[i % 8, i / 8] is Bishop)
+            else if (board[i % 8, i / 8] == 'b')
             {
                 value += bishopSquareValues[63 - i];
             }
-            else if (board[i % 8, i / 8] is Rook)
+            else if (board[i % 8, i / 8] == 'r')
             {
                 value += rookSquareValues[63 - i];
             }
-            else if (board[i % 8, i / 8] is Queen)
+            else if (board[i % 8, i / 8] == 'q')
             {
                 value += queenSquareValues[63 - i];
             }
@@ -417,21 +289,34 @@ public class ChessAI : MonoBehaviour
         int pawnCount = 0;
 
         // get all the tiles from the square
-        for (int i = 0; i < 64; i++)
+        if (color == 1)
         {
-            // if nothing there, go to next piece
-            if (board[i % 8, i / 8] == null)
+            for (int i = 0; i < 64; i++)
             {
-                continue;
+                if (board[i % 8, i / 8] == '-' || board[i % 8, i / 8] > 'a')
+                {
+                    continue;
+                }
+
+                if (board[i % 8, i / 8] == 'P')
+                {
+                    pawnCount++;
+                }
             }
-            // if they are not the color, go to next piece
-            if (board[i % 8, i / 8].color != color)
+        }
+        else
+        {
+            for (int i = 0; i < 64; i++)
             {
-                continue;
-            }
-            if (board[i % 8, i / 8] is Pawn)
-            {
-                pawnCount++;
+                if (board[i % 8, i / 8] == '-' || board[i % 8, i / 8] < 'a')
+                {
+                    continue;
+                }
+
+                if (board[i % 8, i / 8] == 'p')
+                {
+                    pawnCount++;
+                }
             }
         }
 
@@ -440,29 +325,69 @@ public class ChessAI : MonoBehaviour
         // adding 40 to keep same start, as pawns decrease, the value inreases
         int newRookValue = rookValue - (5 * pawnCount) + 40;
 
-        for (int i = 0; i < 64; i++)
+        if (color == 1)
         {
-            if (board[i % 8, i / 8] is Pawn)
+            for (int i = 0; i < 64; i++)
             {
-                material += pawnValue;
-            }
-            else if (board[i % 8, i / 8] is Knight)
-            {
-                material += newKnightValue;
-            }
-            else if (board[i % 8, i / 8] is Bishop)
-            {
-                material += bishopValue;
-            }
-            else if (board[i % 8, i / 8] is Rook)
-            {
-                material += newRookValue;
-            }
-            else if (board[i % 8, i / 8] is Queen)
-            {
-                material += queenValue;
+                if (board[i % 8, i / 8] == '-' || board[i % 8, i / 8] > 'a')
+                {
+                    continue;
+                }
+
+                if (board[i % 8, i / 8] == 'P')
+                {
+                    material += pawnValue;
+                }
+                else if (board[i % 8, i / 8] == 'N')
+                {
+                    material += newKnightValue;
+                }
+                else if (board[i % 8, i / 8] == 'B')
+                {
+                    material += bishopValue;
+                }
+                else if (board[i % 8, i / 8] == 'R')
+                {
+                    material += newRookValue;
+                }
+                else if (board[i % 8, i / 8] == 'Q')
+                {
+                    material += queenValue;
+                }
             }
         }
+        else
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                if (board[i % 8, i / 8] == '-' || board[i % 8, i / 8] < 'a')
+                {
+                    continue;
+                }
+
+                if (board[i % 8, i / 8] == 'p')
+                {
+                    material += pawnValue;
+                }
+                else if (board[i % 8, i / 8] == 'n')
+                {
+                    material += newKnightValue;
+                }
+                else if (board[i % 8, i / 8] == 'b')
+                {
+                    material += bishopValue;
+                }
+                else if (board[i % 8, i / 8] == 'r')
+                {
+                    material += newRookValue;
+                }
+                else if (board[i % 8, i / 8] == 'q')
+                {
+                    material += queenValue;
+                }
+            }
+        }
+
         return material;
     }
 }
