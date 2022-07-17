@@ -13,12 +13,18 @@ public class Move
     public static ulong wq = 0UL;
     public static ulong wr = 0UL;
 
+    public static int wbCount = 0;
+    public static int wnCount = 0;
+
     public static ulong bb = 0UL;
     public static ulong bk = 0UL;
     public static ulong bn = 0UL;
     public static ulong bp = 0UL;
     public static ulong bq = 0UL;
     public static ulong br = 0UL;
+
+    public static int bbCount = 0;
+    public static int bnCount = 0;
 
     public static ulong whites = 0UL;
     public static ulong blacks = 0UL;
@@ -83,6 +89,12 @@ public class Move
         wk = 0UL;
         wp = 0UL;
 
+        bbCount = 0;
+        bnCount = 0;
+
+        wbCount = 0;
+        wnCount = 0;
+
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++) {
@@ -93,9 +105,11 @@ public class Move
                         break;
                     case 'n':
                         bn |= 1UL << (y * 8 + x);
+                        bnCount++;
                         break;
                     case 'b':
                         bb |= 1UL << (y * 8 + x);
+                        bbCount++;
                         break;
                     case 'q':
                         bq |= 1UL << (y * 8 + x);
@@ -111,9 +125,11 @@ public class Move
                         break;
                     case 'N':
                         wn |= 1UL << (y * 8 + x);
+                        wnCount++;
                         break;
                     case 'B':
                         wb |= 1UL << (y * 8 + x);
+                        wbCount++;
                         break;
                     case 'Q':
                         wq |= 1UL << (y * 8 + x);
@@ -159,11 +175,11 @@ public class Move
     public static List<int> GetMovesList(int x, int y, char type, List<string> record) 
     {
         List<int> moveList = new List<int>();
-        ulong moves = GetMoves(x, y, type, moveRecord);
+        ulong moves = GetMoves(x, y, type, record);
 
         while (moves != 0UL)
         {
-            (int moveX, int moveY) = Moves.GetCoords(moves);
+            (int moveX, int moveY) = GetCoords(moves);
             moves &= ~(1UL << (moveY * 8 + moveX));
             moveList.Add(moveY * 8 + moveX);
         }
@@ -771,7 +787,7 @@ public class Move
         return directCheck & possibleMoves;
     }
 
-    private static ulong KingMoveCheck(List<ulong> possibleMoves, char type) // Returns bitboard of legal new positions
+    public static ulong KingMoveCheck(List<ulong> possibleMoves, char type) // Returns bitboard of legal new positions
     {
         int kingX = 0;
         int kingY = 0;
