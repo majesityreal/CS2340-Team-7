@@ -44,8 +44,8 @@ public class Move
     public const ulong Main_Diag = 0b_00000001_00000010_00000100_00001000_00010000_00100000_01000000_10000000;
     public const ulong Main_Anti = 0b_10000000_01000000_00100000_00010000_00001000_00000100_00000010_00000001;
 
-    private readonly ulong[] Ranks = {Rank_8, Rank_7, Rank_6, Rank_5, Rank_4, Rank_3, Rank_2, Rank_1};
-    private readonly ulong[] Files = {File_A, File_B, File_C, File_D, File_E, File_F, File_G, File_H};
+    private static readonly ulong[] Ranks = {Rank_8, Rank_7, Rank_6, Rank_5, Rank_4, Rank_3, Rank_2, Rank_1};
+    private static readonly ulong[] Files = {File_A, File_B, File_C, File_D, File_E, File_F, File_G, File_H};
 
     public const ulong A8 = 0b_10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
     public const ulong D8 = 0b_00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
@@ -59,7 +59,7 @@ public class Move
     public const ulong F1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000100;
     public const ulong H1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000001;
 
-    private readonly int[] DeBruijnTable64 = {
+    private static readonly int[] DeBruijnTable64 = {
         0, 58, 1, 59, 47, 53, 2, 60, 
         39, 48, 27, 54, 33, 42, 3, 61,
         51, 37, 40, 49, 18, 28, 20, 55, 
@@ -145,11 +145,11 @@ public class Move
             case 'b': case 'B':
                 return PreventCheck(position, type, x, y, GetBishopMoves(position, type, x, y));
             case 'q': case 'Q':
-                return ConvertMovesToList(PreventCheck(position, type, x, y, GetQueenMoves(position, type, x, y)));
+                return PreventCheck(position, type, x, y, GetQueenMoves(position, type, x, y));
             case 'k': case 'K':
-                return ConvertMovesToList(KingMoveCheck(GetKingMoves(position, type, record), type));
+                return KingMoveCheck(GetKingMoves(position, type, record), type);
             case 'p': case 'P':
-                return ConvertMovesToList(PreventCheck(position, type, x, y, GetPawnMoves(position, type, record)));
+                return PreventCheck(position, type, x, y, GetPawnMoves(position, type, record));
         }
 
         Debug.LogWarning("Wrong piece type has been given to GetMoves().");
