@@ -192,60 +192,7 @@ public class ChessAI : MonoBehaviour
         {
             for (int j = 0; j < 8; j++)
             {
-                if (board[j,i] == null)
-                {
-                    s += "-";
-                    continue;
-                }
-                if (board[j,i].color < "a")
-                {
-                    switch (board[j, i].type)
-                    {
-                        case PieceType.Pawn:
-                            s += "P";
-                            break;
-                        case PieceType.Rook:
-                            s += "R";
-                            break;
-                        case PieceType.King:
-                            s += "K";
-                            break;
-                        case PieceType.Queen:
-                            s += "Q";
-                            break;
-                        case PieceType.Bishop:
-                            s += "B";
-                            break;
-                        case PieceType.Knight:
-                            s += "N";
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (board[j, i].type)
-                    {
-                        case PieceType.Pawn:
-                            s += "p";
-                            break;
-                        case PieceType.Rook:
-                            s += "r";
-                            break;
-                        case PieceType.King:
-                            s += "k";
-                            break;
-                        case PieceType.Queen:
-                            s += "q";
-                            break;
-                        case PieceType.Bishop:
-                            s += "b";
-                            break;
-                        case PieceType.Knight:
-                            s += "n";
-                            break;
-                    }
-                }
-               
+                s+= board[j, i];
             }
             s += "\n";
         }

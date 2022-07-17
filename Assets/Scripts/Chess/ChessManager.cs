@@ -55,7 +55,7 @@ public class ChessManager : MonoBehaviour
 
     public static void MovePosition(int oldX, int oldY, int newX, int newY, char[,] board, List<string> moveRecord)
     {       
-        RecordMove(oldX, oldY, newX, newY, board, moveRecord);
+        RecordMove(oldX, oldY, newX, newY, board[oldX, oldY], moveRecord);
         Debug.Log("x:" + oldX + " y:" + oldY);
 
         if (board[oldX, oldY] == 'K' || board[oldX, oldY] == 'k') // When King is moved
@@ -111,9 +111,9 @@ public class ChessManager : MonoBehaviour
         }
 
         CheckInsufficientMaterials(board);
-        Check50Move(board);
-        CheckRepetition(board);
-        CheckCheckmate(board[newX, newY], board);
+        Check50Move(moveRecord);
+        CheckRepetition(moveRecord);
+        CheckCheckmate(board[newX, newY], board, moveRecord);
     }
 
     private static void CheckCheckmate(char type, char[,] board, List<string> moveRecord)
@@ -130,26 +130,35 @@ public class ChessManager : MonoBehaviour
                 {
                     continue;
                 }
-                else if (color == -1 && board[i, j] < 'a')
+                else if (type > 'a' && board[i, j] < 'a')
                 {
                     continue;
                 }
 
-                if (Moves.GetMoves(i, j, board[i, j], moveRecord) != 0UL)
+                if (Move.GetMoves(i, j, board[i, j], moveRecord) != 0UL)
                 {
                     return;
                 }
             }
         }
 
-        if (color == 1)
+        Move.ConvertBoardToBinary(board);
+        if (type < 'a')
         {
+            if (Move.KingMoveCheck(new List<ulong> {Move.wk}, 'K') != 0UL)
+            {
+                Draw("Stalemate");
+            }
             ResultStageScript.IsWhiteWin = true;
             resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("White Win");
         }
         else
         {
+            if (Move.KingMoveCheck(new List<ulong> {Move.bk}, 'k') != 0UL)
+            {
+                Draw("Stalemate");
+            }
             ResultStageScript.IsWhiteWin = false;
             resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("Black Win");
@@ -158,36 +167,30 @@ public class ChessManager : MonoBehaviour
 
     private static void CheckInsufficientMaterials(char[,] board)
     {
-        if (Moves.wp != 0UL || Moves.bp != 0UL) // No pawns?
+        if (Move.wp != 0UL || Move.bp != 0UL) // No pawns?
         {
             return;
         }
 
-        if (Moves.wq != 0UL || Moves.bq != 0UL) // No queens?
+        if (Move.wq != 0UL || Move.bq != 0UL) // No queens?
         {
             return;
         }
 
-        if (Moves.wr != 0UL || Moves.br != 0UL) // No rooks?
+        if (Move.wr != 0UL || Move.br != 0UL) // No rooks?
         {
             return;
         }
 
-        if (Moves.wb != 0UL && Moves.wn != 0UL) // Has at least 1 bishop and knight
+        if (Move.wnCount < 2 && Move.bnCount < 2 && Move.wbCount == 0 && Move.bbCount == 0)
         {
-            return;
+            Draw("Insufficient Materials");
         }
 
-        if (Moves.bb != 0UL && Moves.bn != 0UL) // Has at least 1 bishop and knight
+        if (Move.wnCount == 0 && Move.bnCount == 0 && Move.wbCount < 2 && Move.bbCount < 2)
         {
-            return;
+            Draw("Insufficient Materials");
         }
-
-        //Bishop / Knight / Solo King
-
-        
-
-        Draw("Insufficient Materials");
     }
 
     private static void Check50Move(List<string> moveRecord)
@@ -234,7 +237,7 @@ public class ChessManager : MonoBehaviour
     {
         string record = "" + type;
         
-        if (board[newX, newY] != null)
+        if (board[newX, newY] != '-')
         {
             record += "x";
         }
