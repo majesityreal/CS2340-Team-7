@@ -53,95 +53,91 @@ public class ChessManager : MonoBehaviour
         };
     }
 
-    public static void MovePosition(int oldX, int oldY, int newX, int newY, char[,] board, List<string> moveRecord)
+    public static void MovePosition(int oldX, int oldY, ulong move, char[,] board, List<string> moveRecord)
     {       
-        if (board[newX, newY].type == 'K' || board[newX, newY].type == 'k')
-        {
-            Debug.Log("Game End");
-            return;
-        }
-        
         RecordMove(oldX, oldY, newX, newY, board, moveRecord);
         Debug.Log("x:" + oldX + " y:" + oldY);
 
-        PieceType pieceType = board[oldX, oldY].type;
-
-        if (pieceType == PieceType.King) // When King is moved
+        if (board[oldX, oldY] == 'K' || board[oldX, oldY] == 'k') // When King is moved
         {
-            board[oldX, oldY].xCoord = newX;
-            board[oldX, oldY].yCoord = newY;
             board[newX, newY] = board[oldX, oldY];
-            board[oldX, oldY] = null;
+            board[oldX, oldY] = '-';
             
             if (newX - oldX == 2) // Right Castling
             {
-                board[7, newY].xCoord = 5;
                 board[5, newY] = board[7, newY];
-                board[7, newY] = null;
+                board[7, newY] = '-';
             }
             else if (newX - oldX == -2) // Left Castling
             {
-                board[0, newY].xCoord = 3;
                 board[3, newY] = board[0, newY];
-                board[0, newY] = null;
+                board[0, newY] = '-';
             }
         } 
-        else if (pieceType == PieceType.Pawn) // When Pawn is moved
+        else if (board[oldX, oldY] == 'K' || board[oldX, oldY] == 'k') // When Pawn is moved
         {
             // En Passant
-            if (newX != oldX && board[newX, newY] == null) // When capturing move, but square is empty
+            if (newX != oldX && board[newX, newY] == '-') // When capturing move, but square is empty
             {
-                Debug.LogWarning("This happened");
-                board[newX, oldY] = null;
+                Debug.LogWarning("En Passant'd");
+                board[newX, oldY] = '-';
             }
 
-            // Moves the piece to the destination and removes the old pointer index
             board[newX, newY] = board[oldX, oldY];
-            board[oldX, oldY].xCoord = newX;
-            board[oldX, oldY].yCoord = newY;
+
             if (newY == 7)
             {
                 Debug.LogWarning("New Y is 7! ");
                 ChessAI.printBoard(board);
             }
-            board[oldX, oldY] = null;
+            board[oldX, oldY] = '-';
 
             // Promotion
-            // TODO: Ask player for piece type. Setted it to Queen for right now.
-            if ((newY == 0 && board[newX, newY].color == 1) || (newY == 7 && board[newX, newY].color == -1))
+            if (newY == 0 && board[newX, newY] == 'P')
             {
-                Debug.LogWarning("Pawn is being promoted to a QUEEN");
-                board[newX, newY] = new Queen(board[newX, newY].color, newX, newY);
+                Debug.LogWarning("White Pawn is being promoted to a QUEEN");
+                board[newX, newY] = 'Q';
+            }
+            else if (newY == 7 && board[newX, newY] == 'k')
+            {
+                Debug.LogWarning("Black Pawn is being promoted to a QUEEN");
+                board[newX, newY] = 'q';
             }
         } 
         else // Any other piece
         {
-            board[oldX, oldY].xCoord = newX;
-            board[oldX, oldY].yCoord = newY;
             board[newX, newY] = board[oldX, oldY];
-            board[oldX, oldY] = null;
+            board[oldX, oldY] = '-';
         }
 
         CheckInsufficientMaterials(board);
         Check50Move(board);
         CheckRepetition(board);
-        CheckCheckmate(board[newX, newY].color, board);
+        CheckCheckmate(board[newX, newY], board);
     }
 
-    private static void CheckCheckmate(int color, Piece[,] board)
+    private static void CheckCheckmate(char type, char[,] board, List<string> moveRecord)
     {
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                if (board[i, j] == null || color == board[i, j].color)
+                if (board[i, j] == '-')
+                {
+                    continue;
+                }
+                else if (type < 'a' && board[i, j] > 'a')
+                {
+                    continue;
+                }
+                else if (color == -1 && board[i, j] < 'a')
                 {
                     continue;
                 }
 
-                List<int[]> thisMoves = board[i, j].GetLegalMoves(board, moveRecord);
+                ulong thisMoves = Moves.GetMoves(i, j, board[i, j], moveRecord);
 
-                if (thisMoves.Count != 0)
+                if (thisMoves != 0UL)
                 {
                     return;
                 }
@@ -164,49 +160,41 @@ public class ChessManager : MonoBehaviour
         }
     }
 
-    private static void CheckInsufficientMaterials(Piece[,] board)
+    private static void CheckInsufficientMaterials(char[,] board)
     {
-        int countWhite = 0;
-        int countBlack = 0;
-
-        foreach (Piece piece in board)
+        if (Moves.wp != 0UL || Moves.bp != 0UL) // No pawns?
         {
-            if (piece == null)
-            {
-                continue;
-            }
-
-            if (piece.type == PieceType.Pawn || piece.type == PieceType.Rook)
-            {
-                return;
-            }
-
-            // Count everything except king
-            if (piece.type != PieceType.King)
-            {
-                if (piece.color == 1)
-                {
-                    countWhite++;
-                    if (countWhite > 1)
-                    {
-                        return;
-                    }
-                }
-                else if (piece.color == -1)
-                {
-                    countBlack++;
-                    if (countBlack > 1)
-                    {
-                        return;
-                    }
-                }
-            }
+            return;
         }
+
+        if (Moves.wq != 0UL || Moves.bq != 0UL) // No queens?
+        {
+            return;
+        }
+
+        if (Moves.wr != 0UL || Moves.br != 0UL) // No rooks?
+        {
+            return;
+        }
+
+        if (Moves.wb != 0UL && Moves.wn != 0UL) // Has at least 1 bishop and knight
+        {
+            return;
+        }
+
+        if (Moves.bb != 0UL && Moves.bn != 0UL) // Has at least 1 bishop and knight
+        {
+            return;
+        }
+
+        //Bishop / Knight / Solo King
+
+        
 
         Draw("Insufficient Materials");
     }
 
-    private static void Check50Move(Piece[,] board)
+    private static void Check50Move(List<string> moveRecord)
     {
         if (moveRecord.Count < 50)
         {
@@ -228,7 +216,7 @@ public class ChessManager : MonoBehaviour
         Draw("50 move rule");
     }
 
-    private static void CheckRepetition(Piece[,] board)
+    private static void CheckRepetition(List<string> moveRecord)
     {
         if (moveRecord.Count < 5)
         {
@@ -246,34 +234,15 @@ public class ChessManager : MonoBehaviour
     }
 
     // Records each move into a string: [Piece Type][oldX][oldY][newX][newY]
-    public static void RecordMove(int oldX, int oldY, int newX, int newY, Piece[,] board, List<string> moveRecord)
+    public static void RecordMove(int oldX, int oldY, int newX, int newY, char type, List<string> moveRecord)
     {
-        string record = "";
-        switch (board[oldX, oldY].type)
-        {
-            case PieceType.Bishop:
-                record += "B";
-                break;
-            case PieceType.King:
-                record += "K";
-                break;
-            case PieceType.Knight:
-                record += "N";
-                break;
-            case PieceType.Pawn:
-                break;
-            case PieceType.Queen:
-                record += "Q";
-                break;
-            case PieceType.Rook:
-                record += "R";
-                break;
-        };
+        string record = "" + type;
         
         if (board[newX, newY] != null)
         {
             record += "x";
         }
+
         record += "" + oldX + oldY + newX + newY;
         moveRecord.Add(record);
     }

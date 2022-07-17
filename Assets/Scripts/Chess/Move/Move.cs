@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class Move
 {
-    private ulong bitboard;
+    public static ulong bitboard;
 
-    private ulong wb = 0UL;
-    private ulong wk = 0UL;
-    private ulong wn = 0UL;
-    private ulong wp = 0UL;
-    private ulong wq = 0UL;
-    private ulong wr = 0UL;
+    public static ulong wb = 0UL;
+    public static ulong wk = 0UL;
+    public static ulong wn = 0UL;
+    public static ulong wp = 0UL;
+    public static ulong wq = 0UL;
+    public static ulong wr = 0UL;
 
-    private ulong bb = 0UL;
-    private ulong bk = 0UL;
-    private ulong bn = 0UL;
-    private ulong bp = 0UL;
-    private ulong bq = 0UL;
-    private ulong br = 0UL;
+    public static ulong bb = 0UL;
+    public static ulong bk = 0UL;
+    public static ulong bn = 0UL;
+    public static ulong bp = 0UL;
+    public static ulong bq = 0UL;
+    public static ulong br = 0UL;
 
-    private ulong whites = 0UL;
-    private ulong blacks = 0UL;
+    public static ulong whites = 0UL;
+    public static ulong blacks = 0UL;
 
     public const ulong Rank_1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_11111111;
     public const ulong Rank_2 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_11111111_00000000;
@@ -41,118 +41,21 @@ public class Move
     public const ulong File_G = 0b_00000010_00000010_00000010_00000010_00000010_00000010_00000010_00000010;
     public const ulong File_H = 0b_00000001_00000001_00000001_00000001_00000001_00000001_00000001_00000001;
 
-    // public const long Diag_A8 = 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long Diag_B8 = 0b01000000_10000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long Diag_C8 = 0b00100000_01000000_10000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long Diag_D8 = 0b00010000_00100000_01000000_10000000_00000000_00000000_00000000_00000000;
-    // public const long Diag_E8 = 0b00001000_00010000_00100000_01000000_10000000_00000000_00000000_00000000;
-    // public const long Diag_F8 = 0b00000100_00001000_00010000_00100000_01000000_10000000_00000000_00000000;
-    // public const long Diag_G8 = 0b00000010_00000100_00001000_00010000_00100000_01000000_10000000_00000000;
-    // public const long Diag_H8 = 0b00000001_00000010_00000100_00001000_00010000_00100000_01000000_10000000;
-    // public const long Diag_H7 = 0b00000000_00000001_00000010_00000100_00001000_00010000_00100000_01000000;
-    // public const long Diag_H6 = 0b00000000_00000000_00000001_00000010_00000100_00001000_00010000_00100000;
-    // public const long Diag_H5 = 0b00000000_00000000_00000000_00000001_00000010_00000100_00001000_00010000;
-    // public const long Diag_H4 = 0b00000000_00000000_00000000_00000000_00000001_00000010_00000100_00001000;
-    // public const long Diag_H3 = 0b00000000_00000000_00000000_00000000_00000000_00000001_00000010_00000100;
-    // public const long Diag_H2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000001_00000010;
-    // public const long Diag_H1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000001;
-
-    // public const long Anti_A1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_10000000;
-    // public const long Anti_B1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_10000000_01000000;
-    // public const long Anti_C1 = 0b00000000_00000000_00000000_00000000_00000000_10000000_01000000_00100000;
-    // public const long Anti_D1 = 0b00000000_00000000_00000000_00000000_10000000_01000000_00100000_00010000;
-    // public const long Anti_E1 = 0b00000000_00000000_00000000_10000000_01000000_00100000_00010000_00001000;
-    // public const long Anti_F1 = 0b00000000_00000000_10000000_01000000_00100000_00010000_00001000_00000100;
-    // public const long Anti_G1 = 0b00000000_10000000_01000000_00100000_00010000_00001000_00000100_00000010;
-    // public const long Anti_H1 = 0b10000000_01000000_00100000_00010000_00001000_00000100_00000010_00000001;
-    // public const long Anti_H2 = 0b01000000_00100000_00010000_00001000_00000100_00000010_00000001_00000000;
-    // public const long Anti_H3 = 0b00100000_00010000_00001000_00000100_00000010_00000001_00000000_00000000;
-    // public const long Anti_H4 = 0b00010000_00001000_00000100_00000010_00000001_00000000_00000000_00000000;
-    // public const long Anti_H5 = 0b00001000_00000100_00000010_00000001_00000000_00000000_00000000_00000000;
-    // public const long Anti_H6 = 0b00000100_00000010_00000001_00000000_00000000_00000000_00000000_00000000;
-    // public const long Anti_H7 = 0b00000010_00000001_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long Anti_H8 = 0b00000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-
     public const ulong Main_Diag = 0b_00000001_00000010_00000100_00001000_00010000_00100000_01000000_10000000;
     public const ulong Main_Anti = 0b_10000000_01000000_00100000_00010000_00001000_00000100_00000010_00000001;
 
     private readonly ulong[] Ranks = {Rank_8, Rank_7, Rank_6, Rank_5, Rank_4, Rank_3, Rank_2, Rank_1};
     private readonly ulong[] Files = {File_A, File_B, File_C, File_D, File_E, File_F, File_G, File_H};
-    // private readonly long[] Diags = {Diag_A8, Diag_B8, Diag_C8, Diag_D8, Diag_E8, Diag_F8, Diag_G8, Diag_H8, Diag_H7, Diag_H6, Diag_H5, Diag_H4, Diag_H3, Diag_H2, Diag_H1};
-    // private readonly long[] Antis = {Anti_A1, Anti_B1, Anti_C1, Anti_D1, Anti_E1, Anti_F1, Anti_G1, Anti_H1, Anti_H2, Anti_H3, Anti_H4, Anti_H5, Anti_H6, Anti_H7, Anti_H8};
 
     public const ulong A8 = 0b_10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long B8 = 0b01000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long C8 = 0b00100000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long D8 = 0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    public const ulong E8 = 0b_00001000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long F8 = 0b00000100_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long G8 = 0b00000010_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long H8 = 0b00000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-
-    // public const long A7 = 0b00000000_10000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long B7 = 0b00000000_01000000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long C7 = 0b00000000_00100000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long D7 = 0b00000000_00010000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long E7 = 0b00000000_00001000_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long F7 = 0b00000000_00000100_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long G7 = 0b00000000_00000010_00000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long H7 = 0b00000000_00000001_00000000_00000000_00000000_00000000_00000000_00000000;
-
-    // public const long A6 = 0b00000000_00000000_10000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long B6 = 0b00000000_00000000_01000000_00000000_00000000_00000000_00000000_00000000;
-    // public const long C6 = 0b00000000_00000000_00100000_00000000_00000000_00000000_00000000_00000000;
-    // public const long D6 = 0b00000000_00000000_00010000_00000000_00000000_00000000_00000000_00000000;
-    // public const long E6 = 0b00000000_00000000_00001000_00000000_00000000_00000000_00000000_00000000;
-    // public const long F6 = 0b00000000_00000000_00000100_00000000_00000000_00000000_00000000_00000000;
-    // public const long G6 = 0b00000000_00000000_00000010_00000000_00000000_00000000_00000000_00000000;
-    // public const long H6 = 0b00000000_00000000_00000001_00000000_00000000_00000000_00000000_00000000;
-
-    // public const long A5 = 0b00000000_00000000_00000000_10000000_00000000_00000000_00000000_00000000;
-    // public const long B5 = 0b00000000_00000000_00000000_01000000_00000000_00000000_00000000_00000000;
-    // public const long C5 = 0b00000000_00000000_00000000_00100000_00000000_00000000_00000000_00000000;
-    // public const long D5 = 0b00000000_00000000_00000000_00010000_00000000_00000000_00000000_00000000;
-    // public const long E5 = 0b00000000_00000000_00000000_00001000_00000000_00000000_00000000_00000000;
-    // public const long F5 = 0b00000000_00000000_00000000_00000100_00000000_00000000_00000000_00000000;
-    // public const long G5 = 0b00000000_00000000_00000000_00000010_00000000_00000000_00000000_00000000;
-    // public const long H5 = 0b00000000_00000000_00000000_00000001_00000000_00000000_00000000_00000000;
-
-    // public const long A4 = 0b00000000_00000000_00000000_00000000_10000000_00000000_00000000_00000000;
-    // public const long B4 = 0b00000000_00000000_00000000_00000000_01000000_00000000_00000000_00000000;
-    // public const long C4 = 0b00000000_00000000_00000000_00000000_00100000_00000000_00000000_00000000;
-    // public const long D4 = 0b00000000_00000000_00000000_00000000_00010000_00000000_00000000_00000000;
-    // public const long E4 = 0b00000000_00000000_00000000_00000000_00001000_00000000_00000000_00000000;
-    // public const long F4 = 0b00000000_00000000_00000000_00000000_00000100_00000000_00000000_00000000;
-    // public const long G4 = 0b00000000_00000000_00000000_00000000_00000010_00000000_00000000_00000000;
-    // public const long H4 = 0b00000000_00000000_00000000_00000000_00000001_00000000_00000000_00000000;
-
-    // public const long A3 = 0b00000000_00000000_00000000_00000000_00000000_10000000_00000000_00000000;
-    // public const long B3 = 0b00000000_00000000_00000000_00000000_00000000_01000000_00000000_00000000;
-    // public const long C3 = 0b00000000_00000000_00000000_00000000_00000000_00100000_00000000_00000000;
-    // public const long D3 = 0b00000000_00000000_00000000_00000000_00000000_00010000_00000000_00000000;
-    // public const long E3 = 0b00000000_00000000_00000000_00000000_00000000_00001000_00000000_00000000;
-    // public const long F3 = 0b00000000_00000000_00000000_00000000_00000000_00000100_00000000_00000000;
-    // public const long G3 = 0b00000000_00000000_00000000_00000000_00000000_00000010_00000000_00000000;
-    // public const long H3 = 0b00000000_00000000_00000000_00000000_00000000_00000001_00000000_00000000;
-
-    // public const long A2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_10000000_00000000;
-    // public const long B2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_01000000_00000000;
-    // public const long C2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00100000_00000000;
-    // public const long D2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00010000_00000000;
-    // public const long E2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00001000_00000000;
-    // public const long F2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000100_00000000;
-    // public const long G2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000010_00000000;
-    // public const long H2 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000001_00000000;
+    public const ulong D8 = 0b_00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+    public const ulong F8 = 0b_00000100_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+    public const ulong H8 = 0b_00000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
 
     public const ulong A1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_10000000;
-    // public const long B1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_01000000;
-    // public const long C1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00100000;
-    // public const long D1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00010000;
-    public const ulong E1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00001000;
-    // public const long F1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000100;
-    // public const long G1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000010;
-    // public const long H1 = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000001;
-
+    public const ulong D1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00010000;
+    public const ulong F1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000100;
+    public const ulong H1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000001;
 
     private readonly int[] DeBruijnTable64 = {
         0, 58, 1, 59, 47, 53, 2, 60, 
@@ -165,8 +68,7 @@ public class Move
         24, 15, 8, 23, 7, 6, 5, 63
     };
 
-
-    public void ConvertBoardToBinary(char[,] board) 
+    public static void ConvertBoardToBinary(char[,] board) 
     {
         br = 0UL;
         bn = 0UL;
@@ -227,14 +129,9 @@ public class Move
         bitboard = br | bn | bb | bq | bk | bp | wr | wn | wb | wq | wk | wp;
         whites = wb | wk | wn | wp | wq | wr;
         blacks = br | bn | bb | bq | bk | bp;
-    } 
-
-    public void MakeMove(ulong position, char type, ulong movePos)
-    {
-        
     }
 
-    public ulong GetMoves(int x, int y, char type, List<string> record) 
+    public static ulong GetMoves(int x, int y, char type, List<string> record) 
     {
         ulong position = 1UL << (y * 8 + x);
         switch (type)
@@ -246,18 +143,48 @@ public class Move
             case 'b': case 'B':
                 return PreventCheck(position, type, x, y, GetBishopMoves(position, type, x, y));
             case 'q': case 'Q':
-                return PreventCheck(position, type, x, y, GetQueenMoves(position, type, x, y));
+                return ConvertMovesToList(PreventCheck(position, type, x, y, GetQueenMoves(position, type, x, y)));
             case 'k': case 'K':
-                return PreventCheck(position, type, x, y, GetKingMoves(position, type, record));
+                return ConvertMovesToList(KingMoveCheck(GetKingMoves(position, type, record), type));
             case 'p': case 'P':
-                return PreventCheck(position, type, x, y, GetPawnMoves(position, type, record));
+                return ConvertMovesToList(PreventCheck(position, type, x, y, GetPawnMoves(position, type, record)));
         }
 
         Debug.LogWarning("Wrong piece type has been given to GetMoves().");
         return 0UL;
     }
 
-    private ulong GetRookMoves(ulong position, char type, int x, int y)
+    public static List<int> GetMovesList(int x, int y, char type, List<string> record) 
+    {
+        List<int> moveList = List<int>();
+        ulong moves = GetMoves(x, y, type, moveRecord);
+
+        while (moves != 0UL)
+        {
+            (int moveX, int moveY) = Moves.GetCoords(moves);
+            moves &= ~(1UL << (moveY * 8 + moveX));
+            moveList.Add(moveY * 8 + moveX);
+        }
+
+        return moveList;
+    }
+
+    private ulong GetBishopMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
+    {
+        ulong diagonalMask = GetDiagonalMask(x, y);
+        ulong antiDiagonalMask = GetAntiDiagonalMask(x, y);
+        ulong allies = GetAllies(type);
+
+        // Hyperbola Quintessence (o^(o-2r))
+        // Diagonal Attacks
+        ulong possibleMoves = (((bitboard & diagonalMask) - position - position) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(position) - Reverse(position))) & ~allies;
+        // Anti-Diagonal Attacks
+        possibleMoves |= (((bitboard & antiDiagonalMask) - position - position) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(position) - Reverse(position))) & ~allies;
+
+        return possibleMoves;
+    }
+
+    private ulong GetRookMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
     {
         ulong rankMask = Ranks[y];
         ulong fileMask = Files[x];
@@ -272,7 +199,7 @@ public class Move
         return possibleMoves;
     }
 
-    private ulong GetKnightMoves(ulong position, char type)
+    private ulong GetKnightMoves(ulong position, char type) // Returns bitboard of possible new positions
     {
         ulong allies = GetAllies(type);
 
@@ -302,23 +229,8 @@ public class Move
 
         return possibleMoves;
     }
-
-    private ulong GetBishopMoves(ulong position, char type, int x, int y)
-    {
-        ulong diagonalMask = GetDiagonalMask(x, y);
-        ulong antiDiagonalMask = GetAntiDiagonalMask(x, y);
-        ulong allies = GetAllies(type);
-
-        // Hyperbola Quintessence (o^(o-2r))
-        // Diagonal Attacks
-        ulong possibleMoves = (((bitboard & diagonalMask) - position - position) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(position) - Reverse(position))) & ~allies;
-        // Anti-Diagonal Attacks
-        possibleMoves |= (((bitboard & antiDiagonalMask) - position - position) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(position) - Reverse(position))) & ~allies;
-
-        return possibleMoves;
-    }
     
-    private ulong GetQueenMoves(ulong position, char type, int x, int y)
+    private ulong GetQueenMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
     {
         if (type == 'q')
         {
@@ -327,9 +239,9 @@ public class Move
         return GetRookMoves(position, 'R', x, y) | GetBishopMoves(position, 'B', x, y);
     }
 
-    private ulong GetKingMoves(ulong position, char type, List<string> record)
+    private List<ulong> GetKingMoves(ulong position, char type, List<string> record) // Returns bitboard of possible new positions
     {
-        ulong possibleMoves = 0UL;
+        List<ulong> possibleMoves = new List<ulong>();
 
         ulong allies = GetAllies(type);
         if (type == 'k')
@@ -379,12 +291,12 @@ public class Move
 
                     if (canLeft)
                     {
-                        possibleMoves |= (position << 2) & ~bitboard;
+                        possibleMoves.Add((position << 2) & ~bitboard);
                     }
 
                     if (canRight)
                     {
-                        possibleMoves |= (position >> 2) & ~bitboard;
+                        possibleMoves.Add((position >> 2) & ~bitboard);
                     }
                 }
             }
@@ -436,45 +348,45 @@ public class Move
 
                     if (canLeft)
                     {
-                        possibleMoves |= (position << 2) & ~bitboard;
+                        possibleMoves.Add((position << 2) & ~bitboard);
                     }
 
                     if (canRight)
                     {
-                        possibleMoves |= (position >> 2) & ~bitboard;
+                        possibleMoves.Add((position >> 2) & ~bitboard);
                     }
                 }
             }
         }
 
         // Up Left
-        possibleMoves |= (position << 9) & ~allies & ~File_H;
+        possibleMoves.Add((position << 9) & ~allies & ~File_H);
 
         // Up
-        possibleMoves |= (position << 8) & ~allies;
+        possibleMoves.Add((position << 8) & ~allies);
 
         // Up Right
-        possibleMoves |= (position << 7) & ~allies & ~File_A;
+        possibleMoves.Add((position << 7) & ~allies & ~File_A);
 
         // Left
-        possibleMoves |= (position << 1) & ~allies & ~File_H;
+        possibleMoves.Add((position << 1) & ~allies & ~File_H);
 
         // Right
-        possibleMoves |= (position >> 1) & ~allies & ~File_A;
+        possibleMoves.Add((position >> 1) & ~allies & ~File_A);
 
         // Down Left
-        possibleMoves |= (position >> 7) & ~allies & ~File_H;
+        possibleMoves.Add((position >> 7) & ~allies & ~File_H);
 
         // Down
-        possibleMoves |= (position >> 8) & ~allies;
+        possibleMoves.Add((position >> 8) & ~allies);
 
         // Down Right
-        possibleMoves |= (position >> 9) & ~allies & ~File_A;
+        possibleMoves.Add((position >> 9) & ~allies & ~File_A);
 
         return possibleMoves;
     }
 
-    private ulong GetPawnMoves(ulong position, char type, List<string> record)
+    private ulong GetPawnMoves(ulong position, char type, List<string> record) // Returns bitboard of possible new positions
     {
         ulong possibleMoves = 0UL;
 
@@ -561,87 +473,24 @@ public class Move
         return possibleMoves;
     }
 
-    private ulong GetDiagonalMask(int x, int y)
+    private ulong PreventCheck(ulong position, char type, int x, int y, ulong possibleMoves) // Returns bitboard of legal new positions
     {
-        ulong diagonalMask = Main_Diag;
-        if (x + y < 7)
-        {
-            diagonalMask <<= ((7 - x - y) * 8);
-        }
-        else
-        {
-            diagonalMask >>= ((x + y - 7) * 8);
-        }
-
-        return diagonalMask;
-    }
-
-    private ulong GetAntiDiagonalMask(int x, int y)
-    {
-        ulong antiDiagonalMask = Main_Anti;
-        if (x - y > 0)
-        {
-            antiDiagonalMask <<= ((x - y) * 8);
-        }
-        else
-        {
-            antiDiagonalMask >>= ((y - x) * 8);
-        }
-
-        return antiDiagonalMask;
-    }
-
-    private ulong GetAllies(char type)
-    {
-        if (type < 'a')
-        {
-            return whites;
-        }
-        return blacks;
-    }
-
-    private ulong Reverse(ulong binary)
-    {
-        // Reverse bits by swapping positions. Total 30 operations.
-        binary = (binary & 0b_11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000) >> 32 
-                |(binary & 0b_00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111) << 32;
-
-        binary = (binary & 0b_11111111_11111111_00000000_00000000_11111111_11111111_00000000_00000000) >> 16 
-                |(binary & 0b_00000000_00000000_11111111_11111111_00000000_00000000_11111111_11111111) << 16;
-
-        binary = (binary & 0b_11111111_00000000_11111111_00000000_11111111_00000000_11111111_00000000) >> 8 
-                |(binary & 0b_00000000_11111111_00000000_11111111_00000000_11111111_00000000_11111111) << 8;
-
-        binary = (binary & 0b_11110000_11110000_11110000_11110000_11110000_11110000_11110000_11110000) >> 4 
-                |(binary & 0b_00001111_00001111_00001111_00001111_00001111_00001111_00001111_00001111) << 4;
-
-        binary = (binary & 0b_11001100_11001100_11001100_11001100_11001100_11001100_11001100_11001100) >> 2 
-                |(binary & 0b_00110011_00110011_00110011_00110011_00110011_00110011_00110011_00110011) << 2;
-
-        binary = (binary & 0b_10101010_10101010_10101010_10101010_10101010_10101010_10101010_10101010) >> 1 
-                |(binary & 0b_01010101_01010101_01010101_01010101_01010101_01010101_01010101_01010101) << 1;
-
-        return binary;
-    }
-
-    private ulong PreventCheck(ulong position, char type, int x, int y, ulong possibleMoves)
-    {
-        int kingX = 0;
-        int kingY = 0;
         ulong directCheck = ulong.MaxValue;
         bitboard &= ~position;
+        int kingX = 0;
+        int kingY = 0;
 
         if (type < 'a') // White
         {
             ulong allies = whites & ~position;
 
             // Pawn Checks
-            if (((wk >> 7) & bp) != 0UL)
+            if (((wk << 7) & bp) != 0UL)
             {
-                directCheck = (wk >> 7);
+                directCheck = (wk << 7);
             }
 
-            if (((wk >> 9) & bp) != 0UL)
+            if (((wk << 9) & bp) != 0UL)
             {
                 if (directCheck != ulong.MaxValue)
                 {
@@ -649,7 +498,7 @@ public class Move
                     return 0UL;
                 }
 
-                directCheck = (wk >> 9);
+                directCheck = (wk << 9);
             }
 
             // Knight Check
@@ -920,10 +769,324 @@ public class Move
         return directCheck & possibleMoves;
     }
 
+    private ulong KingMoveCheck(List<ulong> possibleMoves, char type) // Returns bitboard of legal new positions
+    {
+        int kingX = 0;
+        int kingY = 0;
+        if (type == 'K')
+        {
+            bitboard &= ~wk;
+
+            for (int i = possibleMoves.Count - 1; i >= 0; i--)
+            {
+                ulong allies = whites & ~possibleMoves[i];
+                // Pawn Checks
+                if (((possibleMoves[i] << 7) & bp) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    continue;
+                }
+
+                if (((possibleMoves[i] << 9) & bp) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    continue;
+                }
+
+
+                // Knight Check
+                ulong knights = GetKnightMoves(possibleMoves[i], 'N');
+                if ((knights & bn) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    continue;
+                }
+
+
+                // Vertical Checks
+                (kingX, kingY) = GetCoords(possibleMoves[i]);
+                bitboard |= possibleMoves[i];
+
+                ulong fileMask = Files[kingX];
+                ulong ups = (bitboard & fileMask) ^ ((bitboard & fileMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+
+                if ((ups & (br | bq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+                ulong downs = (bitboard & fileMask) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
+                if ((downs & (br | bq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+
+                // Horizontal Checks
+                ulong rankMask = Ranks[kingY];
+                ulong lefts = (bitboard & rankMask) ^ ((bitboard & rankMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+                if ((lefts & (br | bq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+                ulong rights = (bitboard & rankMask) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
+                if ((rights & (br | bq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+
+                // Diagonal Checks
+                ulong diagonalMask = GetDiagonalMask(kingX, kingY);
+                ulong upDiag = (bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+                if ((upDiag & (bb | bq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+                
+                ulong downDiag = (bitboard & diagonalMask) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
+                if ((downDiag & (bb | bq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+
+                // Anti-Diagonal Checks
+                ulong antiDiagonalMask = GetAntiDiagonalMask(kingX, kingY);
+                ulong upAnti = (bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+                if ((upAnti & (bb | bq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+                ulong downAnti = (bitboard & antiDiagonalMask) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
+                if ((downAnti & (bb | bq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+                bitboard &= ~possibleMoves[i];
+            }
+
+            bitboard &= wk;
+        }
+        else
+        {
+            bitboard &= ~bk;
+
+            for (int i = possibleMoves.Count - 1; i >= 0; i--)
+            {
+                ulong allies = blacks & ~possibleMoves[i];
+
+                // Pawn Checks
+                if (((possibleMoves[i] >> 7) & wp) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    continue;
+                }
+
+                if (((possibleMoves[i] >> 9) & wp) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    continue;
+                }
+
+
+                // Knight Check
+                ulong knights = GetKnightMoves(possibleMoves[i], 'n');
+                if ((knights & wn) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    continue;
+                }
+
+
+                // Vertical Checks
+                (kingX, kingY) = GetCoords(possibleMoves[i]);
+                bitboard |= possibleMoves[i];
+
+                ulong fileMask = Files[kingX];
+                ulong ups = (bitboard & fileMask) ^ ((bitboard & fileMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+
+                if ((ups & (wr | wq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+                ulong downs = (bitboard & fileMask) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
+                if ((downs & (wr | wq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+
+                // Horizontal Checks
+                ulong rankMask = Ranks[kingY];
+                ulong lefts = (bitboard & rankMask) ^ ((bitboard & rankMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+                if ((lefts & (wr | wq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+                ulong rights = (bitboard & rankMask) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
+                if ((rights & (wr | wq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+
+                // Diagonal Checks
+                ulong diagonalMask = GetDiagonalMask(kingX, kingY);
+                ulong upDiag = (bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+                if ((upDiag & (wb | wq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+                
+                ulong downDiag = (bitboard & diagonalMask) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
+                if ((downDiag & (wb | wq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+
+                // Anti-Diagonal Checks
+                ulong antiDiagonalMask = GetAntiDiagonalMask(kingX, kingY);
+                ulong upAnti = (bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+                if ((upAnti & (wb | wq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+                ulong downAnti = (bitboard & antiDiagonalMask) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
+                if ((downAnti & (wb | wq)) != 0UL)
+                {
+                    possibleMoves.RemoveAt(i);
+                    bitboard &= ~possibleMoves[i];
+                    continue;
+                }
+
+                bitboard &= ~possibleMoves[i];
+            }
+
+            bitboard &= bk;
+        }
+
+        ulong kingMoves = 0UL;
+        foreach (ulong move in possibleMoves)
+        {
+            kingMoves |= move;
+        }
+        return kingMoves;
+    } 
+
+    private ulong GetDiagonalMask(int x, int y) // Returns diagonal mask based on piece's position
+    {
+        if (x < 0 || x > 7 || y < 0 || y > 7)
+        {
+            return 0UL;
+        }
+
+        ulong diagonalMask = Main_Diag;
+        if (x + y < 7)
+        {
+            diagonalMask <<= ((7 - x - y) * 8);
+        }
+        else
+        {
+            diagonalMask >>= ((x + y - 7) * 8);
+        }
+
+        return diagonalMask;
+    }
+
+    private ulong GetAntiDiagonalMask(int x, int y) // Returns anti-diagonal mask based on piece's position
+    {
+        if (x < 0 || x > 7 || y < 0 || y > 7)
+        {
+            return 0UL;
+        }
+
+        ulong antiDiagonalMask = Main_Anti;
+        if (x - y > 0)
+        {
+            antiDiagonalMask <<= ((x - y) * 8);
+        }
+        else
+        {
+            antiDiagonalMask >>= ((y - x) * 8);
+        }
+
+        return antiDiagonalMask;
+    }
+
+    private ulong GetAllies(char type) // Returns allies (whites or blacks) base on type
+    {
+        if (type < 'a')
+        {
+            return whites;
+        }
+        return blacks;
+    }
+
+    private ulong Reverse(ulong binary) // Reverse bits by swapping positions. Total 30 operations.
+    {
+        binary = (binary & 0b_11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000) >> 32 
+                |(binary & 0b_00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111) << 32;
+
+        binary = (binary & 0b_11111111_11111111_00000000_00000000_11111111_11111111_00000000_00000000) >> 16 
+                |(binary & 0b_00000000_00000000_11111111_11111111_00000000_00000000_11111111_11111111) << 16;
+
+        binary = (binary & 0b_11111111_00000000_11111111_00000000_11111111_00000000_11111111_00000000) >> 8 
+                |(binary & 0b_00000000_11111111_00000000_11111111_00000000_11111111_00000000_11111111) << 8;
+
+        binary = (binary & 0b_11110000_11110000_11110000_11110000_11110000_11110000_11110000_11110000) >> 4 
+                |(binary & 0b_00001111_00001111_00001111_00001111_00001111_00001111_00001111_00001111) << 4;
+
+        binary = (binary & 0b_11001100_11001100_11001100_11001100_11001100_11001100_11001100_11001100) >> 2 
+                |(binary & 0b_00110011_00110011_00110011_00110011_00110011_00110011_00110011_00110011) << 2;
+
+        binary = (binary & 0b_10101010_10101010_10101010_10101010_10101010_10101010_10101010_10101010) >> 1 
+                |(binary & 0b_01010101_01010101_01010101_01010101_01010101_01010101_01010101_01010101) << 1;
+
+        return binary;
+    }
+
     /*
     De Bruijn Bit Position Algorithm
     Authors: Eric Cole, Mark Dickinson
-    An algorithm that finds the log base 2 of an 64 bit integer in O(log(n)) operations
+    An algorithm that finds the log base 2 of the MSD of a given 64 bit ulong in O(log(n)) operations
     Uses the DeBrujnTable64 lookup table.
     */
     private (int, int) GetCoords(ulong position)
@@ -937,6 +1100,6 @@ public class Move
 
         int index = 63 - DeBruijnTable64[(position * 0b_00000011_11110110_11101010_11110010_11001101_00100111_00010100_01100001) >> 58];
 
-        return (index / 8, index % 8);
+        return (index % 8 , index / 8);
     }
 }

@@ -119,8 +119,9 @@ public class ChessAI : MonoBehaviour
             }
 
             // if not turn skip
-            if (board[i % 8, i / 8].color != turn)
+            if (turn == 1)
             {
+                if (board[i % 8, i ])
                 continue;
             }
 
@@ -155,10 +156,10 @@ public class ChessAI : MonoBehaviour
                 Debug.Log("i: " + i);
                 char pos1 = temp[i % 8, i / 8];
                 // before log
-                Debug.Log("before Piece: " + temp[i % 8, i / 8].type + "x: " + (i % 8) + " y:" + (i / 8));
+                Debug.Log("before Piece: " + temp[i % 8, i / 8] + "x: " + (i % 8) + " y:" + (i / 8));
                 ChessManager.MovePosition(i % 8, i / 8, move[0], move[1], temp, simulatedRecord);
                 // after log
-                Debug.Log("after Piece: " + temp[move[0], move[1]].type + "x: " + (move[0]) + " y:" + (move[1]));
+                Debug.Log("after Piece: " + temp[move[0], move[1]] + "x: " + (move[0]) + " y:" + (move[1]));
 
                 printBoard(temp);
 
