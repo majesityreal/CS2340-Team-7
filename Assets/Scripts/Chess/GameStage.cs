@@ -32,14 +32,14 @@ public class GameStage : MonoBehaviour
     public GameObject bBishop;
     public GameObject bKing;
     public GameObject bKnight;
-    public GameObject bPown;
+    public GameObject bPawn;
     public GameObject bQueen;
     public GameObject bRook;
 
     public GameObject wBishop;
     public GameObject wKing;
     public GameObject wKnight;
-    public GameObject wPown;
+    public GameObject wPawn;
     public GameObject wQueen;
     public GameObject wRook;
 
@@ -121,8 +121,8 @@ public class GameStage : MonoBehaviour
         {
             for (int j = 0; j < 8; j++)
             {
-                Piece curr = ChessManager.board[i, j];
-                if (curr == null)
+                char curr = ChessManager.board[i, j];
+                if (curr == '-')
                 {
                     Destroy(SpriteBoard[i, j]);
                     SpriteBoard[i, j] = Instantiate(emptyPiece, new Vector3(i - 4, 4 - j, transform.position.z), Quaternion.identity);
@@ -132,116 +132,89 @@ public class GameStage : MonoBehaviour
                 } 
                 else
                 {
-                    UpdatePieceToGame(ChessManager.board[i, j]);
+                    UpdatePieceToGame(ChessManager.board[i, j], i, j);
                 }
             }
         }
     }
 
-    public void UpdatePieceToGame(Piece piece)
+    public void UpdatePieceToGame(char piece, int x, int y)
     {
-        if (piece.type == PieceType.Bishop)
+        if (piece == 'B')
         {
-            if (piece.color < 0)
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(bBishop, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = BlackPiece.transform;
-            }
-            else
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(wBishop, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = WhitePiece.transform;
-            }
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(wBishop, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = WhitePiece.transform;
+        }
+        else if (piece == 'b')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(bBishop, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = BlackPiece.transform;
+        }
+        else if (piece == 'K')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(wKing, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = WhitePiece.transform;
+        }
+        else if (piece == 'k')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(bKing, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = BlackPiece.transform;
+        }
+        else if (piece == 'N')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(wKnight, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = WhitePiece.transform;
+        }
+        else if (piece == 'n')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(bKnight, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = BlackPiece.transform;
+        }
+        else if (piece == 'P')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(wPawn, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = WhitePiece.transform;
+        }
+        else if (piece == 'p')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(bPawn, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = BlackPiece.transform;
+        }
+        else if (piece == 'Q')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(wQueen, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = WhitePiece.transform;
+        }
+        else if (piece == 'q')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(bQueen, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = BlackPiece.transform;
+        }
+        else if (piece == 'R')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(wRook, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = WhitePiece.transform;
+        }
+        else if (piece == 'r')
+        {
+            Destroy(SpriteBoard[x, y]);
+            SpriteBoard[x, y] = Instantiate(bRook, new Vector3(x - 4, 4 - y, 0), Quaternion.identity);
+            SpriteBoard[x, y].transform.parent = BlackPiece.transform;
         }
 
-        // King
-        if (piece.type == PieceType.King)
-        {
-            if (piece.color < 0)
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(bKing, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = BlackPiece.transform;
-            }
-            else
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(wKing, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = WhitePiece.transform;
-            }
-        }
-
-        // Knight
-        if (piece.type == PieceType.Knight)
-        {
-            if (piece.color < 0)
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(bKnight, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = BlackPiece.transform;
-            }
-            else
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(wKnight, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = WhitePiece.transform;
-            }
-        }
-
-        // Pawn
-        if (piece.type == PieceType.Pawn)
-        {
-            if (piece.color < 0)
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(bPown, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = BlackPiece.transform;
-            }
-            else
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(wPown, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = WhitePiece.transform;
-            }
-        }
-
-        // Queen
-        if (piece.type == PieceType.Queen)
-        {
-            if (piece.color < 0)
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(bQueen, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = BlackPiece.transform;
-            }
-            else
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(wQueen, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = WhitePiece.transform;
-            }
-        }
-        // Rook
-        if (piece.type == PieceType.Rook)
-        {
-            if (piece.color < 0)
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(bRook, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = BlackPiece.transform;
-            }
-            else
-            {
-                Destroy(SpriteBoard[piece.xCoord, piece.yCoord]);
-                SpriteBoard[piece.xCoord, piece.yCoord] = Instantiate(wRook, new Vector3(piece.xCoord - 4, 4 - piece.yCoord, 0), Quaternion.identity);
-                SpriteBoard[piece.xCoord, piece.yCoord].transform.parent = WhitePiece.transform;
-            }
-        }
-
-        SpriteBoard[piece.xCoord, piece.yCoord].GetComponent<PieceOnClick>().SetPos(piece.xCoord, piece.yCoord);
-        SpriteBoard[piece.xCoord, piece.yCoord].GetComponent<PieceOnClick>().SetColor(piece.color);
+        SpriteBoard[x, y].GetComponent<PieceOnClick>().SetPos(x, y);
+        SpriteBoard[x, y].GetComponent<PieceOnClick>().SetColor(piece < 'a' ? 1 : -1);
     }
 
 
