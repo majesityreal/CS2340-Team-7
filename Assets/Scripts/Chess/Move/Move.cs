@@ -171,7 +171,6 @@ public class Move
         Debug.LogWarning("Wrong piece type has been given to GetMoves().");
         return 0UL;
     }
-
     public static List<int> GetMovesList(int x, int y, char type, List<string> record) // Returns list of legal move positions
     {
         List<int> moveList = new List<int>();

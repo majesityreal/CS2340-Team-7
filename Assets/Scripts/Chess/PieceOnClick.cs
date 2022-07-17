@@ -34,7 +34,11 @@ public class PieceOnClick : MonoBehaviour
                     PlayerInput.CurrSelected = gameObject;
 
                     //Replace when Game Move Check Fixed.
-                    GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos()].GetLegalMoves(ChessManager.board, ChessManager.moveRecord);
+                    List<int> temp = Move.GetMovesList(xPos, yPos, ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos()], ChessManager.moveRecord);
+                    foreach (int index in temp)
+                    {
+                        GameStage.HighLightIndex.Add(new int[index]);
+                    }
                     GameStage.CurrPossibleMove = GameStage.HighLightIndex;
                     //GameStage.HighLightIndex = new List<int>();
                     //GameStage.HighLightIndex.Add(GetIndex() - 8);
@@ -55,7 +59,11 @@ public class PieceOnClick : MonoBehaviour
                     PlayerInput.CurrSelected.transform.GetChild(0).transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
 
                     //Replace when Game Move Check Fixed.
-                    GameStage.HighLightIndex = ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos()].GetLegalMoves(ChessManager.board, ChessManager.moveRecord);
+                    List<int> temp = Move.GetMovesList(xPos, yPos, ChessManager.board[PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetXPos(), PlayerInput.CurrSelected.GetComponent<PieceOnClick>().GetYPos()], ChessManager.moveRecord);
+                    foreach (int index in temp)
+                    {
+                        GameStage.HighLightIndex.Add(new int[index]);
+                    }
                     GameStage.CurrPossibleMove = GameStage.HighLightIndex;
                     //GameStage.HighLightIndex = new List<int[]>();
                     //GameStage.HighLightIndex.Add(new int[2] { 4, 4 });
