@@ -76,7 +76,7 @@ public class Move
         24, 15, 8, 23, 7, 6, 5, 63
     };
 
-    public static void ConvertBoardToBinary(char[,] board) 
+    public static void ConvertBoardToBinary(char[,] board) // Sets bitboard and wX & bX bitboards to be set for legal move calculations
     {
         br = 0UL;
         bn = 0UL;
@@ -149,7 +149,7 @@ public class Move
         blacks = br | bn | bb | bq | bk | bp;
     }
 
-    public static ulong GetMoves(int x, int y, char type, List<string> record) 
+    public static ulong GetMoves(int x, int y, char type, List<string> record) // Returns ulong of legal move positions
     {
         ulong position = 1UL << (y * 8 + x);
         switch (type)
@@ -172,7 +172,7 @@ public class Move
         return 0UL;
     }
 
-    public static List<int> GetMovesList(int x, int y, char type, List<string> record) 
+    public static List<int> GetMovesList(int x, int y, char type, List<string> record) // Returns list of legal move positions
     {
         List<int> moveList = new List<int>();
         ulong moves = GetMoves(x, y, type, record);
