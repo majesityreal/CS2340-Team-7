@@ -155,15 +155,15 @@ public class Move
         Debug.LogWarning("Wrong piece type has been given to GetMoves().");
         return 0UL;
     }
-
+    
     public static List<int> GetMovesList(int x, int y, char type, List<string> record) 
     {
         List<int> moveList = new List<int>();
-        ulong moves = GetMoves(x, y, type, moveRecord);
+        ulong moves = GetMoves(x, y, type, record);
 
         while (moves != 0UL)
         {
-            (int moveX, int moveY) = Moves.GetCoords(moves);
+            (int moveX, int moveY) = GetCoords(moves);
             moves &= ~(1UL << (moveY * 8 + moveX));
             moveList.Add(moveY * 8 + moveX);
         }

@@ -197,7 +197,7 @@ public class ChessAI : MonoBehaviour
                     s += "-";
                     continue;
                 }
-                if (board[j,i].color == 1)
+                if (board[j,i].color < "a")
                 {
                     switch (board[j, i].type)
                     {
