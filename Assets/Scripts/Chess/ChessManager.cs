@@ -53,7 +53,7 @@ public class ChessManager : MonoBehaviour
         };
     }
 
-    public static void MovePosition(int oldX, int oldY, ulong move, char[,] board, List<string> moveRecord)
+    public static void MovePosition(int oldX, int oldY, int newX, int newY, char[,] board, List<string> moveRecord)
     {       
         RecordMove(oldX, oldY, newX, newY, board, moveRecord);
         Debug.Log("x:" + oldX + " y:" + oldY);
@@ -135,9 +135,7 @@ public class ChessManager : MonoBehaviour
                     continue;
                 }
 
-                ulong thisMoves = Moves.GetMoves(i, j, board[i, j], moveRecord);
-
-                if (thisMoves != 0UL)
+                if (Moves.GetMoves(i, j, board[i, j], moveRecord) != 0UL)
                 {
                     return;
                 }
@@ -146,14 +144,12 @@ public class ChessManager : MonoBehaviour
 
         if (color == 1)
         {
-            // TODO: White Win
             ResultStageScript.IsWhiteWin = true;
             resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("White Win");
         }
         else
         {
-            // TODO: Black Win
             ResultStageScript.IsWhiteWin = false;
             resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("Black Win");

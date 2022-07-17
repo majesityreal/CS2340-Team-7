@@ -49,11 +49,13 @@ public class Move
 
     public const ulong A8 = 0b_10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
     public const ulong D8 = 0b_00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+    public const ulong E8 = 0b_00001000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
     public const ulong F8 = 0b_00000100_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
     public const ulong H8 = 0b_00000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
 
     public const ulong A1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_10000000;
     public const ulong D1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00010000;
+    public const ulong E1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00001000;
     public const ulong F1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000100;
     public const ulong H1 = 0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000001;
 
@@ -156,7 +158,7 @@ public class Move
 
     public static List<int> GetMovesList(int x, int y, char type, List<string> record) 
     {
-        List<int> moveList = List<int>();
+        List<int> moveList = new List<int>();
         ulong moves = GetMoves(x, y, type, moveRecord);
 
         while (moves != 0UL)
@@ -169,7 +171,7 @@ public class Move
         return moveList;
     }
 
-    private ulong GetBishopMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
+    private static ulong GetBishopMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
     {
         ulong diagonalMask = GetDiagonalMask(x, y);
         ulong antiDiagonalMask = GetAntiDiagonalMask(x, y);
@@ -184,7 +186,7 @@ public class Move
         return possibleMoves;
     }
 
-    private ulong GetRookMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
+    private static ulong GetRookMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
     {
         ulong rankMask = Ranks[y];
         ulong fileMask = Files[x];
@@ -199,7 +201,7 @@ public class Move
         return possibleMoves;
     }
 
-    private ulong GetKnightMoves(ulong position, char type) // Returns bitboard of possible new positions
+    private static ulong GetKnightMoves(ulong position, char type) // Returns bitboard of possible new positions
     {
         ulong allies = GetAllies(type);
 
@@ -230,7 +232,7 @@ public class Move
         return possibleMoves;
     }
     
-    private ulong GetQueenMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
+    private static ulong GetQueenMoves(ulong position, char type, int x, int y) // Returns bitboard of possible new positions
     {
         if (type == 'q')
         {
@@ -239,7 +241,7 @@ public class Move
         return GetRookMoves(position, 'R', x, y) | GetBishopMoves(position, 'B', x, y);
     }
 
-    private List<ulong> GetKingMoves(ulong position, char type, List<string> record) // Returns bitboard of possible new positions
+    private static List<ulong> GetKingMoves(ulong position, char type, List<string> record) // Returns bitboard of possible new positions
     {
         List<ulong> possibleMoves = new List<ulong>();
 
@@ -386,7 +388,7 @@ public class Move
         return possibleMoves;
     }
 
-    private ulong GetPawnMoves(ulong position, char type, List<string> record) // Returns bitboard of possible new positions
+    private static ulong GetPawnMoves(ulong position, char type, List<string> record) // Returns bitboard of possible new positions
     {
         ulong possibleMoves = 0UL;
 
@@ -473,7 +475,7 @@ public class Move
         return possibleMoves;
     }
 
-    private ulong PreventCheck(ulong position, char type, int x, int y, ulong possibleMoves) // Returns bitboard of legal new positions
+    private static ulong PreventCheck(ulong position, char type, int x, int y, ulong possibleMoves) // Returns bitboard of legal new positions
     {
         ulong directCheck = ulong.MaxValue;
         bitboard &= ~position;
@@ -769,7 +771,7 @@ public class Move
         return directCheck & possibleMoves;
     }
 
-    private ulong KingMoveCheck(List<ulong> possibleMoves, char type) // Returns bitboard of legal new positions
+    private static ulong KingMoveCheck(List<ulong> possibleMoves, char type) // Returns bitboard of legal new positions
     {
         int kingX = 0;
         int kingY = 0;
@@ -1011,7 +1013,7 @@ public class Move
         return kingMoves;
     } 
 
-    private ulong GetDiagonalMask(int x, int y) // Returns diagonal mask based on piece's position
+    private static ulong GetDiagonalMask(int x, int y) // Returns diagonal mask based on piece's position
     {
         if (x < 0 || x > 7 || y < 0 || y > 7)
         {
@@ -1031,7 +1033,7 @@ public class Move
         return diagonalMask;
     }
 
-    private ulong GetAntiDiagonalMask(int x, int y) // Returns anti-diagonal mask based on piece's position
+    private static ulong GetAntiDiagonalMask(int x, int y) // Returns anti-diagonal mask based on piece's position
     {
         if (x < 0 || x > 7 || y < 0 || y > 7)
         {
@@ -1051,7 +1053,7 @@ public class Move
         return antiDiagonalMask;
     }
 
-    private ulong GetAllies(char type) // Returns allies (whites or blacks) base on type
+    private static ulong GetAllies(char type) // Returns allies (whites or blacks) base on type
     {
         if (type < 'a')
         {
@@ -1060,7 +1062,7 @@ public class Move
         return blacks;
     }
 
-    private ulong Reverse(ulong binary) // Reverse bits by swapping positions. Total 30 operations.
+    private static ulong Reverse(ulong binary) // Reverse bits by swapping positions. Total 30 operations.
     {
         binary = (binary & 0b_11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000) >> 32 
                 |(binary & 0b_00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111) << 32;
@@ -1089,7 +1091,7 @@ public class Move
     An algorithm that finds the log base 2 of the MSD of a given 64 bit ulong in O(log(n)) operations
     Uses the DeBrujnTable64 lookup table.
     */
-    private (int, int) GetCoords(ulong position)
+    private static (int, int) GetCoords(ulong position)
     {
         position |= position >> 1;
         position |= position >> 2;
