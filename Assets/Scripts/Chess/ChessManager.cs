@@ -51,6 +51,8 @@ public class ChessManager : MonoBehaviour
             {'n', 'p', '-', '-', '-', '-', 'P', 'N'}, 
             {'r', 'p', '-', '-', '-', '-', 'P', 'R'}
         };
+
+        Move.ConvertBoardToBinary(board);
     }
 
     /*
@@ -122,6 +124,7 @@ public class ChessManager : MonoBehaviour
             board[oldX, oldY] = '-';
         }
 
+        Move.ConvertBoardToBinary(board);
         CheckInsufficientMaterials(board);
         Check50Move(moveRecord);
         CheckRepetition(moveRecord);
