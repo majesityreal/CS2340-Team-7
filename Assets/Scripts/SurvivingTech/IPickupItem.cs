@@ -9,13 +9,10 @@ using UnityEngine;
  */
 
 
-[SerializeField] STAudio sound;
-
 public interface IPickupItem
 {
     public void OnPickUp(PlayerController player);
-    [SerializeField] STAudio sound;
-    sound = FindObjectOfType<STAudio>();
-    sound.PlayGemPickup();
 
 }
+
+

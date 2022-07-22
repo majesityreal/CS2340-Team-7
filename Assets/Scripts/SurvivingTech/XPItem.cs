@@ -10,9 +10,12 @@ using UnityEngine;
  
 public class XPItem : MonoBehaviour, IPickupItem
 {
+    [SerializeField] STAudio sound;
     [SerializeField] int xpAmount = 10;
     public void OnPickUp(PlayerController player) {
+        sound = FindObjectOfType<STAudio>();
         player.addXP(xpAmount);
+        sound.PlayGemPickup();
     }
     
 

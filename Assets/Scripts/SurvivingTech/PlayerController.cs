@@ -10,6 +10,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] STAudio sound;
     Rigidbody2D rgb;
     Vector3 movementVect;
     [SerializeField] float maxHitpoints = 100;
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void Start() {
+        sound = FindObjectOfType<STAudio>();
         lastHorizontalVector = 0f;
         lastVerticalVector = 0f;
         xpToNextLevel = xpScalePerLevel * level;
@@ -108,6 +110,7 @@ public class PlayerController : MonoBehaviour
                 //Debug.Log("Player has died!");
                 LoseScreen.SetActive(true);
                 gameManager.GameOver();
+                sound.PlayLose();
                 //Time.timeScale = 0; // use this for pause too
             }
         }

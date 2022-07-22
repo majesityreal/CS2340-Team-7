@@ -12,13 +12,11 @@ using TMPro;
  
 public class PickupItem : MonoBehaviour
 {
-    [SerializeField] STAudio sound;
     void OnTriggerEnter2D(Collider2D collision) {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
         if (player != null) {
             GetComponent<IPickupItem>().OnPickUp(player);
             Destroy(gameObject);
-            sound.PlayGemPickup();
         }
     }
 }

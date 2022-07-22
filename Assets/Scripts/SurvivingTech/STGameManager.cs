@@ -29,10 +29,12 @@ public class STGameManager : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] GameObject WinScreen;
     [SerializeField] GameObject Player;
+    [SerializeField] STAudio sound;
 
 
     void Start()
     {
+        sound = FindObjectOfType<STAudio>();
         if (isGameStarted) {
         StartWave(waves[currentWave]);
         timer = timeBetweenWaves;
@@ -62,6 +64,7 @@ public class STGameManager : MonoBehaviour
             {
                 StopWave(waves[currentWave]);
                 WinScreen.SetActive(true);
+                sound.PlayWin();
                 GameOver();
             }
         }
