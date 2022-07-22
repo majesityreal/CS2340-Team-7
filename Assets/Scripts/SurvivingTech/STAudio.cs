@@ -16,6 +16,8 @@ public class STAudio: MonoBehaviour
     [SerializeField] AudioSource Dying;
     [SerializeField] AudioSource Lose;
     [SerializeField] AudioSource Win;
+    [SerializeField] AudioSource LevelUp;
+
 
 
     void Start() {
@@ -40,5 +42,9 @@ public class STAudio: MonoBehaviour
 
     public void PlayWin() {
         Win.Play();
+    }
+
+    public void PlayLevelUp() {
+        LevelUp.Play();
     }
 }

@@ -139,6 +139,7 @@ public class PlayerController : MonoBehaviour
         if (xp >= xpToNextLevel)
         {
             level++;
+            sound.PlayLevelUp();
             xp = 0;
             xpToNextLevel = level * xpScalePerLevel;
             if (scaleHealthWithLevel)
