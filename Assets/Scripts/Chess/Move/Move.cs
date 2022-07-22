@@ -100,8 +100,6 @@ public class Move
         wbCount = 0;
         wnCount = 0;
 
-        Debug.Log("Hee Hee Hah");
-
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++) {
@@ -811,241 +809,233 @@ public class Move
     {
         int kingX = 0;
         int kingY = 0;
-        if (type == 'K')
-        {
-            bitboard &= ~wk;
+        ulong origin = bitboard;
 
-            for (int i = possibleMoves.Count - 1; i >= 0; i--)
-            {
-                ulong allies = whites & ~possibleMoves[i];
-                // Pawn Checks
-                if (((possibleMoves[i] << 7) & bp) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    continue;
-                }
+        // if (type == 'K')
+        // {
+        //     bitboard &= ~wk;
 
-                if (((possibleMoves[i] << 9) & bp) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    continue;
-                }
+        //     for (int i = possibleMoves.Count - 1; i >= 0; i--)
+        //     {
+        //         ulong allies = whites & ~wk | possibleMoves[i];
+        //         // Pawn Checks
+        //         if (((possibleMoves[i] << 7) & bp) != 0UL)
+        //         {
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
+        //         if (((possibleMoves[i] << 9) & bp) != 0UL)
+        //         {
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                // Knight Check
-                ulong knights = GetKnightMoves(possibleMoves[i], 'N');
-                if ((knights & bn) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    continue;
-                }
+        //         // Knight Check
+        //         ulong knights = GetKnightMoves(possibleMoves[i], 'N');
+        //         if ((knights & bn) != 0UL)
+        //         {
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
+        //         // Vertical Checks
+        //         (kingX, kingY) = GetCoords(possibleMoves[i]);
+        //         bitboard |= possibleMoves[i];
 
-                // Vertical Checks
-                (kingX, kingY) = GetCoords(possibleMoves[i]);
-                bitboard |= possibleMoves[i];
+        //         ulong fileMask = Files[kingX];
+        //         ulong ups = ((bitboard & fileMask) ^ ((bitboard & fileMask) - possibleMoves[i] - possibleMoves[i])) & fileMask & ~allies;
+        //         if ((ups & (br | bq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                ulong fileMask = Files[kingX];
-                ulong ups = (bitboard & fileMask) ^ ((bitboard & fileMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+        //         ulong downs = ((bitboard & fileMask) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i]))) & fileMask & ~allies;
+        //         if ((downs & (br | bq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                if ((ups & (br | bq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         // Horizontal Checks
+        //         ulong rankMask = Ranks[kingY];
+        //         ulong lefts = ((bitboard & rankMask) ^ ((bitboard & rankMask) - possibleMoves[i] - possibleMoves[i])) & rankMask & ~allies;
+        //         if ((lefts & (br | bq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                ulong downs = (bitboard & fileMask) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
-                if ((downs & (br | bq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         ulong rights = ((bitboard & rankMask) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i]))) & rankMask & ~allies;
+        //         if ((rights & (br | bq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-
-                // Horizontal Checks
-                ulong rankMask = Ranks[kingY];
-                ulong lefts = (bitboard & rankMask) ^ ((bitboard & rankMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
-                if ((lefts & (br | bq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
-
-                ulong rights = (bitboard & rankMask) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
-                if ((rights & (br | bq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
-
-
-                // Diagonal Checks
-                ulong diagonalMask = GetDiagonalMask(kingX, kingY);
-                ulong upDiag = (bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
-                if ((upDiag & (bb | bq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         // Diagonal Checks
+        //         ulong diagonalMask = GetDiagonalMask(kingX, kingY);
+        //         ulong upDiag = ((bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - possibleMoves[i] - possibleMoves[i])) & diagonalMask & ~allies;
+        //         if ((upDiag & (bb | bq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
                 
-                ulong downDiag = (bitboard & diagonalMask) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
-                if ((downDiag & (bb | bq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         ulong downDiag = ((bitboard & diagonalMask) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i]))) & diagonalMask & ~allies;
+        //         if ((downDiag & (bb | bq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
+        //         // Anti-Diagonal Checks
+        //         ulong antiDiagonalMask = GetAntiDiagonalMask(kingX, kingY);
+        //         ulong upAnti = ((bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - possibleMoves[i] - possibleMoves[i])) & antiDiagonalMask & ~allies;
+        //         if ((upAnti & (bb | bq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                // Anti-Diagonal Checks
-                ulong antiDiagonalMask = GetAntiDiagonalMask(kingX, kingY);
-                ulong upAnti = (bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
-                if ((upAnti & (bb | bq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         ulong downAnti = ((bitboard & antiDiagonalMask) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i]))) & antiDiagonalMask & ~allies;
+        //         if ((downAnti & (bb | bq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                ulong downAnti = (bitboard & antiDiagonalMask) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
-                if ((downAnti & (bb | bq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         bitboard &= ~possibleMoves[i];
+        //     }
 
-                bitboard &= ~possibleMoves[i];
-            }
+        //     bitboard &= wk;
+        // }
+        // else
+        // {
+        //     bitboard &= ~bk;
 
-            bitboard &= wk;
-        }
-        else
-        {
-            bitboard &= ~bk;
+        //     for (int i = possibleMoves.Count - 1; i >= 0; i--)
+        //     {
+        //         ulong allies = blacks & ~bk | possibleMoves[i];
 
-            for (int i = possibleMoves.Count - 1; i >= 0; i--)
-            {
-                ulong allies = blacks & ~possibleMoves[i];
+        //         // Pawn Checks
+        //         if (((possibleMoves[i] >> 7) & wp) != 0UL)
+        //         {
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                // Pawn Checks
-                if (((possibleMoves[i] >> 7) & wp) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    continue;
-                }
+        //         if (((possibleMoves[i] >> 9) & wp) != 0UL)
+        //         {
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                if (((possibleMoves[i] >> 9) & wp) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    continue;
-                }
+        //         // Knight Check
+        //         ulong knights = GetKnightMoves(possibleMoves[i], 'n');
+        //         if ((knights & wn) != 0UL)
+        //         {
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
+        //         // Vertical Checks
+        //         (kingX, kingY) = GetCoords(possibleMoves[i]);
+        //         bitboard |= possibleMoves[i];
 
-                // Knight Check
-                ulong knights = GetKnightMoves(possibleMoves[i], 'n');
-                if ((knights & wn) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    continue;
-                }
+        //         ulong fileMask = Files[kingX];
+        //         ulong ups = ((bitboard & fileMask) ^ ((bitboard & fileMask) - possibleMoves[i] - possibleMoves[i])) & fileMask & ~allies;
 
+        //         if ((ups & (wr | wq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                // Vertical Checks
-                (kingX, kingY) = GetCoords(possibleMoves[i]);
-                bitboard |= possibleMoves[i];
+        //         ulong downs = ((bitboard & fileMask) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i]))) & fileMask & ~allies;
+        //         if ((downs & (wr | wq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                ulong fileMask = Files[kingX];
-                ulong ups = (bitboard & fileMask) ^ ((bitboard & fileMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
+        //         // Horizontal Checks
+        //         ulong rankMask = Ranks[kingY];
+        //         ulong lefts = ((bitboard & rankMask) ^ ((bitboard & rankMask) - possibleMoves[i] - possibleMoves[i])) & rankMask & ~allies;
+        //         if ((lefts & (wr | wq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                if ((ups & (wr | wq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         ulong rights = ((bitboard & rankMask) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i]))) & rankMask & ~allies;
+        //         if ((rights & (wr | wq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                ulong downs = (bitboard & fileMask) ^ Reverse(Reverse(bitboard & fileMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
-                if ((downs & (wr | wq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
-
-
-                // Horizontal Checks
-                ulong rankMask = Ranks[kingY];
-                ulong lefts = (bitboard & rankMask) ^ ((bitboard & rankMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
-                if ((lefts & (wr | wq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
-
-                ulong rights = (bitboard & rankMask) ^ Reverse(Reverse(bitboard & rankMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
-                if ((rights & (wr | wq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
-
-
-                // Diagonal Checks
-                ulong diagonalMask = GetDiagonalMask(kingX, kingY);
-                ulong upDiag = (bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
-                if ((upDiag & (wb | wq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         // Diagonal Checks
+        //         ulong diagonalMask = GetDiagonalMask(kingX, kingY);
+        //         ulong upDiag = ((bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - possibleMoves[i] - possibleMoves[i])) & diagonalMask & ~allies;
+        //         if ((upDiag & (wb | wq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
                 
-                ulong downDiag = (bitboard & diagonalMask) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
-                if ((downDiag & (wb | wq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         ulong downDiag = ((bitboard & diagonalMask) ^ Reverse(Reverse(bitboard & diagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i]))) & diagonalMask & ~allies;
+        //         if ((downDiag & (wb | wq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
+        //         // Anti-Diagonal Checks
+        //         ulong antiDiagonalMask = GetAntiDiagonalMask(kingX, kingY);
+        //         ulong upAnti = ((bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - possibleMoves[i] - possibleMoves[i])) & antiDiagonalMask & ~allies;
+        //         if ((upAnti & (wb | wq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                // Anti-Diagonal Checks
-                ulong antiDiagonalMask = GetAntiDiagonalMask(kingX, kingY);
-                ulong upAnti = (bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - possibleMoves[i] - possibleMoves[i]) & ~allies;
-                if ((upAnti & (wb | wq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         ulong downAnti = ((bitboard & antiDiagonalMask) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i]))) & antiDiagonalMask & ~allies;
+        //         if ((downAnti & (wb | wq)) != 0UL)
+        //         {
+        //             bitboard &= ~possibleMoves[i];
+        //             possibleMoves.RemoveAt(i);
+        //             continue;
+        //         }
 
-                ulong downAnti = (bitboard & antiDiagonalMask) ^ Reverse(Reverse(bitboard & antiDiagonalMask) - Reverse(possibleMoves[i]) - Reverse(possibleMoves[i])) & ~allies;
-                if ((downAnti & (wb | wq)) != 0UL)
-                {
-                    possibleMoves.RemoveAt(i);
-                    bitboard &= ~possibleMoves[i];
-                    continue;
-                }
+        //         bitboard &= ~possibleMoves[i];
+        //     }
 
-                bitboard &= ~possibleMoves[i];
-            }
-
-            bitboard &= bk;
-        }
+        //     bitboard &= bk;
+        // }
 
         ulong kingMoves = 0UL;
         foreach (ulong move in possibleMoves)
         {
             kingMoves |= move;
         }
+        bitboard = origin;
         return kingMoves;
     } 
 

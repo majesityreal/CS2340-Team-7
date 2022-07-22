@@ -125,6 +125,36 @@ public class ChessManager : MonoBehaviour
         }
 
         Move.ConvertBoardToBinary(board);
+
+        string temp = "";
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                temp += board[x, y];
+            }
+            temp += "\n";
+        }
+        Debug.Log(temp);
+
+        string temp2 = "";
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (((Move.whites >> (- 8 * y - x + 63)) & 1UL) == 1UL)
+                {
+                    temp2 += "1";
+                }
+                else
+                {
+                    temp2 += "0";
+                }
+            }
+            temp2 += "\n";
+        }
+        Debug.Log(temp2);
+
         CheckInsufficientMaterials(board);
         Check50Move(moveRecord);
         CheckRepetition(moveRecord);
