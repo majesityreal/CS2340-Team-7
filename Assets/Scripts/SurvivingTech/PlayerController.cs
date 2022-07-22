@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour
     public void takeDamage(float damage)
     {
         currentHitpoints -= damage * (1 - damageReduction);
+        sound.PlayDying();
         if (currentHitpoints <= 0)
         {
             lives--;

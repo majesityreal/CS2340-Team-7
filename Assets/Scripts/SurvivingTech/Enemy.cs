@@ -55,12 +55,11 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        sound = FindObjectOfType<STAudio>();
+        // sound = FindObjectOfType<STAudio>();
         if (collision.gameObject == targetPlayer)
         {
             Harm();
-            sound.PlayDying();
-
+            //sound.PlayDying();
         }
     }
 
@@ -69,6 +68,7 @@ public class Enemy : MonoBehaviour
         if (targetPlayer != null)
         {
             targetPlayer.GetComponent<PlayerController>().takeDamage(damage);
+            sound.PlayDying();
         }
     }
 
