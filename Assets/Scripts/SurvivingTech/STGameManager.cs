@@ -29,6 +29,8 @@ public class STGameManager : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] GameObject WinScreen;
     [SerializeField] GameObject Player;
+
+
     void Start()
     {
         if (isGameStarted) {

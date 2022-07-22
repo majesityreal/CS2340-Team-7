@@ -15,6 +15,7 @@ public class cryTear : MonoBehaviour
     [SerializeField] float speed = 1;
     [SerializeField] float damage = 1;
     [SerializeField] float overlayRadius = 0.5f;
+    [SerializeField] STAudio sound;
     
 
     public void SetDirection(float x, float y)
@@ -47,7 +48,7 @@ public class cryTear : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, 270);
         }
 
-
+        sound = FindObjectOfType<STAudio>();
     }
 
     bool hitDetected = false;
@@ -70,6 +71,7 @@ public class cryTear : MonoBehaviour
             if (hitDetected)
             {
                 Destroy(gameObject);
+                sound.PlayShoot();
             }
         }
         if (Vector3.Distance(GameObject.Find("Player").transform.position, transform.position) > 30)
