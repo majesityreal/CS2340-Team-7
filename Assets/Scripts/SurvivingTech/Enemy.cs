@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
+                sound = FindObjectOfType<STAudio>();
         rgbEnemy = GetComponent<Rigidbody2D>();
         initialScaleOfSprite = transform.localScale;
     }
@@ -63,12 +64,22 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Debug.Log("Collision");
+        if (collision.gameObject == targetPlayer)
+        {
+            sound.PlayDying();
+        }
+    }
+
     void Harm()
     {
+        //sound = FindObjectOfType<STAudio>();
         if (targetPlayer != null)
         {
             targetPlayer.GetComponent<PlayerController>().takeDamage(damage);
-            sound.PlayDying();
+            //sound.PlayDying();
         }
     }
 

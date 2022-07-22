@@ -3664,7 +3664,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7780548, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -5999,6 +5999,7 @@ MonoBehaviour:
   scalingDifficultyMultiplierPerWave: 0.5
   WinScreen: {fileID: 28585770}
   Player: {fileID: 1996801194}
+  sound: {fileID: 0}
 --- !u!1001 &1513465662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6622,7 +6623,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ab2e273397b204114b703a5c1c152c79, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 35074acade848a1429387adbdc9c1b40, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

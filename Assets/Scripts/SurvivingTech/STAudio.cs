@@ -31,7 +31,7 @@ public class STAudio: MonoBehaviour
     }
 
     public void PlayDying() {
-        Dying.Play();
+        Dying.PlayOneShot(Dying.clip, 0.5f);
     }
 
     public void PlayLose() {
