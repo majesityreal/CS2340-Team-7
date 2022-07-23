@@ -159,7 +159,6 @@ public class Move
     public static ulong GetMoves(int x, int y, char type, List<string> record) // Returns ulong of legal move positions
     {
         ulong position = 1UL << (- 8 * y - x + 63);
-        Debug.Log("Position of " + type + " is " + x + " " + y + " " + position);
         switch (type)
         {
             case 'r': case 'R':
@@ -184,14 +183,10 @@ public class Move
     {
         List<int> moveList = new List<int>();
         ulong moves = GetMoves(x, y, type, record);
-        Debug.Log("This is GetMovesList x, y, type: " + x + y + type);
-        Debug.Log("There's possible moves: " + (moves != 0UL));
-
         int threshold = 64;
         while (moves != 0UL && threshold > 0)
         {
             (int moveX, int moveY) = GetCoords(moves);
-            Debug.Log("X: " + moveX + " Y: " + moveY);
             moves &= ~(1UL << (-8 * moveY - moveX + 63));
             moveList.Add(moveY * 8 + moveX);
             threshold--;
@@ -363,20 +358,20 @@ public class Move
                             break;
                         }
 
-                        if (rec[0] == 'k')
+                        if (rec[0] == 'K')
                         {
                             canLeft = false;
                             canRight = false;
                             break;
                         }
 
-                        if (rec[0] == 'r' && rec[1] == '0' && rec[2] == '7')
+                        if (rec[0] == 'R' && rec[1] == '0' && rec[2] == '7')
                         {
                             canLeft = false;
                             continue;
                         }
 
-                        if (rec[0] == 'r' && rec[1] == '7' && rec[2] == '7')
+                        if (rec[0] == 'R' && rec[1] == '7' && rec[2] == '7')
                         {
                             canRight = false;
                             continue;
@@ -431,11 +426,11 @@ public class Move
         ulong movedX = 0UL;
         if (record.Count > 3)
         {
-            if (record[record.Count - 1].Length == 4)
+            if (record[record.Count - 1][0] == 'p' || record[record.Count - 1][0] == 'P') // A Pawn has moved
             {
-                if (record[record.Count - 1][1] - record[record.Count - 1][3] == 2)
+                if ((record[record.Count - 1][2] - record[record.Count - 1][4] == 2) || (record[record.Count - 1][2] - record[record.Count - 1][4] == -2))
                 {
-                    switch (record[record.Count - 1][0])
+                    switch (record[record.Count - 1][1])
                     {
                         case '0':
                             movedX = File_A;
@@ -465,7 +460,7 @@ public class Move
                 }
             }
         }
-
+        
         if (type == 'p')
         {
             // Single Move
@@ -481,10 +476,10 @@ public class Move
             possibleMoves |= (position >> 9) & ~File_A & whites;
 
             // Left En Passant
-            possibleMoves |= (position >> 7) & Rank_4 & movedX;
+            possibleMoves |= (position >> 7) & Rank_3 & movedX;
 
             // Right En Passant
-            possibleMoves |= (position >> 9) & Rank_4 & movedX; 
+            possibleMoves |= (position >> 9) & Rank_3 & movedX; 
         }
         else
         {
@@ -501,10 +496,10 @@ public class Move
             possibleMoves |= (position << 7) & ~File_A & blacks;
 
             // Left En Passant
-            possibleMoves |= (position << 9) & Rank_5 & movedX;
+            possibleMoves |= (position << 9) & Rank_6 & movedX;
 
             // Right En Passant
-            possibleMoves |= (position << 7) & Rank_5 & movedX;      
+            possibleMoves |= (position << 7) & Rank_6 & movedX;      
         }
 
         return possibleMoves;
@@ -554,7 +549,7 @@ public class Move
 
             // Vertical Checks
             (kingX, kingY) = GetCoords(wk);
-            ulong fileMask = Files[x];
+            ulong fileMask = Files[kingX];
             ulong ups = ((bitboard & fileMask) ^ ((bitboard & fileMask) - wk - wk)) & fileMask & ~allies;
             if ((ups & (br | bq)) != 0UL)
             {
@@ -581,7 +576,7 @@ public class Move
             
 
             // Horizontal Checks
-            ulong rankMask = Ranks[y];
+            ulong rankMask = Ranks[kingY];
             ulong lefts = ((bitboard & rankMask) ^ ((bitboard & rankMask) - wk - wk)) & rankMask & ~allies;
             if ((lefts & (br | bq)) != 0UL)
             {
@@ -608,7 +603,7 @@ public class Move
             
             
             // Diagonal Checks
-            ulong diagonalMask = GetDiagonalMask(x, y);
+            ulong diagonalMask = GetDiagonalMask(kingX, kingY);
             ulong upDiag = ((bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - wk - wk)) & diagonalMask & ~allies;
             if ((upDiag & (bb | bq)) != 0UL)
             {
@@ -635,7 +630,7 @@ public class Move
             
 
             // Anti-Diagonal Checks
-            ulong antiDiagonalMask = GetAntiDiagonalMask(x, y);
+            ulong antiDiagonalMask = GetAntiDiagonalMask(kingX, kingY);
             ulong upAnti = ((bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - wk - wk)) & antiDiagonalMask & ~allies;
             if ((upAnti & (bb | bq)) != 0UL)
             {
@@ -696,7 +691,7 @@ public class Move
 
             // Vertical Checks
             (kingX, kingY) = GetCoords(bk);
-            ulong fileMask = Files[x];
+            ulong fileMask = Files[kingX];
             ulong ups = ((bitboard & fileMask) ^ ((bitboard & fileMask) - bk - bk)) & fileMask & ~allies;
             if ((ups & (wr | wq)) != 0UL)
             {
@@ -723,7 +718,7 @@ public class Move
             
 
             // Horizontal Checks
-            ulong rankMask = Ranks[y];
+            ulong rankMask = Ranks[kingY];
             ulong lefts = ((bitboard & rankMask) ^ ((bitboard & rankMask) - bk - bk)) & rankMask & ~allies;
             if ((lefts & (wr | wq)) != 0UL)
             {
@@ -750,7 +745,7 @@ public class Move
             
             
             // Diagonal Checks
-            ulong diagonalMask = GetDiagonalMask(x, y);
+            ulong diagonalMask = GetDiagonalMask(kingX, kingY);
             ulong upDiag = ((bitboard & diagonalMask) ^ ((bitboard & diagonalMask) - bk - bk)) & diagonalMask & ~allies;
             if ((upDiag & (wb | wq)) != 0UL)
             {
@@ -777,7 +772,7 @@ public class Move
             
 
             // Anti-Diagonal Checks
-            ulong antiDiagonalMask = GetAntiDiagonalMask(x, y);
+            ulong antiDiagonalMask = GetAntiDiagonalMask(kingX, kingY);
             ulong upAnti = ((bitboard & antiDiagonalMask) ^ ((bitboard & antiDiagonalMask) - bk - bk)) & antiDiagonalMask & ~allies;
             if ((upAnti & (wb | wq)) != 0UL)
             {
@@ -803,24 +798,6 @@ public class Move
         }
         
         bitboard |= position;
-
-        string temp2 = "";
-        for (int j = 0; j < 8; j++)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                if (((directCheck >> (- 8 * j - i + 63)) & 1UL) == 1UL)
-                {
-                    temp2 += "1";
-                }
-                else
-                {
-                    temp2 += "0";
-                }
-            }
-            temp2 += "\n";
-        }
-        Debug.Log(temp2);
 
         return (directCheck & possibleMoves);
     }

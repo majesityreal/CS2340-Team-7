@@ -23,7 +23,22 @@ public class ChessManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            ChessAI.negaMaxStarter(3, -1, board, moveRecord);
+            Debug.Log("MoveRecord Count: " + moveRecord.Count);
+            string aiMove = ChessAI.negaMaxStarter(3, -1, board, moveRecord);
+            
+            if (aiMove.Length == 5)
+            {
+                Debug.Log("x: " + aiMove[1] + ", y: " + aiMove[2] + ", nx: " + aiMove[3] + ", ny: " + aiMove[4]);
+                MovePosition(aiMove[1] - '0', aiMove[2] - '0', aiMove[3] - '0', aiMove[4] - '0', board, moveRecord);
+            }
+            else
+            {
+                Debug.Log("x: " + aiMove[2] + ", y: " + aiMove[3] + ", nx: " + aiMove[4] + ", ny: " + aiMove[5]);
+                MovePosition(aiMove[2] - '0', aiMove[3] - '0', aiMove[4] - '0', aiMove[5] - '0', board, moveRecord);
+            }
+
+            PlayerInput.PlayerColor *= -1;
+            
 
             // foreach (string moveAI in ChessAI.bestMoveRecord)
             //     /*            foreach (string moveAI in ChessAI.bestMoveRecord)
@@ -68,7 +83,8 @@ public class ChessManager : MonoBehaviour
     */
 
     public static void MovePosition(int oldX, int oldY, int newX, int newY, char[,] board, List<string> moveRecord)
-    {       
+    {
+        Debug.Log(board[oldX, oldY]);
         RecordMove(oldX, oldY, newX, newY, board[oldX, oldY], moveRecord);
         Debug.Log("x:" + oldX + " y:" + oldY);
 
@@ -88,7 +104,7 @@ public class ChessManager : MonoBehaviour
                 board[0, newY] = '-';
             }
         } 
-        else if (board[oldX, oldY] == 'K' || board[oldX, oldY] == 'k') // When Pawn is moved
+        else if (board[oldX, oldY] == 'P' || board[oldX, oldY] == 'p') // When Pawn is moved
         {
             // En Passant
             if (newX != oldX && board[newX, newY] == '-') // When capturing move, but square is empty
@@ -286,7 +302,7 @@ public class ChessManager : MonoBehaviour
             record += "x";
         }
 
-        record += "" + oldX + oldY + newX + newY;
+        record += "" + oldX + "" + oldY + "" + newX + "" + newY;
         moveRecord.Add(record);
     }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ChessAI : MonoBehaviour
 {
+    static List<string> bestMoveRecord;
     const int pawnValue = 100;
     const int knightValue = 300;
     const int bishopValue = 300;
@@ -149,7 +150,7 @@ public class ChessAI : MonoBehaviour
                     char pos1 = temp[x, y];
                     // // before log
                     // Debug.Log("before Piece: " + temp[i % 8, i / 8] + "x: " + (i % 8) + " y:" + (i / 8));
-                    ChessManager.MovePosition(x, y, move / 8, move % 8, temp, simulatedRecord);
+                    ChessManager.MovePosition(x, y, move % 8, move / 8, temp, simulatedRecord);
                     // // after log
                     // Debug.Log("after Piece: " + temp[move[0], move[1]] + "x: " + (move[0]) + " y:" + (move[1]));
 
@@ -161,8 +162,7 @@ public class ChessAI : MonoBehaviour
                     {
                         max = score;
                         // stores the move here
-                        // bestMoveBoard = temp;
-                        // bestMoveRecord = simulatedRecord;
+                        bestMoveRecord = simulatedRecord;
                     }
                 }
             }
@@ -171,10 +171,15 @@ public class ChessAI : MonoBehaviour
         return max;
     }
 
-    public static void negaMaxStarter(int depth, int turn, char[,] board, List<string> copyRecord)
+    public static string negaMaxStarter(int depth, int turn, char[,] board, List<string> copyRecord)
     {
         int max = int.MinValue;
         int amount = negaMax(depth, max, turn, board, copyRecord);
+        for (int i = copyRecord.Count; i < bestMoveRecord.Count; i++)
+        {
+            Debug.Log(bestMoveRecord[i]);
+        }
+        return bestMoveRecord[copyRecord.Count];
     }
 
     public static void printBoard(char[,] board)
