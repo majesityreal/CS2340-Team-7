@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
         dealerHand.AddToHand(DealCard());
         dealerHand.AddToHand(DealCard());
         CardBrain.showDealerHand = false;
-        PlayerBalanceText.SetText("Balance: " + PlayerMoney.ToString());
+        PlayerBalanceText.SetText("Balance: $" + PlayerMoney.ToString());
         hideResult();
     }
 
@@ -226,6 +226,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
             showResult();
+            PlayerBalanceText.SetText("Balance: $" + PlayerMoney.ToString());
         }
     }
 
