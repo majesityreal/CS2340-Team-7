@@ -10,6 +10,8 @@ using UnityEngine;
  
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] STAudio sound;
+    
     Transform targetLocation;
     [SerializeField] GameObject targetPlayer;
     // let the spawner handle these values and account for wave scaling
@@ -24,6 +26,7 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
+                sound = FindObjectOfType<STAudio>();
         rgbEnemy = GetComponent<Rigidbody2D>();
         initialScaleOfSprite = transform.localScale;
     }
@@ -53,17 +56,30 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
+        // sound = FindObjectOfType<STAudio>();
         if (collision.gameObject == targetPlayer)
         {
             Harm();
+            //sound.PlayDying();
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Debug.Log("Collision");
+        if (collision.gameObject == targetPlayer)
+        {
+            sound.PlayDying();
         }
     }
 
     void Harm()
     {
+        //sound = FindObjectOfType<STAudio>();
         if (targetPlayer != null)
         {
             targetPlayer.GetComponent<PlayerController>().takeDamage(damage);
+            //sound.PlayDying();
         }
     }
 
