@@ -2965,9 +2965,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 800736888}
-        m_TargetAssemblyTypeName: TSMainMenu, Assembly-CSharp
-        m_MethodName: Quit
+      - m_Target: {fileID: 1456578052}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: backToMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
