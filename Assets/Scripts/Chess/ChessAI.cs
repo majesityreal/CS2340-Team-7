@@ -135,7 +135,7 @@ public class ChessAI : MonoBehaviour
                 foreach (int move in moves)
                 {
                     // deep copy of board
-                    char[,] temp = new char[8,8];
+                    char[,] temp = new char[8, 8];
                     for (int i = 0; i < 8; i++)
                     {
                         for (int j = 0; j < 8; j++)
@@ -157,7 +157,7 @@ public class ChessAI : MonoBehaviour
                     printBoard(temp);
 
                     // re does algorithm with opposite turn, with newly moved piece on board
-                    int score = -negaMax(depth - 1, max, turn * -1, temp, simulatedRecord);
+                    int score = -negaMax(depth - 1, max, -turn, temp, simulatedRecord);
                     if (score > max)
                     {
                         max = score;
