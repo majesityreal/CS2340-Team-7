@@ -72,4 +72,11 @@ public class ResultStageScript : MonoBehaviour
         }
         Debug.Log("Result Stage Hided");
     }
+
+    public void goHome()
+    {
+        PlayerInput.IsGamePaused = false;
+        PlayerInput.IsPlayerTurn = true;
+        PlayerInput.PlayerColor = 1;
+    }
 }
