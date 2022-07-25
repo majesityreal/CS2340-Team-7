@@ -2283,7 +2283,7 @@ Transform:
   - {fileID: 128796781}
   - {fileID: 640883780}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &510416842
 PrefabInstance:
@@ -2965,7 +2965,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1456578052}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
         m_MethodName: backToMenu
         m_Mode: 1
@@ -3650,6 +3650,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 832782815}
   m_CullTransparentMesh: 1
+--- !u!1 &858941176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 858941178}
+  - component: {fileID: 858941177}
+  m_Layer: 0
+  m_Name: PauseMenuHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &858941177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858941176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb7538c1cc9b1ab4d97ed87206fdce5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPhysicsRelated: 1
+  gameStarted: 1
+  pauseMenu: {fileID: 1914852823}
+--- !u!4 &858941178
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858941176}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 402.76163, y: 501.88174, z: -5.851967}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &866276579
 GameObject:
   m_ObjectHideFlags: 0
@@ -4047,7 +4094,7 @@ PrefabInstance:
     - target: {fileID: 3692712990063689098, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1456578052}
+      objectReference: {fileID: 858941177}
     - target: {fileID: 3692712990063689098, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: backToMenu
@@ -4159,7 +4206,7 @@ PrefabInstance:
     - target: {fileID: 7136419791531141377, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1456578052}
+      objectReference: {fileID: 858941177}
     - target: {fileID: 7136419791531141377, guid: 4183b07817a2f0c42ba98424016326b9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: unpause
@@ -5802,7 +5849,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1456578051}
-  - component: {fileID: 1456578052}
   - component: {fileID: 1456578053}
   m_Layer: 0
   m_Name: GameManager
@@ -5832,21 +5878,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1456578052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1456578050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb7538c1cc9b1ab4d97ed87206fdce5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPhysicsRelated: 1
-  gameStarted: 1
-  pauseMenu: {fileID: 1914852823}
 --- !u!114 &1456578053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7651,7 +7682,7 @@ RectTransform:
   - {fileID: 28585771}
   - {fileID: 1914852824}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7857,7 +7888,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1914852823 stripped
 GameObject:
