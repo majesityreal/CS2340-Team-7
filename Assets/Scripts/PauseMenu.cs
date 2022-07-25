@@ -76,12 +76,18 @@ public class PauseMenu : MonoBehaviour
         if (isPhysicsRelated) {
             Time.timeScale = 1f;
         }
+        PlayerInput.IsGamePaused = false;
+        PlayerInput.IsPlayerTurn = true;
+        PlayerInput.PlayerColor = 1;
         SceneManager.LoadScene("MainMenu");
     }
 
     public void backToMenuSingleton()
     {
         GameManager.Instance.QuitGame();
+        PlayerInput.IsGamePaused = false;
+        PlayerInput.IsPlayerTurn = true;
+        PlayerInput.PlayerColor = 1;
     }
 
     public void startGame() // we need this because ST will have a starting screen
