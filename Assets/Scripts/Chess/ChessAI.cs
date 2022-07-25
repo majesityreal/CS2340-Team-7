@@ -147,7 +147,7 @@ public class ChessAI : MonoBehaviour
                     // deep copy of record
                     List<string> simulatedRecord = record.ToList();
 
-                    char pos1 = temp[x, y];
+                    // char pos1 = temp[x, y];
                     // // before log
                     // Debug.Log("before Piece: " + temp[i % 8, i / 8] + "x: " + (i % 8) + " y:" + (i / 8));
                     ChessManager.MovePosition(x, y, move % 8, move / 8, temp, simulatedRecord);
