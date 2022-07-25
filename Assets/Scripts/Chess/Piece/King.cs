@@ -143,7 +143,7 @@ public class King : Piece
         }
 
         List<int[]> specials = GetSpecialMoves(board, moveRecord);
-        Piece[,] copyBoard = (Piece[,]) board.Clone();
+        Piece[,] copyBoard = GetDeepCopy(board).Item1;
 
         /* 
         Check if the King is under check

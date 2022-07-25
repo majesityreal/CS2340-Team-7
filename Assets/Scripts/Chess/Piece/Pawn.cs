@@ -11,20 +11,16 @@ public class Pawn : Piece
     public override List<int[]> GetLegalMoves(Piece[,] board, List<string> moveRecord)
     {
         List<int[]> possibleMoves = new List<int[]>();
-        int move = 0;
 
-        if (color == 1)
-        {
-            // If White, Pawn goes up
-            move = -1;
-        }
-        else
-        {
-            // If Black, Pawn goes down
-            move = 1;
-        }
-        
+        int move = -color;
+
         // Single Move
+        if (yCoord + move >= 8 || yCoord + move < 0 || xCoord > 7 || xCoord < 0)
+        {
+            Debug.Log(yCoord + move);
+            Debug.Log(xCoord + move);
+            Debug.LogError("THE PAWN CANT MOVE HERE");
+        }
         if (board[xCoord, yCoord + move] == null)
         {
             possibleMoves.Add(new int[2] {xCoord, yCoord + move});
@@ -35,7 +31,7 @@ public class Pawn : Piece
         {
             if (board[xCoord, yCoord + move] == null && board[xCoord, yCoord + move * 2] == null)
             {
-                possibleMoves.Add(new int[2] {xCoord, yCoord + move * 2});
+                possibleMoves.Add(new int[2] {xCoord, yCoord + (move * 2)});
             }
         }
 
@@ -97,15 +93,13 @@ public class Pawn : Piece
             int lastMoveX = lastMove[2] - '0';
             int lastMoveY = lastMove[3] - '0';
             
-            if (lastMoveX == xCoord + 1 || lastMoveX == xCoord - 1)
-            {
-                if (prevY - lastMoveY == 2) // White Pawn double moved
+            if (yCoord == lastMoveY) {
+                if (lastMoveX == xCoord + 1 || lastMoveX == xCoord - 1)
                 {
-                    specialMove.Add(new int[2] {lastMoveX, lastMoveY - 1});
-                }
-                else if (lastMoveY - prevY == 2) // Black Pawn double moved
-                {
-                    specialMove.Add(new int[2] {lastMoveX, lastMoveY + 1});
+                    if (prevY - lastMoveY == 2 || prevY - lastMoveY == -2)
+                    {
+                        specialMove.Add(new int[2] {lastMoveX, yCoord - color});
+                    }
                 }
             }
         }
