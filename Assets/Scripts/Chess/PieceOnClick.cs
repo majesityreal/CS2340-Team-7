@@ -66,7 +66,7 @@ public class PieceOnClick : MonoBehaviour
                         GameStage.HighLightIndex.Add(index);
                     }
                     GameStage.CurrPossibleMove = GameStage.HighLightIndex;
-                    Debug.Log("You Switch to " + gameObject.name.ToString());
+                    //Debug.Log("You Switch to " + gameObject.name.ToString());
                 }
                 else
                 {

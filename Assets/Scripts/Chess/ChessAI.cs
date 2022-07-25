@@ -101,12 +101,12 @@ public class ChessAI : MonoBehaviour
         {
             // this function returns a positive value based on whose turn it is
             int val = EvaluateBoard(turn, board);
-            Debug.Log("Reached end of board with eval: " + val);
+            //Debug.Log("Reached end of board with eval: " + val);
             return val;
         }
         else
         {
-            Debug.Log("Depth: " + depth);
+            //Debug.Log("Depth: " + depth);
         }
 
         // go through all the moves!
@@ -175,25 +175,25 @@ public class ChessAI : MonoBehaviour
     {
         int max = int.MinValue;
         int amount = negaMax(depth, max, turn, board, copyRecord);
-        for (int i = copyRecord.Count; i < bestMoveRecord.Count; i++)
-        {
-            Debug.Log(bestMoveRecord[i]);
-        }
+        // for (int i = copyRecord.Count; i < bestMoveRecord.Count; i++)
+        // {
+        //     Debug.Log(bestMoveRecord[i]);
+        // }
         return bestMoveRecord[copyRecord.Count];
     }
 
     public static void printBoard(char[,] board)
     {
-        string s = "";
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                s+= board[j, i];
-            }
-            s += "\n";
-        }
-        Debug.Log(s);
+        // string s = "";
+        // for (int i = 0; i < 8; i++)
+        // {
+        //     for (int j = 0; j < 8; j++)
+        //     {
+        //         s+= board[j, i];
+        //     }
+        //     s += "\n";
+        // }
+        // Debug.Log(s);
     }
 
     public static int EvaluateBoard(int turn, char[,] board)

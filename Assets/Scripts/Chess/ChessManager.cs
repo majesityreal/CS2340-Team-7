@@ -23,17 +23,17 @@ public class ChessManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            Debug.Log("MoveRecord Count: " + moveRecord.Count);
+            //Debug.Log("MoveRecord Count: " + moveRecord.Count);
             string aiMove = ChessAI.negaMaxStarter(3, -1, board, moveRecord);
             
             if (aiMove.Length == 5)
             {
-                Debug.Log("x: " + aiMove[1] + ", y: " + aiMove[2] + ", nx: " + aiMove[3] + ", ny: " + aiMove[4]);
+                //Debug.Log("x: " + aiMove[1] + ", y: " + aiMove[2] + ", nx: " + aiMove[3] + ", ny: " + aiMove[4]);
                 MovePosition(aiMove[1] - '0', aiMove[2] - '0', aiMove[3] - '0', aiMove[4] - '0', board, moveRecord);
             }
             else
             {
-                Debug.Log("x: " + aiMove[2] + ", y: " + aiMove[3] + ", nx: " + aiMove[4] + ", ny: " + aiMove[5]);
+                //Debug.Log("x: " + aiMove[2] + ", y: " + aiMove[3] + ", nx: " + aiMove[4] + ", ny: " + aiMove[5]);
                 MovePosition(aiMove[2] - '0', aiMove[3] - '0', aiMove[4] - '0', aiMove[5] - '0', board, moveRecord);
             }
 
@@ -48,6 +48,12 @@ public class ChessManager : MonoBehaviour
             //                 }*/
             //     Debug.LogWarning("Finished NO ERERROS");
             //Debug.Log(ChessAI.bestMoveRecord.Count);
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            ResultStageScript.IsWhiteWin = true;
+            resultStage.GetComponent<ResultStageScript>().ShowResult();
+            Debug.Log("White Win");
         }
     }
 
@@ -84,9 +90,9 @@ public class ChessManager : MonoBehaviour
 
     public static void MovePosition(int oldX, int oldY, int newX, int newY, char[,] board, List<string> moveRecord)
     {
-        Debug.Log(board[oldX, oldY]);
+        //Debug.Log(board[oldX, oldY]);
         RecordMove(oldX, oldY, newX, newY, board[oldX, oldY], moveRecord);
-        Debug.Log("x:" + oldX + " y:" + oldY);
+        //Debug.Log("x:" + oldX + " y:" + oldY);
 
         if (board[oldX, oldY] == 'K' || board[oldX, oldY] == 'k') // When King is moved
         {
@@ -109,7 +115,7 @@ public class ChessManager : MonoBehaviour
             // En Passant
             if (newX != oldX && board[newX, newY] == '-') // When capturing move, but square is empty
             {
-                Debug.LogWarning("En Passant'd");
+                //Debug.LogWarning("En Passant'd");
                 board[newX, oldY] = '-';
             }
 
@@ -142,35 +148,6 @@ public class ChessManager : MonoBehaviour
 
         Move.ConvertBoardToBinary(board);
 
-        // string temp = "";
-        // for (int y = 0; y < 8; y++)
-        // {
-        //     for (int x = 0; x < 8; x++)
-        //     {
-        //         temp += board[x, y];
-        //     }
-        //     temp += "\n";
-        // }
-        // Debug.Log(temp);
-
-        // string temp2 = "";
-        // for (int y = 0; y < 8; y++)
-        // {
-        //     for (int x = 0; x < 8; x++)
-        //     {
-        //         if (((Move.wq >> (- 8 * y - x + 63)) & 1UL) == 1UL)
-        //         {
-        //             temp2 += "1";
-        //         }
-        //         else
-        //         {
-        //             temp2 += "0";
-        //         }
-        //     }
-        //     temp2 += "\n";
-        // }
-        // Debug.Log(temp2);
-
         CheckInsufficientMaterials(board);
         Check50Move(moveRecord);
         CheckRepetition(moveRecord);
@@ -187,31 +164,32 @@ public class ChessManager : MonoBehaviour
                 {
                     continue;
                 }
-                else if (type < 'a' && board[i, j] > 'a')
+                else if (type < 'a' && board[i, j] < 'a')
                 {
                     continue;
                 }
-                else if (type > 'a' && board[i, j] < 'a')
+                else if (type > 'a' && board[i, j] > 'a')
                 {
                     continue;
                 }
 
                 if (Move.GetMoves(i, j, board[i, j], moveRecord) != 0UL)
                 {
+                    //Debug.Log("Checkmate: There are possible moves left.");
                     return;
                 }
             }
         }
 
-        if (type < 'a')
+        if (type > 'a')
         {
             if (Move.KingMoveCheck(new List<ulong> {Move.wk}, 'K') != 0UL)
             {
                 Draw("Stalemate");
             }
-            ResultStageScript.IsWhiteWin = true;
+            ResultStageScript.IsWhiteWin = false;
             resultStage.GetComponent<ResultStageScript>().ShowResult();
-            Debug.Log("White Win");
+            Debug.Log("Black Win");
         }
         else
         {
@@ -219,9 +197,9 @@ public class ChessManager : MonoBehaviour
             {
                 Draw("Stalemate");
             }
-            ResultStageScript.IsWhiteWin = false;
+            ResultStageScript.IsWhiteWin = true;
             resultStage.GetComponent<ResultStageScript>().ShowResult();
-            Debug.Log("Black Win");
+            Debug.Log("White Win");
         }
     }
 
