@@ -7,9 +7,12 @@ using UnityEngine;
  *  Last Updated:   2022.07.06
  *  Version:        1.0
  */
- 
+
+
 public interface IPickupItem
 {
     public void OnPickUp(PlayerController player);
 
 }
+
+

@@ -6,10 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class ChessManager : MonoBehaviour
 {
-    // [xCoord, yCoord]
-    public static Piece[,] board;
+    public static char[,] board;
     public static List<string> moveRecord;
-    public static bool isWhiteTurn;
     private static GameObject resultStage;
 
     void Start()
@@ -25,255 +23,222 @@ public class ChessManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            ChessAI.negaMax(2, 1, board);
+            //Debug.Log("MoveRecord Count: " + moveRecord.Count);
+            string aiMove = ChessAI.negaMaxStarter(3, -1, board, moveRecord);
+            
+            if (aiMove.Length == 5)
+            {
+                //Debug.Log("x: " + aiMove[1] + ", y: " + aiMove[2] + ", nx: " + aiMove[3] + ", ny: " + aiMove[4]);
+                MovePosition(aiMove[1] - '0', aiMove[2] - '0', aiMove[3] - '0', aiMove[4] - '0', board, moveRecord);
+            }
+            else
+            {
+                //Debug.Log("x: " + aiMove[2] + ", y: " + aiMove[3] + ", nx: " + aiMove[4] + ", ny: " + aiMove[5]);
+                MovePosition(aiMove[2] - '0', aiMove[3] - '0', aiMove[4] - '0', aiMove[5] - '0', board, moveRecord);
+            }
+
+            PlayerInput.PlayerColor *= -1;
+            
+
+            // foreach (string moveAI in ChessAI.bestMoveRecord)
+            //     /*            foreach (string moveAI in ChessAI.bestMoveRecord)
+            //                 {
+            //                     Debug.Log(moveAI);
+            //                 }
+            //                 }*/
+            //     Debug.LogWarning("Finished NO ERERROS");
+            //Debug.Log(ChessAI.bestMoveRecord.Count);
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            ResultStageScript.IsWhiteWin = true;
+            resultStage.GetComponent<ResultStageScript>().ShowResult();
+            Debug.Log("White Win");
         }
     }
 
     public void InitializeGame()
     {
-        isWhiteTurn = true;
         moveRecord = new List<string>();
 
-        // Clears 2D array
-        board = new Piece[8, 8];
-
-        // Black pieces [new Piece(Color, X, Y)]
-        board[0, 0] = new Rook(-1, 0, 0);
-        board[1, 0] = new Knight(-1, 1, 0);
-        board[2, 0] = new Bishop(-1, 2, 0);
-        board[3, 0] = new Queen(-1, 3, 0);
-        board[4, 0] = new King(-1, 4, 0);
-        board[5, 0] = new Bishop(-1, 5, 0);
-        board[6, 0] = new Knight(-1, 6, 0);
-        board[7, 0] = new Rook(-1, 7, 0);
-        for (int i = 0; i < 8; i++)
+        board = new char[8, 8] 
         {
-            board[i, 1] = new Pawn(-1, i, 1);
-        }
+            {'r', 'p', '-', '-', '-', '-', 'P', 'R'},
+            {'n', 'p', '-', '-', '-', '-', 'P', 'N'}, 
+            {'b', 'p', '-', '-', '-', '-', 'P', 'B'}, 
+            {'q', 'p', '-', '-', '-', '-', 'P', 'Q'}, 
+            {'k', 'p', '-', '-', '-', '-', 'P', 'K'}, 
+            {'b', 'p', '-', '-', '-', '-', 'P', 'B'}, 
+            {'n', 'p', '-', '-', '-', '-', 'P', 'N'}, 
+            {'r', 'p', '-', '-', '-', '-', 'P', 'R'}
+        };
 
-        // White pieces [new Piece(Color, X, Y)]
-        for (int j = 0; j < 8; j++)
-        {
-            board[j, 6] = new Pawn(1, j, 6);
-        }
-        board[0, 7] = new Rook(1, 0, 7);
-        board[1, 7] = new Knight(1, 1, 7);
-        board[2, 7] = new Bishop(1, 2, 7);
-        board[3, 7] = new Queen(1, 3, 7);
-        board[4, 7] = new King(1, 4, 7);
-        board[5, 7] = new Bishop(1, 5, 7);
-        board[6, 7] = new Knight(1, 6, 7);
-        board[7, 7] = new Rook(1, 7, 7);
-
-        PlayerInput.IsGamePaused = false;
+        Move.ConvertBoardToBinary(board);
     }
 
-    public static void MovePosition(int oldX, int oldY, int newX, int newY, Piece[,] board)
-    {       
-        if (board[newX, newY] != null && (int) board[newX, newY].type == 1)
-        {
-            Debug.Log("Game End");
-            return;
-        }
-        
-        RecordMove(oldX, oldY, newX, newY);
+    /*
+    {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+            {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'}, 
+            {'-', '-', '-', '-', '-', '-', '-', '-'}, 
+            {'-', '-', '-', '-', '-', '-', '-', '-'}, 
+            {'-', '-', '-', '-', '-', '-', '-', '-'}, 
+            {'-', '-', '-', '-', '-', '-', '-', '-'}, 
+            {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'}, 
+            {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 
-        int pieceType = (int) board[oldX, oldY].type;
+    */
 
-        if (pieceType == 1) // When King is moved
+    public static void MovePosition(int oldX, int oldY, int newX, int newY, char[,] board, List<string> moveRecord)
+    {
+        //Debug.Log(board[oldX, oldY]);
+        RecordMove(oldX, oldY, newX, newY, board[oldX, oldY], moveRecord);
+        //Debug.Log("x:" + oldX + " y:" + oldY);
+
+        if (board[oldX, oldY] == 'K' || board[oldX, oldY] == 'k') // When King is moved
         {
-            board[oldX, oldY].xCoord = newX;
-            board[oldX, oldY].yCoord = newY;
             board[newX, newY] = board[oldX, oldY];
-            board[oldX, oldY] = null;
+            board[oldX, oldY] = '-';
             
             if (newX - oldX == 2) // Right Castling
             {
-                board[7, newY].xCoord = 5;
                 board[5, newY] = board[7, newY];
-                board[7, newY] = null;
+                board[7, newY] = '-';
             }
             else if (newX - oldX == -2) // Left Castling
             {
-                board[0, newY].xCoord = 3;
                 board[3, newY] = board[0, newY];
-                board[0, newY] = null;
+                board[0, newY] = '-';
             }
         } 
-        else if (pieceType == 3) // When Pawn is moved
+        else if (board[oldX, oldY] == 'P' || board[oldX, oldY] == 'p') // When Pawn is moved
         {
             // En Passant
-            if (newX != oldX && board[newX, newY] == null) // When capturing move, but square is empty
+            if (newX != oldX && board[newX, newY] == '-') // When capturing move, but square is empty
             {
-                board[newX, oldY] = null;
+                //Debug.LogWarning("En Passant'd");
+                board[newX, oldY] = '-';
             }
 
-            // Moves the piece to the destination and removes the old pointer index
-            board[oldX, oldY].xCoord = newX;
-            board[oldX, oldY].yCoord = newY;
             board[newX, newY] = board[oldX, oldY];
-            board[oldX, oldY] = null;
+
+            if (newY == 7)
+            {
+                Debug.LogWarning("New Y is 7! ");
+                ChessAI.printBoard(board);
+            }
+            board[oldX, oldY] = '-';
 
             // Promotion
-            // TODO: Ask player for piece type. Setted it to Queen for right now.
-            if ((newY == 0 && board[newX, newY].color == 1) || (newY == 7 && board[newX, newY].color == -1))
+            if (newY == 0 && board[newX, newY] == 'P')
             {
-                board[newX, newY] = new Queen(board[newX, newY].color, newX, newY);
+                Debug.LogWarning("White Pawn is being promoted to a QUEEN");
+                board[newX, newY] = 'Q';
+            }
+            else if (newY == 7 && board[newX, newY] == 'p')
+            {
+                Debug.LogWarning("Black Pawn is being promoted to a QUEEN");
+                board[newX, newY] = 'q';
             }
         } 
         else // Any other piece
         {
-            board[oldX, oldY].xCoord = newX;
-            board[oldX, oldY].yCoord = newY;
             board[newX, newY] = board[oldX, oldY];
-            board[oldX, oldY] = null;
+            board[oldX, oldY] = '-';
         }
 
-        if (isWhiteTurn)
-        {
-            Debug.Log("White:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
-        }
-        else
-        {
-            Debug.Log("Black:" + (moveRecord.Count - 1) + " " + moveRecord[moveRecord.Count - 1]);
-        }
+        Move.ConvertBoardToBinary(board);
 
-        isWhiteTurn = !isWhiteTurn;
         CheckInsufficientMaterials(board);
-        Check50Move(board);
-        CheckRepetition(board);
-        CheckCheckmate(board[newX, newY].color, board);
+        Check50Move(moveRecord);
+        CheckRepetition(moveRecord);
+        CheckCheckmate(board[newX, newY], board, moveRecord);
     }
 
-    private static void CheckCheckmate(int color, Piece[,] board)
+    private static void CheckCheckmate(char type, char[,] board, List<string> moveRecord)
     {
-        //Debug.Log("Checking if Checkmate: " + color);
-        
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                if (board[i, j] == null)
+                if (board[i, j] == '-')
                 {
-                    Debug.Log("CCM: x: " + i + ", y: " + j + " is an empty square.");
+                    continue;
+                }
+                else if (type < 'a' && board[i, j] < 'a')
+                {
+                    continue;
+                }
+                else if (type > 'a' && board[i, j] > 'a')
+                {
                     continue;
                 }
 
-                if (color == board[i, j].color)
+                if (Move.GetMoves(i, j, board[i, j], moveRecord) != 0UL)
                 {
-                    Debug.Log("CCM: x: " + i + ", y: " + j + " " + board[i, j].type + " is an ally.");
-                    continue;
-                }
-
-                List<int[]> thisMoves = board[i, j].GetLegalMoves(board, moveRecord);
-
-                if (thisMoves.Count != 0)
-                {
-                    string textL = "CCM: x: " + i + ", y: " + j + " " + board[i, j].type + " has legal moves. It is not checkmate.";
-                    foreach (int[] hhh in thisMoves)
-                    {
-                        textL += " " + hhh[0] + ":" + hhh[1];
-                    }
-                    Debug.Log(textL);
+                    //Debug.Log("Checkmate: There are possible moves left.");
                     return;
-                }
-                else if (board[i, j].type == PieceType.King)
-                {
-                    Draw("Stalemate");
                 }
             }
         }
 
-        if (color == 1)
+        if (type > 'a')
         {
-            // TODO: White Win
-            ResultStageScript.IsWhiteWin = true;
-            resultStage.GetComponent<ResultStageScript>().ShowResult();
-            Debug.Log("White Win");
-        }
-        else
-        {
-            // TODO: Black Win
+            if (Move.KingMoveCheck(new List<ulong> {Move.wk}, 'K') != 0UL)
+            {
+                Draw("Stalemate");
+            }
             ResultStageScript.IsWhiteWin = false;
             resultStage.GetComponent<ResultStageScript>().ShowResult();
             Debug.Log("Black Win");
         }
+        else
+        {
+            if (Move.KingMoveCheck(new List<ulong> {Move.bk}, 'k') != 0UL)
+            {
+                Draw("Stalemate");
+            }
+            ResultStageScript.IsWhiteWin = true;
+            resultStage.GetComponent<ResultStageScript>().ShowResult();
+            Debug.Log("White Win");
+        }
     }
 
-    private static void CheckInsufficientMaterials(Piece[,] board)
+    private static void CheckInsufficientMaterials(char[,] board)
     {
-        Debug.Log("Checking if insufficient materials");
-
-        int countWhite = 0;
-        int countBlack = 0;
-        int[] whiteKingPos = new int[2];
-        int[] blackKingPos = new int[2];
-
-        foreach (Piece piece in board)
+        if (Move.wp != 0UL || Move.bp != 0UL) // No pawns?
         {
-            if (piece == null)
-            {
-                continue;
-            }
-
-            int ty = (int) piece.type;
-
-            // If pawn or rook are alive, don't end game.
-            if (ty == 3 || ty == 5)
-            {
-                Debug.Log("Pawn or Rook is alive, not insufficient.");
-                return;
-            }
-
-            // Count everything except king
-            if (ty != 1)
-            {
-                if (piece.color == 1)
-                {
-                    countWhite++;
-                    if (countWhite > 1)
-                    {
-                        Debug.Log("Enough white pieces to play");
-                        return;
-                    }
-                }
-                else if (piece.color == -1)
-                {
-                    countBlack++;
-                    if (countBlack > 1)
-                    {
-                        Debug.Log("Enough black pieces to play");
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                if (piece.color == 1)
-                {
-                    whiteKingPos[0] = piece.xCoord;
-                    whiteKingPos[1] = piece.yCoord;
-                }
-                else
-                {
-                    blackKingPos[0] = piece.xCoord;
-                    blackKingPos[1] = piece.yCoord;
-                }
-            }
+            return;
         }
 
-        Draw("Insufficient Materials");
+        if (Move.wq != 0UL || Move.bq != 0UL) // No queens?
+        {
+            return;
+        }
+
+        if (Move.wr != 0UL || Move.br != 0UL) // No rooks?
+        {
+            return;
+        }
+
+        if (Move.wnCount < 2 && Move.bnCount < 2 && Move.wbCount == 0 && Move.bbCount == 0)
+        {
+            Draw("Insufficient Materials");
+        }
+
+        if (Move.wnCount == 0 && Move.bnCount == 0 && Move.wbCount < 2 && Move.bbCount < 2)
+        {
+            Draw("Insufficient Materials");
+        }
     }
 
-    private static void Check50Move(Piece[,] board)
+    private static void Check50Move(List<string> moveRecord)
     {
-        //Debug.Log("Checking if 50 move rule");
         if (moveRecord.Count < 50)
         {
             return;
         }
         
-        for (int i = 0; i < 50; i++)
+        for (int i = 1; i < 51; i++)
         {
             if (moveRecord[moveRecord.Count - i].Length == 4)
             {
@@ -285,128 +250,37 @@ public class ChessManager : MonoBehaviour
             }
         }
         
-        Debug.Log("50 move rule123");
         Draw("50 move rule");
     }
 
-    private static void CheckRepetition(Piece[,] board)
+    private static void CheckRepetition(List<string> moveRecord)
     {
         if (moveRecord.Count < 5)
         {
             return;
         }
 
-        // Check if last and the 5th last are the same.
-        // If so, check if the starting position of the last and ending position of the 3rd are the same.
-        if (moveRecord[moveRecord.Count - 1] == moveRecord[moveRecord.Count - 5])
+        // Check if there were 3 repeated moves by the player.
+        if (moveRecord[moveRecord.Count - 1] == moveRecord[moveRecord.Count - 3] 
+        && moveRecord[moveRecord.Count - 1] == moveRecord[moveRecord.Count - 5])
         {
-            if (moveRecord[moveRecord.Count - 1].Substring(moveRecord[moveRecord.Count - 1].Length - 4, moveRecord[moveRecord.Count - 1].Length - 2) 
-            == moveRecord[moveRecord.Count - 3].Substring(moveRecord[moveRecord.Count - 3].Length - 2))
-            {
-                Draw("Repetition");
-            }
+            Draw("Repetition");
         }
 
         return;
     }
 
-    public static List<int[]> GetMoves(int posX, int posY)
-    {
-        List<int[]> pieceMoves = board[posX, posY].GetLegalMoves(board, moveRecord);
-        int kingX = -1;
-        int kingY = -1;
-        Piece[,] copyBoard = new Piece[8, 8];
-        List<Piece> enemies = new List<Piece>();
-        
-        // Copy over all pieces
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (board[i, j] == null)
-                {
-                    continue;
-                }
-
-                if (board[posX, posY].color == board[i, j].color)
-                {
-                    if ((int) board[i, j].type == 1)
-                    {
-                        kingX = board[i, j].xCoord;
-                        kingY = board[i, j].yCoord;
-                    }
-                }
-                else
-                {
-                    enemies.Add(board[i, j]);
-                }
-
-                copyBoard[i, j] = board[i, j];
-            }
-        }
-
-        int count = 0;
-        while (count < pieceMoves.Count)
-        {
-            if (!CheckIfSafe(posX, posY, pieceMoves[count][0], pieceMoves[count][1], kingX, kingY, enemies, copyBoard, moveRecord))
-            {
-                pieceMoves.RemoveAt(count);
-                continue;
-            }
-            count++;
-        }
-
-        return pieceMoves;
-    }
-
-    private static bool CheckIfSafe(int posX, int posY, int testX, int testY, int kingX, int kingY, List<Piece> enemies, Piece[,] copyBoard, List<string> moveRecord)
-    {
-        MovePosition(posX, posY, testX, testY, copyBoard);
-
-        foreach (Piece enemy in enemies)
-        {
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (enemies[i].xCoord == kingX && enemies[i].yCoord == kingY)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
     // Records each move into a string: [Piece Type][oldX][oldY][newX][newY]
-    private static void RecordMove(int oldX, int oldY, int newX, int newY)
+    public static void RecordMove(int oldX, int oldY, int newX, int newY, char type, List<string> moveRecord)
     {
-        string record = "";
-        switch ((int) board[oldX, oldY].type)
-        {
-            case 0:
-                record += "";
-                break;
-            case 1:
-                record += "K";
-                break;
-            case 2:
-                record += "N";
-                break;
-            case 3:
-                break;
-            case 4:
-                record += "Q";
-                break;
-            case 5:
-                record += "R";
-                break;
-        };
+        string record = "" + type;
         
-        if (board[newX, newY] != null)
+        if (board[newX, newY] != '-')
         {
             record += "x";
         }
-        record += "" + oldX + oldY + newX + newY;
+
+        record += "" + oldX + "" + oldY + "" + newX + "" + newY;
         moveRecord.Add(record);
     }
 

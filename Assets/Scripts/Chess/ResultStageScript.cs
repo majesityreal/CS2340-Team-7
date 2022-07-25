@@ -31,6 +31,9 @@ public class ResultStageScript : MonoBehaviour
     {
         PlayerPrefs.SetInt("loaded", 2);
         Application.LoadLevel("Chess");
+        PlayerInput.IsGamePaused = false;
+        PlayerInput.IsPlayerTurn = true;
+        PlayerInput.PlayerColor = 1;
     }
 
     public void BackToMenu()

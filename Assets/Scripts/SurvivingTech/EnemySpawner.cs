@@ -20,6 +20,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float health = 50; // scaled
     [SerializeField] float damage = 5; // scaled
     //[SerializeField] int xp_amount = 10;
+    [SerializeField] bool isAnEnemy = true;
     float timer;
 
     // Start is called before the first frame update
@@ -51,10 +52,13 @@ public class EnemySpawner : MonoBehaviour
         spawnPosition += targetPlayer.transform.position; // so enemy will spawn relative to player position
         GameObject newEnemy = Instantiate(enemy);
         newEnemy.transform.position = spawnPosition;
-        newEnemy.GetComponent<Enemy>().setTarget(targetPlayer);
-        newEnemy.GetComponent<Enemy>().setSpeed(speed);
-        newEnemy.GetComponent<Enemy>().setHealth(health);
-        newEnemy.GetComponent<Enemy>().setDamage(damage);
+        if (isAnEnemy)
+        {
+            newEnemy.GetComponent<Enemy>().setTarget(targetPlayer);
+            newEnemy.GetComponent<Enemy>().setSpeed(speed);
+            newEnemy.GetComponent<Enemy>().setHealth(health);
+            newEnemy.GetComponent<Enemy>().setDamage(damage);
+        }
 
         // for cleaning up, but leave this commented because i have an idea for handling waves
         // newEnemy.transform.parent = transform;
