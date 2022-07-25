@@ -18,10 +18,12 @@ public class PieceOnClick : MonoBehaviour
     private int yPos;
     private int color;
     private GameObject chessManager;
+    private ChessAudio sound;
 
     void Start()
     {
         chessManager = GameObject.Find("ChessManager");
+        sound = FindObjectOfType<ChessAudio>();
     }
     private void OnMouseDown()
     {
@@ -76,6 +78,8 @@ public class PieceOnClick : MonoBehaviour
                         //PlayerInput.IsPlayerTurn = false;
                         PlayerInput.CurrSelected.GetComponent<PieceOnClick>().SetPos(GetXPos(), GetYPos());
                         PlayerInput.CurrSelected.transform.position = new Vector3(GetXPos() - 4, 4 - GetYPos());
+                        Debug.Log("Move Success!");
+                        sound.PlayPiece();                
                         PlayerInput.PlayerColor *= -1;
                     }
                     else
