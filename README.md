@@ -5,7 +5,7 @@ A game suite made for Objects & Design class (CS 2340). We're learning the princ
 <p><b> 
 <a href="https://majesityreal.github.io/portfolio/" target="_blank">Carson Anderson</a><br/>
 Jing Liu<br/>
-<a href="https://www.koolkev246.com/" target="_blank">Kevin Kwan</a><br/>
+Kevin Kwan<br/>
 Woo Ju Chee<br/>
 <a href="https://www.yuanzheng01.com/" target="_blank">Zheng Yuan</a><br/>
 </b></p>
