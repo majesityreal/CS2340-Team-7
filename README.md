@@ -5,7 +5,7 @@ A game suite made for Objects & Design class (CS 2340) during the Summer of 2022
 <p><b> 
 <a href="https://majesityreal.github.io/portfolio/" target="_blank">Carson Anderson</a><br/>
 Jing Liu<br/>
-<a href="https://koolkev246.com">Kevin Kwan</a><br/>
+<a href="https://koolkev246.net">Kevin Kwan</a><br/>
 Woo Ju Chee<br/>
 <a href="https://www.yuanzheng01.com/" target="_blank">Zheng Yuan</a><br/>
 </b></p>
